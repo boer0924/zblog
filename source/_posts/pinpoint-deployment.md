@@ -1,14 +1,15 @@
 ---
 title: pinpoint-deployment
 date: 2019-05-09 15:40:54
-# index_img: /img/pinpoint.png
+index_img: https://picsum.photos/seed/picsum/300/300
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
 tags: APM
 categories: DevOps
 ---
-
 ### Ref
 [https://naver.github.io/pinpoint/installation.html](https://naver.github.io/pinpoint/installation.html)
+
+<!-- more -->
 
 ### 组件说明
 | **HBase**              | for storage                                  |

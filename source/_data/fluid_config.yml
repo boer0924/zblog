@@ -177,6 +177,7 @@ index:
 # Custom Page
 page:
   banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg
+  index_img: https://picsum.photos/seed/picsum/300/300
   banner_img_height: 60  # available: 0 - 100
   banner_mask_alpha: 0.3  # available: 0 - 1.0
 
@@ -241,8 +242,6 @@ post:  # 部分配置同时控制自定义页面，注意备注
 # 评论
 # Comments
 #---------------------------
-
-post.comments.enable: true
 
 # 开启评论需要先在上方 post.comments.enable: true
 
