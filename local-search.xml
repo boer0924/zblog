@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Openconnect VPN CentOS登陆</title>
+    <link href="/2020/05/10/oc-vpn-connect/"/>
+    <url>/2020/05/10/oc-vpn-connect/</url>
+    
+    <content type="html"><![CDATA[<div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>yum install openconnectopenconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>boer</tag>
+      
+      <tag>DevOps</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>pinpoint-deployment</title>
+    <link href="/2019/05/09/pinpoint-deployment/"/>
+    <url>/2019/05/09/pinpoint-deployment/</url>
+    
+    <content type="html"><![CDATA[<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a href="https://naver.github.io/pinpoint/installation.html" target="_blank" rel="noopener">https://naver.github.io/pinpoint/installation.html</a></p><h3 id="组件说明"><a href="#组件说明" class="headerlink" title="组件说明"></a>组件说明</h3><table><thead><tr><th><strong>HBase</strong></th><th>for storage</th></tr></thead><tbody><tr><td><strong>Pinpoint Collector</strong></td><td>Pinpoint core</td></tr><tr><td><strong>Pinpoint Web</strong></td><td>Web UI</td></tr><tr><td><strong>Pinpoint Agent</strong></td><td>attached to a java application for profiling</td></tr></tbody></table><h3 id="hbase脚本"><a href="#hbase脚本" class="headerlink" title="hbase脚本"></a>hbase脚本</h3><div class="hljs"><pre><code class="hljs awk">https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/naver/</span>pinpoint<span class="hljs-regexp">/tree/m</span>aster<span class="hljs-regexp">/hbase/</span>scripts</code></pre></div><h3 id="War包部署方式"><a href="#War包部署方式" class="headerlink" title="War包部署方式"></a>War包部署方式</h3><div class="hljs"><pre><code class="hljs bash">curl -LO https://archive.apache.org/dist/hbase/1.2.7/hbase-1.2.7-bin.tar.gz下载pinpoint组件war/jar包https://github.com/naver/pinpoint/releaseshttps://raw.githubusercontent.com/naver/pinpoint/master/hbase/scripts/hbase-create.hbasebin/hbase shell ./hbase-create.hbase</code></pre></div><h3 id="Docker部署方式"><a href="#Docker部署方式" class="headerlink" title="Docker部署方式"></a>Docker部署方式</h3><div class="hljs"><pre><code class="hljs vim">http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/naver/pinpoint-dockerdocker-compose pulldocker-compose <span class="hljs-keyword">up</span> -ddocker-compose <span class="hljs-keyword">ps</span></code></pre></div><h3 id="Agent配置"><a href="#Agent配置" class="headerlink" title="Agent配置"></a>Agent配置</h3><div class="hljs"><pre><code class="hljs angelscript">https:<span class="hljs-comment">//github.com/naver/pinpoint/blob/master/doc/installation.md#profiles-2</span>vim $Agent_Home/pinpoint.configpinpoint.profiler.profiles.active=release全部<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>替换为你自己的pinpoint server地址vim profiles/release/pinpoint-env.config # release对应上面配置文件pinpoint.profiler.profiles.active=release全部<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>替换为你自己的pinpoint server地址</code></pre></div><h3 id="应用配置"><a href="#应用配置" class="headerlink" title="应用配置"></a>应用配置</h3><div class="hljs"><pre><code class="hljs routeros">-javaagent:<span class="hljs-variable">$&#123;pinpointPath&#125;</span>/pinpoint-bootstrap-2.0.2.jar-Dpinpoint.<span class="hljs-attribute">applicationName</span>=&lt; 应用名, length&lt;24 &gt;-Dpinpoint.<span class="hljs-attribute">agentId</span>=&lt; 全局唯一, length&lt;24 &gt;</code></pre></div><h3 id="填坑"><a href="#填坑" class="headerlink" title="填坑"></a>填坑</h3><ul><li>服务名 &amp; AgentID长度不能超过24 <code>https://github.com/naver/pinpoint/issues/3504</code></li><li>AgentID全局唯一</li></ul><h3 id="删除AgentID-APP"><a href="#删除AgentID-APP" class="headerlink" title="删除AgentID/APP"></a>删除AgentID/APP</h3><div class="hljs"><pre><code class="hljs pgsql">https://naver.github.io/pinpoint/faq.html#how-<span class="hljs-keyword">do</span>-i-<span class="hljs-keyword">delete</span>-application-<span class="hljs-type">name</span>-andor-agent-id-<span class="hljs-keyword">from</span>-hbase</code></pre></div><h3 id="修改HBase数据保存时间"><a href="#修改HBase数据保存时间" class="headerlink" title="修改HBase数据保存时间"></a>修改HBase数据保存时间</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">describe</span> <span class="hljs-string">'TraceV2'</span><span class="hljs-keyword">disable</span> <span class="hljs-string">'TraceV2'</span><span class="hljs-keyword">alter</span> <span class="hljs-string">'TraceV2'</span>, &#123;<span class="hljs-keyword">NAME</span> =&gt; <span class="hljs-string">'S'</span>, TTL =&gt; <span class="hljs-string">'604800'</span>&#125;<span class="hljs-keyword">enable</span> <span class="hljs-string">'TraceV2'</span><span class="hljs-keyword">describe</span> <span class="hljs-string">'TraceV2'</span></code></pre></div><hr><p>Stay Hungry, Stay Foolish.</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>APM</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>致我的2012</title>
+    <link href="/2012/12/31/for-my2012/"/>
+    <url>/2012/12/31/for-my2012/</url>
+    
+    <content type="html"><![CDATA[<p>那些回顾2012，展望2013的话，留给席主习，理总李去说吧！</p><p>开始，应该是从2月11日开始的，有火车票为证；<br>学生生涯的真正结束，应该是在2月27日，有汽车票为证；<br>职员生涯的艰难开始，应该是在3月16日，有工资条为证；<br>结束，2012的结束，毋庸置疑的今天，时间为证。</p><p>开始的第一站，当然还是学校。<br>呼吸寝室的各种“味道”；<br>办理学校的各种手续；<br>依恋基友的各种难舍；<br> 享受学校最后的温暖。</p><p>找工作的那段时间是最艰难的。<br>起初是和很多人住很廉价的旅馆，不大的床竟然能睡3个男人。<br>在所难免的被老板发现，……也就当然，时日不多。<br>找了个“难民营”，不夸张的说，拉登当初如果逃那儿，<br>也不至于被爆头—-一个被拆迁的只剩下一栋房子矗在那里，<br>墙上到处写着“谁要拆我房，我就………………”很显然“钉子户”。<br>还好有水、有点、有老鼠。<br>初春三月，重庆的天气还是有那么一点小冷，晚上冷的蜷成一团的时候，<br> 老鼠们还出来幸灾乐祸。</p><p>找工作难，找好工作更难。<br>要你的，你不想去；想去的，人不要你。<br>好不容易找个我想去，人家也要我的，第一天上班就被外派到区县（黔江：一个三面环山，倍儿压抑的区），一待就是四十多天。<br>由于刚开始经验的匮乏，使得工作压力很大。<br>不过还好的是吃遍了黔江各地特色风味，足迹踏遍了黔江的各个乡镇（有些地方一辈子可能就去一次）。</p><p>最后的工作性质“你要明白你的身份，就一打杂的”，本少怎能忍受你这般羞辱，毅然决然的离开，至从事现在的工作。</p><p>（……因当下工作尚未结束，所以，不加以任何评述，以待后续……）</p><p>从5月10日起，住进这里，认识的男男女女，老老少少，各个行业之人，都将成为鄙人毕生之财富。吾曾有言“日租公寓，<br> 一抹江湖情”实乃贴切之至也！江湖之快乐，岂非尔等世外之人真知耳？快哉！乐哉！</p><p>2012后半载的快乐是以数月之积苦为付出的，就像IMBA成就“狗急跳墙”，亦如佛家之言“苦尽甘来”。</p><p>2012，我22，真是好2好2，哈哈哈哈！！！！！！</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Life</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>2012</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>写给那些女生</title>
+    <link href="/2012/06/14/for-the-girl/"/>
+    <url>/2012/06/14/for-the-girl/</url>
+    
+    <content type="html"><![CDATA[<p>人，总是在快乐的时候<br>忘记时间<br>不知道是哪一天，她们来了<br> 不知不觉的走进了我平淡无奇的生活</p><p>作为一个计算机专业科班出身的我<br>对SOHO网络还是小有手段的<br>于是，与她们成功的搭讪<br>此后，本为路人甲与乙的我们<br>便“一发不可收拾”</p><p>……<br>聊天<br>……<br>吃饭<br>……<br>打球<br>……<br>等等等等</p><p>今天，她们走了<br>像她们一如既往的来<br>只是，带走的……？？？<br>太多太多……</p><p>十天，<br>十天的时间太长<br>长到足以让你厌恶一个人<br>十天的时间太短<br>短到让你无法了解真实的彼此</p><p>还有，<br>这段时间我真的很快乐<br>我会<br>把这段时间放在我记忆<br>最深处的</p><hr><p>由于感冒，思絮飘零，草草写下此数言，一来作为对几位姑娘的留恋，二来记录下这段快乐的时光，仅此而已。<br> ———2012.6.14于办公室</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Life</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>2012</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>大学，梦起航</title>
+    <link href="/2012/05/26/the-university-the-dream/"/>
+    <url>/2012/05/26/the-university-the-dream/</url>
+    
+    <content type="html"><![CDATA[<h3 id="写在最前面"><a href="#写在最前面" class="headerlink" title="写在最前面"></a>写在最前面</h3><p>开头。这是真正的开头。写什么？怎么写？第一章，第一自然段，第一句话，第一个字，一切都是神圣的，似乎是一个生死存亡的</p><p>问题而令人难以选择，令人战战兢兢。</p><p>……</p><p>现在，平静地坐下来。</p><p>于是，顺利地开始了。</p><p>———路遥《早晨从中午开始》</p><p>一九七五年二、三月间，一个平平常常的日子，细蒙蒙的雨丝夹着一星半点的雪花，正纷纷淋淋地向大地飘洒着。时令已快到惊蛰</p><p>，雪当然再不会存留，往往还没等落地，就已经消失得无踪无影了。黄土高原严寒而漫长的冬天看来就要过去，但那真正温暖的春</p><p>天还远远地没有到来。</p><p>———路遥《平凡的世界》</p><h3 id="2334"><a href="#2334" class="headerlink" title="2334"></a>2334</h3><p>我不知道它为什么会顺序排列<br>也不知道它为什么会中间重复<br>总之</p><p>我牢牢的记住了这个数字———一列绿皮车的车次</p><p>那是我第一次坐火车</p><p>那是我第一次离家那么远</p><p>那是我第一次上大学</p><h3 id="20080915"><a href="#20080915" class="headerlink" title="20080915"></a>20080915</h3><p>不知道什么原因<br>我对这个时间记忆犹为清晰<br>所以<br>也就将它定义为大学开始的时间<br>其实<br>实际时间应该是要早于这个时间<br> 但，好像又忘却了</p><h3 id="608"><a href="#608" class="headerlink" title="608"></a>608</h3><p>一个多么好的数字<br>0 . 开始<br>6 . 顺利<br>8 . 发展</p><p>这是我大学第一间寝室号码<br>在那拥挤的空间里<br> 我开始慢慢习惯9分月重庆那特有的潮热的天气</p><h3 id="军训"><a href="#军训" class="headerlink" title="军训"></a>军训</h3><p>大学，第一堂课“军训”</p><p>大家都有同样的装扮<br>同样的狼狈———汗流浃背<br>分不出美女与帅哥<br>所以<br>你想提前下手似乎是不可能的</p><p>然而，对于第一堂课，我是很惭愧的，出于某种原因，没有参加。<br>但是，军训场地的氛围还是感受过的。</p><h3 id="大一"><a href="#大一" class="headerlink" title="大一"></a>大一</h3><p>还算乖巧的我们还算听话，每次上课宽敞的教室多少有点燥热。<br> 至于课程嘛！也就那不痛不痒的《近现代史纲要》、《马哲》等等之类的。</p><p>那会儿寝室的电脑寥寥无几。<br>所以，活动时间还是有的。<br>社团、协会，偶尔上个课，开个会什么的，还是挺看重的。<br> 至于，后来嘛！呵呵……</p><p>那一年，是最难熬的。<br>语言，饮食，环境，甚至文化。<br> 都需要去习惯。</p><p>那时的寝室站在阳台上就能看到高速公路。每次看到呼啸而过的大巴，一种家的思念，油然而生，涌上心头，久久不能平复。</p><p>那一年，我很傻。</p><h3 id="大二"><a href="#大二" class="headerlink" title="大二"></a>大二</h3><p>我们聚集了一帮子“死党”，有个伟大的代号“306”。</p><p>最安逸的时光是在熄灯之后的半把个小时里。</p><p>我们最高尚的话题是“谈谈中国近五十年的发展”；<br> 最低俗的话题是“关于辣椒皮皮的种种”；</p><p>最MAN的话题是“游历金庸武侠的画卷”；<br> 最八卦的话题是“仓老师、凤姐之流的”。</p><p>那一年<br> 我微弱的尝试了一下“爱情”的味道，苦涩与美好交织；</p><p>那一年<br>我们换了辅导员。那天，我写道“多好的阳光！突然，换辅导员了。（晴天霹雳） 期待吧！…”；</p><p>那一年<br>我参加了计算机技术与软件专业技术资格(水平)考试———网络工程师（中级）考试。没过，差得很远……</p><p>那一年，很复杂。</p><h3 id="大三"><a href="#大三" class="headerlink" title="大三"></a>大三</h3><p>有了那样一群“死党”的陪伴，时间恍惚，都似乎忘记了大三是怎么开始的。<br>噢！对了，我们的代号换了“209”，这可以促使一下记忆。</p><p>我们继续保持着大二的优良作风，睡前探讨半小时。</p><p>紧要的不紧要的，<br>有关的无关的，<br>天上的人家的，<br>过去的将来的。</p><p>那一年<br>我们有一个神奇的老师“从A到Z，二十四个英文字母中……”<br>我百思不得其解。敢问老师，那两个字母是S和B吗？</p><p>那一年<br>我又一次参加了计算机技术与软件专业技术资格(水平)考试———网络工程师（中级）考试。<br>不出意料的通过还是让我HI了那么一阵子的。</p><p>就这样沉浸在胜利的快乐中，度过了那一年。</p><p>那一年，很快乐。</p><h3 id="大四"><a href="#大四" class="headerlink" title="大四"></a>大四</h3><p>由于某种原因<br>我差点脱离了我的组织“124”<br>不过<br>经过殊死的挣扎，我还是以“无尚的崇高”回归了组织。<br> 再次的“回归”让我的压力更大，更加迷茫。</p><p>那时间也是最宅的，一日“两餐”几乎都是由“基友”代劳的。<br>DOTA，DOTA，依然DOTA。<br> 似乎，也只有在游戏的厮杀中得以解脱，实现忘我。</p><p>然而，也不是什么都没做。<br> 但是，现在看来，当时的想法、做法都是那么盲目。</p><p>那一年，很短暂。</p><p>那一年，很迷茫。</p><h3 id="本初"><a href="#本初" class="headerlink" title="本初"></a>本初</h3><p>大学目标有四“毕业证，职业资格认证，英语，女友”。<br> 大学时日已尽，目标对半实现，实感惭愧。</p><p>如此的只言片语只能是记忆的片段。</p><p>有此想法，已有许久。<br>今日，<br>突发感想，迫不及待，写下此篇，以励日后。</p><p>———— 2012年5月26日于重庆·歇台子</p><h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>“这第一碗酒，朕要敬给太皇太后孝庄，敬给列祖列宗的在天之灵。朕八岁丧父，九岁丧母，是孝庄太后带着朕，冲破千难险阻，</p><p>才有今天的大清盛世!孝庄太后，朕想你啊。”</p><p>“还有这第二碗酒，朕要敬给列位臣工，敬给天下子民，敬给今天赴宴的 老同年们!六十年来，是你们辅佐朕，保国平安，你们俯</p><p>首农桑，致使大清的百业兴旺。君、臣、民，三者同德呀！没有你们，记着便没有今日的大清。朕在这儿谢谢你们了。”</p><p>“这第三碗酒啊，朕要敬给朕的死敌们。鳌拜，吴三桂，嘿！郑经，噶尔丹，噢，还有那个朱三太子。他们都是英雄豪杰啊，他们</p><p>造就了朕!他们逼着朕立下了这丰功伟业。朕恨他们，也敬他们。可惜呀，他们都死了，朕寂莫啊!……朕不祝他们死的安宁，祝</p><p>他们，来生再世再与朕为敌吧！”</p><p>———二月河《康熙王朝》</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Life</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>2012</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>
