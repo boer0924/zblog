@@ -1,5 +1,5 @@
 ---
-title: pinpoint-deployment
+title: APM - Pinpoint笔记
 date: 2019-05-09 15:40:54
 index_img: https://picsum.photos/300/200.webp?apm
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg

@@ -25,3 +25,7 @@ boer，将成为一个响彻世界的品牌。所以，在将来的某一天，�
 一切新鲜、好奇的美好事物……
 
 ![skill-map](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/skill-map.png)
+
+---
+
+> Stay Hungry, Stay Foolish.
