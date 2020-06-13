@@ -1,7 +1,7 @@
 ---
 title: 大学，梦起航
 date: 2012-05-26 22:18:36
-index_img: https://picsum.photos/seed/picsum/300/200
+index_img: https://picsum.photos/300/200.webp?university
 tags: '2012'
 categories: Life
 ---
