@@ -1,7 +1,7 @@
 ---
 title: 写给那些女生
 date: 2012-06-14 11:16:18
-index_img: https://picsum.photos/300/200
+index_img: https://picsum.photos/seed/picsum/300/200
 tags: '2012'
 categories: Life
 ---

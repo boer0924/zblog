@@ -1,7 +1,7 @@
 ---
 title: 致我的2012
 date: 2012-12-31 15:15:37
-index_img: https://picsum.photos/300/200
+index_img: https://picsum.photos/seed/picsum/300/200
 tags: ['2012']
 categories: Life
 ---
