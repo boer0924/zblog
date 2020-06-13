@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>Openconnect VPN CentOS登陆</title>
+    <title>Openconnect VPN</title>
     <link href="/2020/05/10/oc-vpn-connect/"/>
     <url>/2020/05/10/oc-vpn-connect/</url>
     
-    <content type="html"><![CDATA[<div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>yum install openconnectopenconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>]]></content>
+    <content type="html"><![CDATA[<p>Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management and control. Openconnect server provides user management interfaces and back-ends necessary in enterprise environments, as well as security features, such as isolation of connected clients, features currently not available to any existing VPN servers.</p><a id="more"></a><div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>yum install openconnectopenconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>]]></content>
     
     
     <categories>
@@ -31,7 +31,7 @@
   
   
   <entry>
-    <title>pinpoint-deployment</title>
+    <title>APM - Pinpoint笔记</title>
     <link href="/2019/05/09/pinpoint-deployment/"/>
     <url>/2019/05/09/pinpoint-deployment/</url>
     
