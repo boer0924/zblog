@@ -1,6 +1,7 @@
 ---
 title: Openconnect VPN CentOS登陆
 date: 2020-05-10 10:20:06
+imdex_img: https://picsum.photos/300/200
 tags:
   - boer
   - DevOps
