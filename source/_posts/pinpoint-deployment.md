@@ -7,7 +7,8 @@ tags: APM
 categories: DevOps
 ---
 ### Ref
-[https://naver.github.io/pinpoint/installation.html](https://naver.github.io/pinpoint/installation.html)
+- [https://naver.github.io/pinpoint/installation.html](https://naver.github.io/pinpoint/installation.html)
+- [https://naver.github.io/pinpoint/faq.html](https://naver.github.io/pinpoint/faq.html)
 
 <!-- more -->
 
@@ -19,7 +20,7 @@ categories: DevOps
 | **Pinpoint Agent**     | attached to a java application for profiling |
 
 ### hbase脚本
-```
+```bash
 https://github.com/naver/pinpoint/tree/master/hbase/scripts
 ```
 
@@ -34,7 +35,7 @@ bin/hbase shell ./hbase-create.hbase
 ```
 
 ### Docker部署方式
-```
+```bash
 https://github.com/naver/pinpoint-docker
 docker-compose pull
 docker-compose up -d
@@ -42,19 +43,20 @@ docker-compose ps
 ```
 
 ### Agent配置
-```
+```bash
 https://github.com/naver/pinpoint/blob/master/doc/installation.md#profiles-2
 
 vim $Agent_Home/pinpoint.config
 pinpoint.profiler.profiles.active=release
-全部127.0.0.1替换为你自己的pinpoint server地址
+# 替换全部127.0.0.1为你自己的pinpoint server地址
 
 vim profiles/release/pinpoint-env.config # release对应上面配置文件pinpoint.profiler.profiles.active=release
-全部127.0.0.1替换为你自己的pinpoint server地址
+# 替换全部127.0.0.1为你自己的pinpoint server地址
+profiler.sampling.rate=<your-want> # agent采样频率
 ```
 
 ### 应用配置
-```
+```bash
 -javaagent:${pinpointPath}/pinpoint-bootstrap-2.0.2.jar
 -Dpinpoint.applicationName=< 应用名, length<24 >
 -Dpinpoint.agentId=< 全局唯一, length<24 >
@@ -65,17 +67,21 @@ vim profiles/release/pinpoint-env.config # release对应上面配置文件pinpoi
 - AgentID全局唯一
 
 ### 删除AgentID/APP
-```
+```bash
 https://naver.github.io/pinpoint/faq.html#how-do-i-delete-application-name-andor-agent-id-from-hbase
 ```
 
 ### 修改HBase数据保存时间
-```
+```bash
+# Shortening the TTL values, especially for `AgentStatV2` and `TraceV2`
 describe 'TraceV2'
 disable 'TraceV2'
-alter 'TraceV2', {NAME => 'S', TTL => '604800'}
+alter 'TraceV2', {NAME => 'S', TTL => '604800'} # 7days
 enable 'TraceV2'
 describe 'TraceV2'
+
+# 业务低峰期major_compact
+hbase shell < https://github.com/naver/pinpoint/blob/master/hbase/scripts/hbase-major-compact-htable.hbase
 ```
 
 ---
