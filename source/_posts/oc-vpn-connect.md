@@ -7,6 +7,12 @@ tags:
   - DevOps
 categories: DevOps
 ---
+2020年是不平凡的一年
+新冠肺炎疫情
+科比逝世
+......
+
+疫情影响下各个公司启动远程办公，VPN成了必不可少的服务。
 Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management and control. Openconnect server provides user management interfaces and back-ends necessary in enterprise environments, as well as security features, such as isolation of connected clients, features currently not available to any existing VPN servers.
 
 <!-- more -->
