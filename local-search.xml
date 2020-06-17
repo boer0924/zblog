@@ -56,6 +56,33 @@
   
   
   <entry>
+    <title>主机初始化的那些事儿</title>
+    <link href="/2018/03/24/srv_initialize/"/>
+    <url>/2018/03/24/srv_initialize/</url>
+    
+    <content type="html"><![CDATA[<p>集群中加入一个主机后，需要做的那些事儿</p><a id="more"></a><h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><div class="hljs"><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%mkfs.xfs /dev/vdb1mkdir /new_disk<span class="hljs-built_in">echo</span> <span class="hljs-string">"UUID=`blkid /dev/vdb1 | awk -F'"</span><span class="hljs-string">' '</span>&#123;<span class="hljs-built_in">print</span> <span class="hljs-variable">$2</span>&#125;<span class="hljs-string">'` /new_disk xfs defaults 1 1" &gt;&gt; /etc/fstab</span><span class="hljs-string">mount -a</span><span class="hljs-string">df -h</span></code></pre></div><h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>vim /etc/sysctl.confnet.ipv4.tcp_syncookies = 1net.ipv4.tcp_timestamps = 0net.ipv4.tcp_fin_timeout = 10net.ipv4.tcp_tw_recycle = 1net.ipv4.tcp_tw_reuse = 1net.ipv4.tcp_max_tw_buckets = 8000<span class="hljs-comment"># fs.file-max = 102400000</span>vm.max_map_count = 262144vm.swappiness = 10sysctl –p  <span class="hljs-comment"># 配置生效</span><span class="hljs-comment"># 文件描述符限制</span>vim /etc/security/limits.conf* soft nofile 102400* hard nofile 204800<span class="hljs-built_in">ulimit</span> -Sn<span class="hljs-built_in">ulimit</span> -Hn</code></pre></div><h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul><li>filebeat</li><li>zabbix/node_exporter</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>parted</tag>
+      
+      <tag>kernel</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>致我的2012</title>
     <link href="/2012/12/31/for-my2012/"/>
     <url>/2012/12/31/for-my2012/</url>
