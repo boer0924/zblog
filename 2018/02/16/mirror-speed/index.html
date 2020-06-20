@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, Bigdata, 5G, AI, Cloud, Java, Golang, Linux, Ansible, Kubernetes, DevOps, Middleware">
-  <title>主机初始化的那些事儿 · ~·boer·~ 乌托邦</title>
+  <title>各种镜像源加速 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -139,7 +139,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -152,8 +152,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2018-03-24 16:30">
-      2018年3月24日 下午
+    <time datetime="2018-02-16 16:16">
+      2018年2月16日 下午
     </time>
   </div>
 
@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      146 字
+      159 字
     </span>
   
 
@@ -204,41 +204,37 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>集群中加入一个主机后，需要做的那些事儿</p>
-<a id="more"></a>
+              <h3 id="阿里云镜像站"><a href="#阿里云镜像站" class="headerlink" title="阿里云镜像站"></a>阿里云镜像站</h3><p><code>https://developer.aliyun.com/mirror/</code></p>
+<h3 id="python-pip源"><a href="#python-pip源" class="headerlink" title="python pip源"></a>python pip源</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://pip.pypa.io/en/stable/user_guide/#config-file</span>
+<span class="hljs-comment"># 全局生效</span>
+<span class="hljs-comment"># Like-Unix(Linux)</span>
+vim /etc/pip.conf
+<span class="hljs-comment"># macOS</span>
+vim /Library/Application Support/pip/pip.conf
+<span class="hljs-comment"># Windows</span>
+notepad C:\ProgramData\pip\pip.ini
+<span class="hljs-comment"># https://developer.aliyun.com/mirror/pypi</span>
+<span class="hljs-comment">## 阿里云源</span>
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
 
-<h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><div class="hljs"><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%
-mkfs.xfs /dev/vdb1
-mkdir /new_disk
-<span class="hljs-built_in">echo</span> <span class="hljs-string">"UUID=`blkid /dev/vdb1 | awk -F'"</span><span class="hljs-string">' '</span>&#123;<span class="hljs-built_in">print</span> <span class="hljs-variable">$2</span>&#125;<span class="hljs-string">'` /new_disk xfs defaults 1 1" &gt;&gt; /etc/fstab</span>
-<span class="hljs-string">mount -a</span>
-<span class="hljs-string">df -h</span></code></pre></div>
+[install]
+trusted-host=mirrors.aliyun.com</code></pre></div>
 
-<h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>
-vim /etc/sysctl.conf
-net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_timestamps = 0
-net.ipv4.tcp_fin_timeout = 10
-net.ipv4.tcp_tw_recycle = 1
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_max_tw_buckets = 8000
-<span class="hljs-comment"># fs.file-max = 102400000</span>
-vm.max_map_count = 262144
-vm.swappiness = 10
-sysctl –p  <span class="hljs-comment"># 配置生效</span>
+<h3 id="Go-proxy"><a href="#Go-proxy" class="headerlink" title="Go proxy"></a>Go proxy</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## Go 1.13 及以上（推荐）</span>
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
+<span class="hljs-comment"># go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct/</span></code></pre></div>
 
-<span class="hljs-comment"># 文件描述符限制</span>
-vim /etc/security/limits.conf
-* soft nofile 102400
-* hard nofile 204800
-<span class="hljs-built_in">ulimit</span> -Sn
-<span class="hljs-built_in">ulimit</span> -Hn</code></pre></div>
-
-<h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul>
-<li>filebeat</li>
-<li>zabbix/node_exporter</li>
-</ul>
-
+<h3 id="NodeJS-npm源"><a href="#NodeJS-npm源" class="headerlink" title="NodeJS npm源"></a>NodeJS npm源</h3><div class="hljs"><pre><code class="hljs bash">npm config <span class="hljs-built_in">set</span> registry https://registry.npm.taobao.org
+<span class="hljs-comment">### </span>
+npm config <span class="hljs-built_in">set</span> &lt;key&gt; &lt;value&gt;
+npm config get [&lt;key&gt;]
+npm config delete &lt;key&gt;
+npm config list [--json]
+npm config edit
+npm <span class="hljs-built_in">set</span> &lt;key&gt; &lt;value&gt;
+npm get [&lt;key&gt;]</code></pre></div>
             </article>
             <hr>
             <div>
@@ -255,9 +251,11 @@ vim /etc/security/limits.conf
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/parted/">parted</a>
+                      <a class="hover-with-bg" href="/tags/pip/">pip</a>
                     
-                      <a class="hover-with-bg" href="/tags/kernel/">kernel</a>
+                      <a class="hover-with-bg" href="/tags/goproxy/">goproxy</a>
+                    
+                      <a class="hover-with-bg" href="/tags/npm/">npm</a>
                     
                   </div>
                 
@@ -270,9 +268,9 @@ vim /etc/security/limits.conf
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2019/05/09/pinpoint-deployment/">
+                      <a href="/2018/03/24/srv_initialize/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">APM - Pinpoint笔记</span>
+                        <span class="hidden-mobile">主机初始化的那些事儿</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -280,8 +278,8 @@ vim /etc/security/limits.conf
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2018/02/16/mirror-speed/">
-                        <span class="hidden-mobile">各种镜像源加速</span>
+                      <a href="/2012/12/31/for-my2012/">
+                        <span class="hidden-mobile">致我的2012</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -301,8 +299,8 @@ vim /etc/security/limits.conf
     <script type="text/javascript">
       function loadDisqus() {
         var disqus_config = function () {
-          this.page.url = 'https://www.boer.xyz/2018/03/24/srv_initialize/';
-          this.page.identifier = '/2018/03/24/srv_initialize/';
+          this.page.url = 'https://www.boer.xyz/2018/02/16/mirror-speed/';
+          this.page.identifier = '/2018/02/16/mirror-speed/';
         };
         (function () {
           var d = document,
@@ -478,7 +476,7 @@ vim /etc/security/limits.conf
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "主机初始化的那些事儿&nbsp;",
+        "各种镜像源加速&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

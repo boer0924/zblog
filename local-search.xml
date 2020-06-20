@@ -83,6 +83,35 @@
   
   
   <entry>
+    <title>各种镜像源加速</title>
+    <link href="/2018/02/16/mirror-speed/"/>
+    <url>/2018/02/16/mirror-speed/</url>
+    
+    <content type="html"><![CDATA[<h3 id="阿里云镜像站"><a href="#阿里云镜像站" class="headerlink" title="阿里云镜像站"></a>阿里云镜像站</h3><p><code>https://developer.aliyun.com/mirror/</code></p><h3 id="python-pip源"><a href="#python-pip源" class="headerlink" title="python pip源"></a>python pip源</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://pip.pypa.io/en/stable/user_guide/#config-file</span><span class="hljs-comment"># 全局生效</span><span class="hljs-comment"># Like-Unix(Linux)</span>vim /etc/pip.conf<span class="hljs-comment"># macOS</span>vim /Library/Application Support/pip/pip.conf<span class="hljs-comment"># Windows</span>notepad C:\ProgramData\pip\pip.ini<span class="hljs-comment"># https://developer.aliyun.com/mirror/pypi</span><span class="hljs-comment">## 阿里云源</span>[global]index-url = https://mirrors.aliyun.com/pypi/simple/[install]trusted-host=mirrors.aliyun.com</code></pre></div><h3 id="Go-proxy"><a href="#Go-proxy" class="headerlink" title="Go proxy"></a>Go proxy</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## Go 1.13 及以上（推荐）</span>go env -w GO111MODULE=ongo env -w GOPROXY=https://goproxy.cn,direct<span class="hljs-comment"># go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct/</span></code></pre></div><h3 id="NodeJS-npm源"><a href="#NodeJS-npm源" class="headerlink" title="NodeJS npm源"></a>NodeJS npm源</h3><div class="hljs"><pre><code class="hljs bash">npm config <span class="hljs-built_in">set</span> registry https://registry.npm.taobao.org<span class="hljs-comment">### </span>npm config <span class="hljs-built_in">set</span> &lt;key&gt; &lt;value&gt;npm config get [&lt;key&gt;]npm config delete &lt;key&gt;npm config list [--json]npm config editnpm <span class="hljs-built_in">set</span> &lt;key&gt; &lt;value&gt;npm get [&lt;key&gt;]</code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>pip</tag>
+      
+      <tag>goproxy</tag>
+      
+      <tag>npm</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>致我的2012</title>
     <link href="/2012/12/31/for-my2012/"/>
     <url>/2012/12/31/for-my2012/</url>
