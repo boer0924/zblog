@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      996 字
+      997 字
     </span>
   
 
@@ -283,7 +283,7 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF</code></pre></div>
 
-<h1 id="安装kube-amp-docker"><a href="#安装kube-amp-docker" class="headerlink" title="安装kube* &amp; docker"></a>安装kube* &amp; docker</h1><div class="hljs"><pre><code class="hljs bash">yum install -y kubelet kubeadm kubectl <span class="hljs-comment"># 注意版本需要和镜像版本对应</span>
+<h3 id="安装kube-amp-docker"><a href="#安装kube-amp-docker" class="headerlink" title="安装kube* &amp; docker"></a>安装kube* &amp; docker</h3><div class="hljs"><pre><code class="hljs bash">yum install -y kubelet kubeadm kubectl <span class="hljs-comment"># 注意版本需要和镜像版本对应</span>
 systemctl <span class="hljs-built_in">enable</span> kubelet &amp;&amp; systemctl start kubelet
 
 yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -391,7 +391,7 @@ etcdctl</code></pre></div>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
 <li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
 <li><a href="https://my.oschina.net/baobao/blog/3031712" target="_blank" rel="noopener">https://my.oschina.net/baobao/blog/3031712</a></li>
-<li><a href="https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml" target="_blank" rel="noopener">https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml</a></li>
+<li><a href="https://kubernetes.io/zh/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/" target="_blank" rel="noopener">https://kubernetes.io/zh/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/</a></li>
 </ul>
 
             </article>
