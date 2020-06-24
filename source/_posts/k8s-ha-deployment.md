@@ -198,7 +198,14 @@ mode: ipvs
 ```bash
 kubeadm init --config kubeadm-config.yaml --upload-certs
 kubeadm config images pull --config kubeadm-config.yaml # 先拉取镜像
-kubectl apply -f calico.yaml # 更改192.168.1.1为podSubnet: 172.30.0.0/16
+curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+# 更改CALICO_IPV4POOL_CIDR为podSubnet: 172.30.0.0/16
+# https://docs.projectcalico.org/reference/node/configuration
+# Enable IPIP
+# - name: CALICO_IPV4POOL_IPIP
+#   value: "off"
+kubectl apply -f calico.yaml
+
 # core-dns pod不再pending
 
 kubeadm reset
@@ -215,8 +222,14 @@ kubectl get pod -n kube-system | grep kube-proxy | awk '{system("kubectl delete 
 
 ### Calico BGP模式重建
 ```bash
-# TODO
-
+# https://docs.projectcalico.org/archive/v3.14/getting-started/kubernetes/installation/config-options
+curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+# 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16
+# https://docs.projectcalico.org/reference/node/configuration
+# Enable IPIP
+# - name: CALICO_IPV4POOL_IPIP
+#   value: "Off"
+kubectl apply -f calico.yaml
 ```
 
 ### Operations
@@ -236,7 +249,26 @@ docker ps --format "{{.ID}}\t{{.Command}}\t{{.Status}}\t{{.Ports}}"
 docker ps --filter "status=exited"
 
 # TODO
-etcdctl
+## etcdctl
+
+## Calicoctl
+# https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/
+curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
+mv calicoctl /usr/local/bin/
+chmod a+x /usr/local/bin/calicoctl
+
+vim /etc/calico/calicoctl.cfg
+apiVersion: projectcalico.org/v3
+kind: CalicoAPIConfig
+metadata:
+spec:
+  datastoreType: "kubernetes"
+  kubeconfig: "/root/.kube/config"
+
+calicoctl get nodes
+calicoctl node status
+calicoctl get ipPool -o yaml
+
 ```
 
 ### Reference
