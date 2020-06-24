@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      997 字
+      1.1k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      19
+      21
        分钟
     </span>
   
@@ -358,7 +358,14 @@ systemctl status docker.service</code></pre></div>
 
 <h3 id="kubeadm-deploy"><a href="#kubeadm-deploy" class="headerlink" title="kubeadm deploy"></a>kubeadm deploy</h3><div class="hljs"><pre><code class="hljs bash">kubeadm init --config kubeadm-config.yaml --upload-certs
 kubeadm config images pull --config kubeadm-config.yaml <span class="hljs-comment"># 先拉取镜像</span>
-kubectl apply -f calico.yaml <span class="hljs-comment"># 更改192.168.1.1为podSubnet: 172.30.0.0/16</span>
+curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+<span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR为podSubnet: 172.30.0.0/16</span>
+<span class="hljs-comment"># https://docs.projectcalico.org/reference/node/configuration</span>
+<span class="hljs-comment"># Enable IPIP</span>
+<span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span>
+<span class="hljs-comment">#   value: "off"</span>
+kubectl apply -f calico.yaml
+
 <span class="hljs-comment"># core-dns pod不再pending</span>
 
 kubeadm reset
@@ -369,7 +376,14 @@ kubectl -n kube-system edit cm kube-proxy
 <span class="hljs-comment"># mode: "ipvs"</span>
 kubectl get pod -n kube-system | grep kube-proxy | awk <span class="hljs-string">'&#123;system("kubectl delete pod "$1" -n kube-system")&#125;'</span> <span class="hljs-comment"># 重建kube-proxy的pod</span></code></pre></div>
 
-<h3 id="Calico-BGP模式重建"><a href="#Calico-BGP模式重建" class="headerlink" title="Calico BGP模式重建"></a>Calico BGP模式重建</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># TODO</span></code></pre></div>
+<h3 id="Calico-BGP模式重建"><a href="#Calico-BGP模式重建" class="headerlink" title="Calico BGP模式重建"></a>Calico BGP模式重建</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/kubernetes/installation/config-options</span>
+curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+<span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16</span>
+<span class="hljs-comment"># https://docs.projectcalico.org/reference/node/configuration</span>
+<span class="hljs-comment"># Enable IPIP</span>
+<span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span>
+<span class="hljs-comment">#   value: "Off"</span>
+kubectl apply -f calico.yaml</code></pre></div>
 
 <h3 id="Operations"><a href="#Operations" class="headerlink" title="Operations"></a>Operations</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## 切换默认namespace</span>
 kubectl config <span class="hljs-built_in">set</span>-context $(kubectl config current-context) --namespace=&lt;insert-namespace-name-here&gt;
@@ -386,7 +400,25 @@ docker ps --format <span class="hljs-string">"&#123;&#123;.ID&#125;&#125;\t&#123
 docker ps --filter <span class="hljs-string">"status=exited"</span>
 
 <span class="hljs-comment"># TODO</span>
-etcdctl</code></pre></div>
+<span class="hljs-comment">## etcdctl</span>
+
+<span class="hljs-comment">## Calicoctl</span>
+<span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span>
+curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
+mv calicoctl /usr/<span class="hljs-built_in">local</span>/bin/
+chmod a+x /usr/<span class="hljs-built_in">local</span>/bin/calicoctl
+
+vim /etc/calico/calicoctl.cfg
+apiVersion: projectcalico.org/v3
+kind: CalicoAPIConfig
+metadata:
+spec:
+  datastoreType: <span class="hljs-string">"kubernetes"</span>
+  kubeconfig: <span class="hljs-string">"/root/.kube/config"</span>
+
+calicoctl get nodes
+calicoctl node status
+calicoctl get ipPool -o yaml</code></pre></div>
 
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
 <li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
