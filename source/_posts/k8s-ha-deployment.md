@@ -15,24 +15,26 @@ system requirement
 
 <!-- more -->
 
-# 安装Aliyun YUM Repo
+### 安装Aliyun YUM Repo
+```bash
 ## https://developer.aliyun.com/mirror/
-
 
 ### base
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+
 ### epel
 mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
 mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
 wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
 
 
-### https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md
 # 安装必需软件
+### https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md
 yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git
+```
 
-# 优化内核参数
+### 优化内核参数
 ```bash
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables=1
@@ -58,9 +60,10 @@ EOF
 sysctl --system
 ```
 
-# 加载内核模块
-## https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md
+### IPVS加载内核模块
 ```bash
+## https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md
+
 vim /etc/sysconfig/modules/ipvs.modules
 #!/bin/bash
 modprobe -- ip_vs
@@ -69,20 +72,21 @@ modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
 modprobe -- nf_conntrack_ipv4
 ```
-modprobe br_netfilter
+> modprobe br_netfilter
 
-# SELinux
+### SELinux
+```bash
 setenforce 0
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+```
 
-# 关闭 swap 分区
+### 关闭 swap 分区
 ```bash
 swapoff -a
 sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 ```
 
-# 防火墙
-## 设置iptables默认转发策略
+### 设置iptables默认转发策略
 ```bash
 systemctl stop firewalld
 systemctl disable firewalld
@@ -90,13 +94,13 @@ iptables -F && iptables -X && iptables -F -t nat && iptables -X -t nat
 iptables -P FORWARD ACCEPT
 ```
 
-# 关闭无用服务
+### 关闭无用服务
 `systemctl stop postfix && systemctl disable postfix`
 
-# 安装Aliyun YUM Repo
+### 安装Aliyun YUM Repo
+```bash
 ## https://developer.aliyun.com/mirror/
 ### k8s
-```bash
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -154,11 +158,11 @@ systemctl status docker.service
 ```
 
 ### kubectl autocompletion
-https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion
+`https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion`
 
 
 ### kubeadm config
-vim kubeadm-config.yaml
+`vim kubeadm-config.yaml`
 ```yaml
 # kubeadm init --config kubeadm-config.yaml --upload-certs
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
@@ -236,5 +240,6 @@ etcdctl
 ```
 
 ### Reference
+- https://github.com/opsnull/follow-me-install-kubernetes-cluster
 - https://my.oschina.net/baobao/blog/3031712
 - https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml
