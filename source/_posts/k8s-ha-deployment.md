@@ -161,8 +161,11 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompl
 vim kubeadm-config.yaml
 ```yaml
 # kubeadm init --config kubeadm-config.yaml --upload-certs
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
+# https://storage.googleapis.com/kubernetes-release/release/stable.txt
+# kubernetesVersion: stable
 kubernetesVersion: v1.18.3
 controlPlaneEndpoint: <your-lb-ip>:<port>
 # apiServer:
@@ -190,6 +193,7 @@ mode: ipvs
 ### kubeadm deploy
 ```bash
 kubeadm init --config kubeadm-config.yaml --upload-certs
+kubeadm config images pull --config kubeadm-config.yaml # 先拉取镜像
 kubectl apply -f calico.yaml # 更改192.168.1.1为podSubnet: 172.30.0.0/16
 # core-dns pod不再pending
 
@@ -210,3 +214,27 @@ kubectl get pod -n kube-system | grep kube-proxy | awk '{system("kubectl delete 
 # TODO
 
 ```
+
+### Operations
+```bash
+## 切换默认namespace
+kubectl config set-context $(kubectl config current-context) --namespace=<insert-namespace-name-here>
+# Validate it
+kubectl config view | grep namespace
+
+# create registry secret
+kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xyz --docker-username=admin --docker-password=Admin@123 --docker-email=boer0924@gmail.com --namespace=boer-public
+
+kubectl drain $NODENAME
+kubectl uncordon $NODENAME
+
+docker ps --format "{{.ID}}\t{{.Command}}\t{{.Status}}\t{{.Ports}}"
+docker ps --filter "status=exited"
+
+# TODO
+etcdctl
+```
+
+### Reference
+- https://my.oschina.net/baobao/blog/3031712
+- https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml

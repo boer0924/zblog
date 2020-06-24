@@ -13,6 +13,9 @@ categories: DevOps
 
 ### python pip源
 ```bash
+# python3 编译安装依赖
+yum install zlib-devel libffi-devel openssl-devel
+
 ## https://pip.pypa.io/en/stable/user_guide/#config-file
 # 全局生效
 # Like-Unix(Linux)
