@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      978 字
+      996 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      19
        分钟
     </span>
   
@@ -208,10 +208,23 @@
 <p>system requirement<br>2C2G</p>
 <a id="more"></a>
 
-<h1 id="安装Aliyun-YUM-Repo"><a href="#安装Aliyun-YUM-Repo" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h1><h2 id="https-developer-aliyun-com-mirror"><a href="#https-developer-aliyun-com-mirror" class="headerlink" title="https://developer.aliyun.com/mirror/"></a><a href="https://developer.aliyun.com/mirror/" target="_blank" rel="noopener">https://developer.aliyun.com/mirror/</a></h2><h3 id="base"><a href="#base" class="headerlink" title="base"></a>base</h3><p>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup<br>curl -o /etc/yum.repos.d/CentOS-Base.repo <a href="https://mirrors.aliyun.com/repo/Centos-7.repo" target="_blank" rel="noopener">https://mirrors.aliyun.com/repo/Centos-7.repo</a></p>
-<h3 id="epel"><a href="#epel" class="headerlink" title="epel"></a>epel</h3><p>mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup<br>mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup<br>wget -O /etc/yum.repos.d/epel.repo <a href="http://mirrors.aliyun.com/repo/epel-7.repo" target="_blank" rel="noopener">http://mirrors.aliyun.com/repo/epel-7.repo</a></p>
-<h3 id="https-github-com-opsnull-follow-me-install-kubernetes-cluster-blob-master-01-E5-88-9D-E5-A7-8B-E5-8C-96-E7-B3-BB-E7-BB-9F-E5-92-8C-E5-85-A8-E5-B1-80-E5-8F-98-E9-87-8F-md"><a href="#https-github-com-opsnull-follow-me-install-kubernetes-cluster-blob-master-01-E5-88-9D-E5-A7-8B-E5-8C-96-E7-B3-BB-E7-BB-9F-E5-92-8C-E5-85-A8-E5-B1-80-E5-8F-98-E9-87-8F-md" class="headerlink" title="https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md"></a><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md</a></h3><h1 id="安装必需软件"><a href="#安装必需软件" class="headerlink" title="安装必需软件"></a>安装必需软件</h1><p>yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git</p>
-<h1 id="优化内核参数"><a href="#优化内核参数" class="headerlink" title="优化内核参数"></a>优化内核参数</h1><div class="hljs"><pre><code class="hljs bash">cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+<h3 id="安装Aliyun-YUM-Repo"><a href="#安装Aliyun-YUM-Repo" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span>
+
+<span class="hljs-comment">### base</span>
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+
+<span class="hljs-comment">### epel</span>
+mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
+mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+
+
+<span class="hljs-comment"># 安装必需软件</span>
+<span class="hljs-comment">### https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md</span>
+yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git</code></pre></div>
+
+<h3 id="优化内核参数"><a href="#优化内核参数" class="headerlink" title="优化内核参数"></a>优化内核参数</h3><div class="hljs"><pre><code class="hljs bash">cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
 net.ipv4.ip_forward=1
@@ -234,25 +247,33 @@ net.netfilter.nf_conntrack_max=2310720
 EOF
 sysctl --system</code></pre></div>
 
-<h1 id="加载内核模块"><a href="#加载内核模块" class="headerlink" title="加载内核模块"></a>加载内核模块</h1><h2 id="https-github-com-kubernetes-kubernetes-blob-master-pkg-proxy-ipvs-README-md"><a href="#https-github-com-kubernetes-kubernetes-blob-master-pkg-proxy-ipvs-README-md" class="headerlink" title="https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md"></a><a href="https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md</a></h2><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/modules/ipvs.modules
+<h3 id="IPVS加载内核模块"><a href="#IPVS加载内核模块" class="headerlink" title="IPVS加载内核模块"></a>IPVS加载内核模块</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md</span>
+
+vim /etc/sysconfig/modules/ipvs.modules
 <span class="hljs-meta">#!/bin/bash</span>
 modprobe -- ip_vs
 modprobe -- ip_vs_rr
 modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
 modprobe -- nf_conntrack_ipv4</code></pre></div>
+<blockquote>
 <p>modprobe br_netfilter</p>
-<h1 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h1><p>setenforce 0<br>sed -i ‘s/^SELINUX=.*/SELINUX=disabled/‘ /etc/selinux/config</p>
-<h1 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h1><div class="hljs"><pre><code class="hljs bash">swapoff -a
+</blockquote>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><div class="hljs"><pre><code class="hljs bash">setenforce 0
+sed -i <span class="hljs-string">'s/^SELINUX=.*/SELINUX=disabled/'</span> /etc/selinux/config</code></pre></div>
+
+<h3 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h3><div class="hljs"><pre><code class="hljs bash">swapoff -a
 sed -i <span class="hljs-string">'/ swap / s/^\(.*\)$/#\1/g'</span> /etc/fstab</code></pre></div>
 
-<h1 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h1><h2 id="设置iptables默认转发策略"><a href="#设置iptables默认转发策略" class="headerlink" title="设置iptables默认转发策略"></a>设置iptables默认转发策略</h2><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
+<h3 id="设置iptables默认转发策略"><a href="#设置iptables默认转发策略" class="headerlink" title="设置iptables默认转发策略"></a>设置iptables默认转发策略</h3><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
 systemctl <span class="hljs-built_in">disable</span> firewalld
 iptables -F &amp;&amp; iptables -X &amp;&amp; iptables -F -t nat &amp;&amp; iptables -X -t nat
 iptables -P FORWARD ACCEPT</code></pre></div>
 
-<h1 id="关闭无用服务"><a href="#关闭无用服务" class="headerlink" title="关闭无用服务"></a>关闭无用服务</h1><p><code>systemctl stop postfix &amp;&amp; systemctl disable postfix</code></p>
-<h1 id="安装Aliyun-YUM-Repo-1"><a href="#安装Aliyun-YUM-Repo-1" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h1><h2 id="https-developer-aliyun-com-mirror-1"><a href="#https-developer-aliyun-com-mirror-1" class="headerlink" title="https://developer.aliyun.com/mirror/"></a><a href="https://developer.aliyun.com/mirror/" target="_blank" rel="noopener">https://developer.aliyun.com/mirror/</a></h2><h3 id="k8s"><a href="#k8s" class="headerlink" title="k8s"></a>k8s</h3><div class="hljs"><pre><code class="hljs bash">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+<h3 id="关闭无用服务"><a href="#关闭无用服务" class="headerlink" title="关闭无用服务"></a>关闭无用服务</h3><p><code>systemctl stop postfix &amp;&amp; systemctl disable postfix</code></p>
+<h3 id="安装Aliyun-YUM-Repo-1"><a href="#安装Aliyun-YUM-Repo-1" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span>
+<span class="hljs-comment">### k8s</span>
+cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
@@ -304,8 +325,8 @@ systemctl start docker.service
 systemctl <span class="hljs-built_in">enable</span> docker.service
 systemctl status docker.service</code></pre></div>
 
-<h3 id="kubectl-autocompletion"><a href="#kubectl-autocompletion" class="headerlink" title="kubectl autocompletion"></a>kubectl autocompletion</h3><p><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion</a></p>
-<h3 id="kubeadm-config"><a href="#kubeadm-config" class="headerlink" title="kubeadm config"></a>kubeadm config</h3><p>vim kubeadm-config.yaml</p>
+<h3 id="kubectl-autocompletion"><a href="#kubectl-autocompletion" class="headerlink" title="kubectl autocompletion"></a>kubectl autocompletion</h3><p><code>https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion</code></p>
+<h3 id="kubeadm-config"><a href="#kubeadm-config" class="headerlink" title="kubeadm config"></a>kubeadm config</h3><p><code>vim kubeadm-config.yaml</code></p>
 <div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span>
 <span class="hljs-comment"># https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
@@ -368,6 +389,7 @@ docker ps --filter <span class="hljs-string">"status=exited"</span>
 etcdctl</code></pre></div>
 
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
 <li><a href="https://my.oschina.net/baobao/blog/3031712" target="_blank" rel="noopener">https://my.oschina.net/baobao/blog/3031712</a></li>
 <li><a href="https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml" target="_blank" rel="noopener">https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml</a></li>
 </ul>
