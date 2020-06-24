@@ -112,7 +112,7 @@ gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors
 EOF
 ```
 
-# 安装kube* & docker
+### 安装kube* & docker
 ```bash
 yum install -y kubelet kubeadm kubectl # 注意版本需要和镜像版本对应
 systemctl enable kubelet && systemctl start kubelet
@@ -242,4 +242,4 @@ etcdctl
 ### Reference
 - https://github.com/opsnull/follow-me-install-kubernetes-cluster
 - https://my.oschina.net/baobao/blog/3031712
-- https://www.cnblogs.com/breezey/p/11770780.html#%E9%85%8D%E7%BD%AEkubeadm-configyaml
+- https://kubernetes.io/zh/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/
