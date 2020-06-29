@@ -270,7 +270,7 @@ spec:
   kubeconfig: "/root/.kube/config"
 
 calicoctl get nodes
-calicoctl node status
+calicoctl node status # 查看calico运行模式
 calicoctl get ipPool -o yaml
 
 ```
