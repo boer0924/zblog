@@ -199,11 +199,13 @@ mode: ipvs
 kubeadm init --config kubeadm-config.yaml --upload-certs
 kubeadm config images pull --config kubeadm-config.yaml # 先拉取镜像
 curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
-# 更改CALICO_IPV4POOL_CIDR为podSubnet: 172.30.0.0/16
-# https://docs.projectcalico.org/reference/node/configuration
+# 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16
+# - name: CALICO_IPV4POOL_CIDR
+#   value: "172.30.0.0/16"
+# 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration
 # Enable IPIP
 # - name: CALICO_IPV4POOL_IPIP
-#   value: "off"
+#   value: "Never"
 kubectl apply -f calico.yaml
 
 # core-dns pod不再pending
@@ -225,10 +227,12 @@ kubectl get pod -n kube-system | grep kube-proxy | awk '{system("kubectl delete 
 # https://docs.projectcalico.org/archive/v3.14/getting-started/kubernetes/installation/config-options
 curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 # 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16
-# https://docs.projectcalico.org/reference/node/configuration
+# - name: CALICO_IPV4POOL_CIDR
+#   value: "172.30.0.0/16"
+# 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration
 # Enable IPIP
 # - name: CALICO_IPV4POOL_IPIP
-#   value: "Off"
+#   value: "Never"
 kubectl apply -f calico.yaml
 ```
 
