@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      146 字
+      273 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      4
        分钟
     </span>
   
@@ -232,7 +232,20 @@ vim /etc/security/limits.conf
 * soft nofile 102400
 * hard nofile 204800
 <span class="hljs-built_in">ulimit</span> -Sn
-<span class="hljs-built_in">ulimit</span> -Hn</code></pre></div>
+<span class="hljs-built_in">ulimit</span> -Hn
+
+<span class="hljs-comment"># nproc</span>
+<span class="hljs-comment">## nproc是操作系统级别对每个用户创建的进程数的限制, 在Linux下运行多线程时, 每个线程的实现其实是一个轻量级的进程, 对应的术语是light weight process(LWP)。</span>
+<span class="hljs-comment"># 查看所有用户创建的进程数,使用命令：</span>
+ps h -Led -o user | sort | uniq -c | sort -n
+<span class="hljs-comment"># 查看boer用户创建的进程数，使用命令:</span>
+ps -o nlwp,pid,lwp,args -u boer | sort -n
+
+vim /etc/security/limits.d/20-nproc.conf <span class="hljs-comment"># CentOS7</span>
+*          soft    nproc     65536
+root       soft    nproc     unlimited
+
+<span class="hljs-comment">##</span></code></pre></div>
 
 <h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul>
 <li>filebeat</li>
