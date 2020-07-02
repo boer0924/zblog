@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.4k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      25
+      26
        分钟
     </span>
   
@@ -401,13 +401,16 @@ kubectl drain <span class="hljs-variable">$NODENAME</span>
 kubectl uncordon <span class="hljs-variable">$NODENAME</span>
 
 docker ps --format <span class="hljs-string">"&#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Command&#125;&#125;\t&#123;&#123;.Status&#125;&#125;\t&#123;&#123;.Ports&#125;&#125;"</span>
-docker ps --filter <span class="hljs-string">"status=exited"</span>
+docker ps --filter <span class="hljs-string">"status=exited"</span></code></pre></div>
 
-<span class="hljs-comment"># TODO</span>
-<span class="hljs-comment">## etcdctl</span>
+<h4 id="etcdctl"><a href="#etcdctl" class="headerlink" title="etcdctl"></a>etcdctl</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://jimmysong.io/kubernetes-handbook/guide/using-etcdctl-to-access-kubernetes-data.html</span>
+curl -LO etcd-v3.4.3-linux-amd64.tar.gz
+<span class="hljs-built_in">alias</span> etcdctl=<span class="hljs-string">'etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key'</span>
+etcdctl get /registry/namespaces/kube-system -w=json | jq .
+etcdctl member list
+etcdctl <span class="hljs-built_in">help</span></code></pre></div>
 
-<span class="hljs-comment">## Calicoctl</span>
-<span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span>
+<h4 id="Calicoctl"><a href="#Calicoctl" class="headerlink" title="Calicoctl"></a>Calicoctl</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span>
 curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
 mv calicoctl /usr/<span class="hljs-built_in">local</span>/bin/
 chmod a+x /usr/<span class="hljs-built_in">local</span>/bin/calicoctl
@@ -422,10 +425,9 @@ spec:
 
 calicoctl get nodes
 calicoctl node status <span class="hljs-comment"># 查看calico运行模式</span>
-calicoctl get ipPool -o yaml
+calicoctl get ipPool -o yaml</code></pre></div>
 
-
-<span class="hljs-comment">## Helm v2安装 # https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</span>
+<h4 id="Helm-v2安装"><a href="#Helm-v2安装" class="headerlink" title="Helm v2安装"></a>Helm v2安装</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</span>
 curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz
 
 vim rbac-config.yaml
