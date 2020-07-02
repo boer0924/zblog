@@ -488,10 +488,10 @@ spec:
     app: theapp
 
 kubectl get svc <span class="hljs-comment"># curl -v EXTERNAL-IP</span></code></pre></div>
-<ul>
-<li>MetalLB (头等舱)<br><img src="/img/figure/metallb.jpg" srcset="/img/loading.gif" alt="metallb"><br>vs</li>
-<li>NodePort (经济舱)<br><img src="/img/figure/nodeport.jpg" srcset="/img/loading.gif" alt="nodeport"></li>
-</ul>
+<p>MetalLB (头等舱)<br><img src="/img/figure/metallb.jpg" srcset="/img/loading.gif" alt="metallb"></p>
+<center>vs</center>
+
+<p>NodePort (经济舱)<br><img src="/img/figure/nodeport.jpg" srcset="/img/loading.gif" alt="nodeport"></p>
 <h3 id="Ingress-Nginx-L7"><a href="#Ingress-Nginx-L7" class="headerlink" title="Ingress-Nginx L7"></a>Ingress-Nginx L7</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal</span>
 <span class="hljs-comment"># 更改controller-service的type: LoadBalancer(默认NodePort)</span>
 <span class="hljs-comment"># 添加MetalLB annotations</span>
