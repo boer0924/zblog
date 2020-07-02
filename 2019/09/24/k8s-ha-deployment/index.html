@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.3k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22
+      25
        分钟
     </span>
   
@@ -422,7 +422,41 @@ spec:
 
 calicoctl get nodes
 calicoctl node status <span class="hljs-comment"># 查看calico运行模式</span>
-calicoctl get ipPool -o yaml</code></pre></div>
+calicoctl get ipPool -o yaml
+
+
+<span class="hljs-comment">## Helm v2安装 # https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</span>
+curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz
+
+vim rbac-config.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+
+helm init --service-account tiller -i registry.aliyuncs.com/google_containers/tiller:v2.16.6
+
+helm repo list
+helm repo add stable https://mirror.azure.cn/kubernetes/charts
+helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
+
+helm repo update
+helm fetch stable/mysql <span class="hljs-comment"># 当前目录现在xxx.tgz</span>
+helm install stable/mysql</code></pre></div>
 
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
 <li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
