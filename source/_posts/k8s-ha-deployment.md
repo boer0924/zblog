@@ -350,10 +350,12 @@ spec:
 
 kubectl get svc # curl -v EXTERNAL-IP
 ```
-- MetalLB (头等舱)
+MetalLB (头等舱)
 ![metallb](/img/figure/metallb.jpg)
-vs
-- NodePort (经济舱)
+
+<center>vs</center>
+
+NodePort (经济舱)
 ![nodeport](/img/figure/nodeport.jpg)
 
 ### Ingress-Nginx L7
