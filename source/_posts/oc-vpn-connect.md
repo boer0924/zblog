@@ -120,6 +120,7 @@ ocpasswd -c /etc/ocserv/ocpasswd boer
 ### 4. 转发与安全配置
 - network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 
 - ocserv WAN interface 为eth0
+
 #### 4.1 修改内核配置
 ```bash
 vim /etc/sysctl.conf
@@ -181,7 +182,7 @@ systemcctl start iptables
 systemcctl enable iptables
 ```
 
-### 4.3 IPtables配置
+#### 4.3 IPtables配置
 ```bash 
 vim /etc/sysconfig/iptables
 # sample configuration for iptables service
@@ -275,7 +276,7 @@ COMMIT
 使之生效【重启机器后需要重新生效一下】
 iptables-restore < /etc/sysconfig/iptables
 
-### 5.ocserv Oops
+### 5. ocserv Oops
 ```bash
 # 添加用户
 ocpasswd -c /etc/ocserv/ocpasswd 【用户名】
@@ -301,7 +302,7 @@ occtl disconnect user 【用户名】
 occtl disconnect id 【id号】
 ```
 
-### 6 客户端
+### 6. 客户端
 #### 6.1 Redhat系
 ```
 https://copr.fedorainfracloud.org/coprs/dwmw2/openconnect/
