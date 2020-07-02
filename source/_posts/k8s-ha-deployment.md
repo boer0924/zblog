@@ -389,6 +389,9 @@ spec:
           servicePort: 5000
 ```
 
+### 模型概览
+![k8s-boer](/img/figure/k8s_network_outbound.jpg)
+
 ### Reference
 - https://github.com/opsnull/follow-me-install-kubernetes-cluster
 - https://my.oschina.net/baobao/blog/3031712
