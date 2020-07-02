@@ -118,8 +118,8 @@ ocpasswd -c /etc/ocserv/ocpasswd boer
 ```
 
 ### 4. 转发与安全配置
-network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 
-ocserv WAN interface 为eth0
+- network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 
+- ocserv WAN interface 为eth0
 #### 4.1 修改内核配置
 ```bash
 vim /etc/sysctl.conf
