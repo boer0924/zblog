@@ -380,7 +380,7 @@ metadata:
     nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri"
 spec:
   rules:
-  - host: theapp.boer..xyz
+  - host: theapp.boer.xyz
     http:
       paths:
       - path: /
