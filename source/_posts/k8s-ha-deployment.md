@@ -273,6 +273,39 @@ calicoctl get nodes
 calicoctl node status # 查看calico运行模式
 calicoctl get ipPool -o yaml
 
+
+## Helm v2安装 # https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/
+curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz
+
+vim rbac-config.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+
+helm init --service-account tiller -i registry.aliyuncs.com/google_containers/tiller:v2.16.6
+
+helm repo list
+helm repo add stable https://mirror.azure.cn/kubernetes/charts
+helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
+
+helm repo update
+helm fetch stable/mysql # 当前目录现在xxx.tgz
+helm install stable/mysql
 ```
 
 ### Reference
