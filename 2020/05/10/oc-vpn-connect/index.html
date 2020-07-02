@@ -300,7 +300,9 @@ ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre></div>
 
 <h3 id="4-转发与安全配置"><a href="#4-转发与安全配置" class="headerlink" title="4. 转发与安全配置"></a>4. 转发与安全配置</h3><ul>
 <li>network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 </li>
-<li>ocserv WAN interface 为eth0<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
+<li>ocserv WAN interface 为eth0</li>
+</ul>
+<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
 <span class="hljs-comment"># Protect from IP Spoofing</span>
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -347,15 +349,14 @@ net.ipv6.conf.all.accept_ra = 2
 net.ipv6.conf.eth0.accept_ra = 2
 
 net.ipv4.ip_forward = 1</code></pre></div>
-使之生效： sysctl -p</li>
-</ul>
+<p>使之生效： sysctl -p</p>
 <h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
 systemctl <span class="hljs-built_in">disable</span> firewalld
 yum install iptables 
 systemcctl start iptables
 systemcctl <span class="hljs-built_in">enable</span> iptables</code></pre></div>
 
-<h3 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h3><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/iptables
+<h4 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/iptables
 <span class="hljs-comment"># sample configuration for iptables service</span>
 <span class="hljs-comment"># you can edit this manually or use system-config-firewall</span>
 <span class="hljs-comment"># please do not ask us to add additional ports/services to this default configuration</span>
@@ -444,7 +445,7 @@ COMMIT
 <span class="hljs-comment"># END OUTPUT RULES</span>
 COMMIT</code></pre></div>
 <p>使之生效【重启机器后需要重新生效一下】<br>iptables-restore &lt; /etc/sysconfig/iptables</p>
-<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5.ocserv Oops"></a>5.ocserv Oops</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
+<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5. ocserv Oops"></a>5. ocserv Oops</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
 ocpasswd -c /etc/ocserv/ocpasswd 【用户名】
 <span class="hljs-comment"># 添加用户至某个分组</span>
 ocpasswd -c /etc/ocserv/ocpasswd -g 【分组名称】 【用户名】
@@ -467,7 +468,7 @@ occtl disconnect user 【用户名】
 <span class="hljs-comment">## 通过id:</span>
 occtl disconnect id 【id号】</code></pre></div>
 
-<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6 客户端"></a>6 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
+<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6. 客户端"></a>6. 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
 yum install openconnect
 openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>
 <h4 id="6-2-Windows-amp-MacOS"><a href="#6-2-Windows-amp-MacOS" class="headerlink" title="6.2 Windows &amp; MacOS"></a>6.2 Windows &amp; MacOS</h4><p><a href="https://github.com/openconnect/openconnect-gui" target="_blank" rel="noopener">https://github.com/openconnect/openconnect-gui</a></p>
