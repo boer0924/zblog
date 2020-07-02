@@ -251,11 +251,20 @@ kubectl uncordon $NODENAME
 
 docker ps --format "{{.ID}}\t{{.Command}}\t{{.Status}}\t{{.Ports}}"
 docker ps --filter "status=exited"
+```
 
-# TODO
-## etcdctl
+#### etcdctl
+```bash
+# https://jimmysong.io/kubernetes-handbook/guide/using-etcdctl-to-access-kubernetes-data.html
+curl -LO etcd-v3.4.3-linux-amd64.tar.gz
+alias etcdctl='etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key'
+etcdctl get /registry/namespaces/kube-system -w=json | jq .
+etcdctl member list
+etcdctl help
+```
 
-## Calicoctl
+#### Calicoctl
+```bash
 # https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/
 curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
 mv calicoctl /usr/local/bin/
@@ -272,9 +281,11 @@ spec:
 calicoctl get nodes
 calicoctl node status # 查看calico运行模式
 calicoctl get ipPool -o yaml
+```
 
-
-## Helm v2安装 # https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/
+#### Helm v2安装
+```bash
+# https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/
 curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz
 
 vim rbac-config.yaml
