@@ -298,8 +298,9 @@ user-profile = profile.xml
 <span class="hljs-comment"># 创建一个登陆用的用户名与密码</span>
 ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre></div>
 
-<h3 id="4-转发与安全配置"><a href="#4-转发与安全配置" class="headerlink" title="4. 转发与安全配置"></a>4. 转发与安全配置</h3><p>network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24<br>ocserv WAN interface 为eth0</p>
-<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
+<h3 id="4-转发与安全配置"><a href="#4-转发与安全配置" class="headerlink" title="4. 转发与安全配置"></a>4. 转发与安全配置</h3><ul>
+<li>network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 </li>
+<li>ocserv WAN interface 为eth0<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
 <span class="hljs-comment"># Protect from IP Spoofing</span>
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -346,7 +347,8 @@ net.ipv6.conf.all.accept_ra = 2
 net.ipv6.conf.eth0.accept_ra = 2
 
 net.ipv4.ip_forward = 1</code></pre></div>
-<p>使之生效： sysctl -p</p>
+使之生效： sysctl -p</li>
+</ul>
 <h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
 systemctl <span class="hljs-built_in">disable</span> firewalld
 yum install iptables 
