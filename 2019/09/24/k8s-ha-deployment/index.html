@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.5k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26
+      29
        分钟
     </span>
   
@@ -408,7 +408,11 @@ curl -LO etcd-v3.4.3-linux-amd64.tar.gz
 <span class="hljs-built_in">alias</span> etcdctl=<span class="hljs-string">'etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key'</span>
 etcdctl get /registry/namespaces/kube-system -w=json | jq .
 etcdctl member list
-etcdctl <span class="hljs-built_in">help</span></code></pre></div>
+etcdctl <span class="hljs-built_in">help</span>
+<span class="hljs-comment"># 备份</span>
+etcdctl snapshot save
+etcdctl snapshot status
+etcdctl snapshot restore</code></pre></div>
 
 <h4 id="Calicoctl"><a href="#Calicoctl" class="headerlink" title="Calicoctl"></a>Calicoctl</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span>
 curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
@@ -459,6 +463,62 @@ helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
 helm repo update
 helm fetch stable/mysql <span class="hljs-comment"># 当前目录现在xxx.tgz</span>
 helm install stable/mysql</code></pre></div>
+
+<h3 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 不让私有云用户成为K8S世界的二等公民</span>
+<span class="hljs-comment"># https://metallb.universe.tf/installation/</span>
+
+<span class="hljs-comment"># 用法demo</span>
+apiVersion: v1
+kind: Service
+metadata:
+  name: theapp-service
+  annotations:
+    metallb.universe.tf/address-pool: default
+  labels:
+    app: theapp
+spec:
+  <span class="hljs-built_in">type</span>: LoadBalancer
+  <span class="hljs-comment"># type: NodePort</span>
+  <span class="hljs-comment"># type: ClusterIP</span>
+  ports:
+  - port: 5000
+    targetPort: 5000
+    <span class="hljs-comment"># nodePort: 31090</span>
+  selector:
+    app: theapp
+
+kubectl get svc <span class="hljs-comment"># curl -v EXTERNAL-IP</span></code></pre></div>
+<ul>
+<li>MetalLB (头等舱)<br><img src="/img/figure/metallb.jpg" srcset="/img/loading.gif" alt="metallb"><br>vs</li>
+<li>NodePort (经济舱)<br><img src="/img/figure/nodeport.jpg" srcset="/img/loading.gif" alt="nodeport"></li>
+</ul>
+<h3 id="Ingress-Nginx-L7"><a href="#Ingress-Nginx-L7" class="headerlink" title="Ingress-Nginx L7"></a>Ingress-Nginx L7</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal</span>
+<span class="hljs-comment"># 更改controller-service的type: LoadBalancer(默认NodePort)</span>
+<span class="hljs-comment"># 添加MetalLB annotations</span>
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  <span class="hljs-built_in">type</span>: LoadBalancer
+
+<span class="hljs-comment"># 用法demo</span>
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: theapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/load-balance: <span class="hljs-string">"ip_hash"</span>
+    nginx.ingress.kubernetes.io/upstream-hash-by: <span class="hljs-string">"<span class="hljs-variable">$request_uri</span>"</span>
+spec:
+  rules:
+  - host: theapp.boer..xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: theapp-service
+          servicePort: 5000</code></pre></div>
 
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
 <li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
