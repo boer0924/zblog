@@ -261,6 +261,10 @@ alias etcdctl='etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kube
 etcdctl get /registry/namespaces/kube-system -w=json | jq .
 etcdctl member list
 etcdctl help
+# 备份
+etcdctl snapshot save
+etcdctl snapshot status
+etcdctl snapshot restore
 ```
 
 #### Calicoctl
@@ -317,6 +321,70 @@ helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
 helm repo update
 helm fetch stable/mysql # 当前目录现在xxx.tgz
 helm install stable/mysql
+```
+
+### MetalLB
+```bash
+# 不让私有云用户成为K8S世界的二等公民
+# https://metallb.universe.tf/installation/
+
+# 用法demo
+apiVersion: v1
+kind: Service
+metadata:
+  name: theapp-service
+  annotations:
+    metallb.universe.tf/address-pool: default
+  labels:
+    app: theapp
+spec:
+  type: LoadBalancer
+  # type: NodePort
+  # type: ClusterIP
+  ports:
+  - port: 5000
+    targetPort: 5000
+    # nodePort: 31090
+  selector:
+    app: theapp
+
+kubectl get svc # curl -v EXTERNAL-IP
+```
+- MetalLB (头等舱)
+![metallb](/img/figure/metallb.jpg)
+vs
+- NodePort (经济舱)
+![nodeport](/img/figure/nodeport.jpg)
+
+### Ingress-Nginx L7
+```bash
+# https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal
+# 更改controller-service的type: LoadBalancer(默认NodePort)
+# 添加MetalLB annotations
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  type: LoadBalancer
+
+# 用法demo
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: theapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/load-balance: "ip_hash"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri"
+spec:
+  rules:
+  - host: theapp.boer..xyz
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: theapp-service
+          servicePort: 5000
 ```
 
 ### Reference
