@@ -309,8 +309,12 @@ https://copr.fedorainfracloud.org/coprs/dwmw2/openconnect/
 yum install openconnect
 openconnect --user=boer -b x.x.x.x:xyz
 ```
+
 #### 6.2 Windows & MacOS
 https://github.com/openconnect/openconnect-gui
+
+#### 6.3 Android
+https://play.google.com/store/apps/details?id=com.github.digitalsoftwaresolutions.openconnect
 
 ---
 感谢我的同事zp
