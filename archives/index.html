@@ -160,12 +160,18 @@
                 
 
 <div class="list-group">
-  <p class="h4">共计 10 篇文章</p>
+  <p class="h4">共计 11 篇文章</p>
   <hr>
   
     
       
       <p class="h5">2020</p>
+    
+    <a href="/2020/06/18/theai-train/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">打破认知边界·融入未来世界</span>
+      <span style="float: right;">06-18</span>
+    </a>
+  
     
     <a href="/2020/05/10/oc-vpn-connect/" class="list-group-item list-group-item-action">
       <span class="archive-post-title">Openconnect VPN</span>
@@ -210,7 +216,7 @@
   
     
     <a href="/2018/01/18/closewait-timewait/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">TCP - CLOSE_WAIT &amp; TIME_WAIT</span>
+      <span class="archive-post-title">CLOSE_WAIT &amp; TIME_WAIT</span>
       <span style="float: right;">01-18</span>
     </a>
   
@@ -229,13 +235,19 @@
       <span style="float: right;">06-14</span>
     </a>
   
-    
-    <a href="/2012/05/26/the-university-the-dream/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">大学，梦起航</span>
-      <span style="float: right;">05-26</span>
-    </a>
-  
 </div>
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
