@@ -192,6 +192,10 @@ dns:
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
 mode: ipvs
+
+## 自定义CA
+# https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/
+# This means you can, for example, copy an existing CA into /etc/kubernetes/pki/ca.crt and /etc/kubernetes/pki/ca.key, and kubeadm will use this CA for signing the rest of the certificates
 ```
 
 ### kubeadm deploy
