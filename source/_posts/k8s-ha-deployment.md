@@ -165,6 +165,7 @@ systemctl status docker.service
 `vim kubeadm-config.yaml`
 ```yaml
 # kubeadm init --config kubeadm-config.yaml --upload-certs
+# kubeadm config print init-defaults
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
@@ -172,15 +173,12 @@ kind: ClusterConfiguration
 # kubernetesVersion: stable
 kubernetesVersion: v1.18.3
 controlPlaneEndpoint: <your-lb-ip>:<port>
-# apiServer:
-#   extraArgs:
-#     anonymous-auth: "false"
-# controllerManager:
-#   extraArgs:
-#     bind-address: 0.0.0.0
-# scheduler:
-#   extraArgs:
-#     address: 0.0.0.0
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+apiServer:
+  timeoutForControlPlane: 4m0s
+controllerManager: {}
+scheduler: {}
 imageRepository: registry.aliyuncs.com/google_containers
 networking:
   dnsDomain: cluster.local
@@ -188,6 +186,9 @@ networking:
   serviceSubnet: 10.96.0.0/12
 dns:
   type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
