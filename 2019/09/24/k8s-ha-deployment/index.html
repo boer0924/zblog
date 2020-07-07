@@ -328,6 +328,7 @@ systemctl status docker.service</code></pre></div>
 <h3 id="kubectl-autocompletion"><a href="#kubectl-autocompletion" class="headerlink" title="kubectl autocompletion"></a>kubectl autocompletion</h3><p><code>https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion</code></p>
 <h3 id="kubeadm-config"><a href="#kubeadm-config" class="headerlink" title="kubeadm config"></a>kubeadm config</h3><p><code>vim kubeadm-config.yaml</code></p>
 <div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span>
+<span class="hljs-comment"># kubeadm config print init-defaults</span>
 <span class="hljs-comment"># https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
@@ -335,15 +336,12 @@ systemctl status docker.service</code></pre></div>
 <span class="hljs-comment"># kubernetesVersion: stable</span>
 <span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span>
 <span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">&lt;your-lb-ip&gt;:&lt;port&gt;</span>
-<span class="hljs-comment"># apiServer:</span>
-<span class="hljs-comment">#   extraArgs:</span>
-<span class="hljs-comment">#     anonymous-auth: "false"</span>
-<span class="hljs-comment"># controllerManager:</span>
-<span class="hljs-comment">#   extraArgs:</span>
-<span class="hljs-comment">#     bind-address: 0.0.0.0</span>
-<span class="hljs-comment"># scheduler:</span>
-<span class="hljs-comment">#   extraArgs:</span>
-<span class="hljs-comment">#     address: 0.0.0.0</span>
+<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
+<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
+<span class="hljs-attr">apiServer:</span>
+  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span>
+<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
 <span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
 <span class="hljs-attr">networking:</span>
   <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
@@ -351,6 +349,9 @@ systemctl status docker.service</code></pre></div>
   <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
 <span class="hljs-attr">dns:</span>
   <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
+<span class="hljs-attr">etcd:</span>
+  <span class="hljs-attr">local:</span>
+    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
 <span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
