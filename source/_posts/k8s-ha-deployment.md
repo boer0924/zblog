@@ -165,6 +165,7 @@ systemctl status docker.service
 `vim kubeadm-config.yaml`
 ```yaml
 # kubeadm init --config kubeadm-config.yaml --upload-certs
+# kubeadm config print init-defaults
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
@@ -172,15 +173,12 @@ kind: ClusterConfiguration
 # kubernetesVersion: stable
 kubernetesVersion: v1.18.3
 controlPlaneEndpoint: <your-lb-ip>:<port>
-# apiServer:
-#   extraArgs:
-#     anonymous-auth: "false"
-# controllerManager:
-#   extraArgs:
-#     bind-address: 0.0.0.0
-# scheduler:
-#   extraArgs:
-#     address: 0.0.0.0
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+apiServer:
+  timeoutForControlPlane: 4m0s
+controllerManager: {}
+scheduler: {}
 imageRepository: registry.aliyuncs.com/google_containers
 networking:
   dnsDomain: cluster.local
@@ -188,6 +186,9 @@ networking:
   serviceSubnet: 10.96.0.0/12
 dns:
   type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
@@ -391,6 +392,84 @@ spec:
         backend:
           serviceName: theapp-service
           servicePort: 5000
+```
+
+### 安装Harbor在K8S之上
+```bash
+## https://www.qikqiak.com/post/harbor-quick-install/
+~/k8s/charts
+helm repo add harbor https://helm.goharbor.io
+helm fetch harbor/harbor --version 1.3.2
+tar -zxf harbor-1.3.2.tgz
+
+vim harbor/values.yaml
+expose:
+  type: ingress
+  tls:
+    enabled: true
+  ingress:
+    hosts:
+      core: registry.boer.xyz
+      notary: notary.boer.xyz
+    controller: default
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      ingress.kubernetes.io/ssl-redirect: "true"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+externalURL: https://registry.boer.xyz
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: "openebs-hostpath"
+    chartmuseum:
+      storageClass: "openebs-hostpath"
+    jobservice:
+      storageClass: "openebs-hostpath"
+    database:
+      storageClass: "openebs-hostpath"
+    redis:
+      storageClass: "openebs-hostpath"
+harborAdminPassword: "<your-secret-password>"
+
+helm list
+helm install --name harbor -f values.yaml . --namespace harbor
+helm upgrade -f values.yaml harbor . --namespace harbor
+helm delete --purge harbor
+helm status harbor
+
+kubectl -n harbor delete pvc $(kubectl -n harbor get pvc | grep harbor | awk '{print $1}')
+
+kubectl get secret harbor-harbor-ingress -n kube-ops -o yaml
+# 其中 data 区域中 ca.crt 对应的值就是我们需要证书，不过需要注意还需要做一个 base64 的解码，这样证书配置上以后就可以正常访问了。
+# 保存data区域ca.crt内容到ca.crt
+mkdir -p /etc/docker/certs.d/registry.boer.xyz
+cp ca.crt /etc/docker/certs.d/registry.boer.xyz # 所有node均需配置
+docker login registry.boer.xyz
+docker tag mysql:5.7 registry.boer.xyz/public/mysql:5.7
+docker push registry.boer.xyz/public/mysql:5.7
+
+# hosts
+ansible k8s -m lineinfile -a "dest=/etc/hosts line='10.10.253.17 registry.boer.xyz'"
+
+kubectl create secret docker-registry boer-registry --docker-server=registry.boer.xyz --docker-username=deployer --docker-password=<your-password> --docker-email=boer0924@gmail.com --namespace=boer-public
+
+# 用法demo
+apiVersion: apps/v1
+kind: Deployment
+template:
+  spec:
+    containers:
+    - name: theapp
+      image: registry.boer.xyz/public/theapp:0.0.1
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 5000
+    imagePullSecrets:
+    - name: boer-registry
 ```
 
 ### 模型概览
