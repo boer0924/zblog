@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2.2k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      36
+      40
        分钟
     </span>
   
@@ -355,7 +355,11 @@ systemctl status docker.service</code></pre></div>
 <span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
-<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span></code></pre></div>
+<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span>
+
+<span class="hljs-comment">## 自定义CA</span>
+<span class="hljs-comment"># https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/</span>
+<span class="hljs-comment"># This means you can, for example, copy an existing CA into /etc/kubernetes/pki/ca.crt and /etc/kubernetes/pki/ca.key, and kubeadm will use this CA for signing the rest of the certificates</span></code></pre></div>
 
 <h3 id="kubeadm-deploy"><a href="#kubeadm-deploy" class="headerlink" title="kubeadm deploy"></a>kubeadm deploy</h3><div class="hljs"><pre><code class="hljs bash">kubeadm init --config kubeadm-config.yaml --upload-certs
 kubeadm config images pull --config kubeadm-config.yaml <span class="hljs-comment"># 先拉取镜像</span>
@@ -401,6 +405,8 @@ kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xy
 kubectl drain <span class="hljs-variable">$NODENAME</span>
 kubectl uncordon <span class="hljs-variable">$NODENAME</span>
 
+<span class="hljs-comment"># https://docs.docker.com/engine/reference/commandline/ps/#filtering</span>
+docker rm $(docker ps -a -f status=exited -q)
 docker ps --format <span class="hljs-string">"&#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Command&#125;&#125;\t&#123;&#123;.Status&#125;&#125;\t&#123;&#123;.Ports&#125;&#125;"</span>
 docker ps --filter <span class="hljs-string">"status=exited"</span></code></pre></div>
 
@@ -595,6 +601,27 @@ template:
       - containerPort: 5000
     imagePullSecrets:
     - name: boer-registry</code></pre></div>
+
+<h3 id="监控Prometheus"><a href="#监控Prometheus" class="headerlink" title="监控Prometheus"></a>监控Prometheus</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</span>
+<span class="hljs-comment">## </span>
+<span class="hljs-built_in">cd</span> ~/k8s
+git <span class="hljs-built_in">clone</span> https://github.com/coreos/kube-prometheus.git
+<span class="hljs-built_in">cd</span> kube-prometheus
+sed -i -e <span class="hljs-string">'s_quay.io_quay.mirrors.ustc.edu.cn_'</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span>
+
+kubectl apply -f manifests/setup <span class="hljs-comment"># 安装 prometheus-operator</span>
+kubectl apply -f manifests/ <span class="hljs-comment"># 安装 promethes metric adapter</span>
+
+
+<span class="hljs-comment"># https://blog.csdn.net/gui951753/article/details/106160427</span>
+kubectl proxy &amp;
+NAMESPACE=<span class="hljs-built_in">local</span>
+kubectl get namespace <span class="hljs-variable">$NAMESPACE</span> -o json |jq <span class="hljs-string">'.spec = &#123;"finalizers":[]&#125;'</span> &gt;temp.json
+curl -k -H <span class="hljs-string">"Content-Type: application/json"</span> -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/<span class="hljs-variable">$NAMESPACE</span>/finalize
+
+<span class="hljs-comment"># https://github.com/rancher/rancher/issues/14715#issuecomment-430194650</span>
+kubectl get customresourcedefinitions | grep cattle.io | awk <span class="hljs-string">'&#123;print $1&#125;'</span> | xargs kubectl delete customresourcedefinitions</code></pre></div>
+
 
 <h3 id="模型概览"><a href="#模型概览" class="headerlink" title="模型概览"></a>模型概览</h3><p><img src="/img/figure/k8s_network_outbound.jpg" srcset="/img/loading.gif" alt="k8s-boer"></p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
