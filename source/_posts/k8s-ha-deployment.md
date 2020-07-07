@@ -254,6 +254,8 @@ kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xy
 kubectl drain $NODENAME
 kubectl uncordon $NODENAME
 
+# https://docs.docker.com/engine/reference/commandline/ps/#filtering
+docker rm $(docker ps -a -f status=exited -q)
 docker ps --format "{{.ID}}\t{{.Command}}\t{{.Status}}\t{{.Ports}}"
 docker ps --filter "status=exited"
 ```
@@ -471,6 +473,30 @@ template:
     imagePullSecrets:
     - name: boer-registry
 ```
+
+### 监控Prometheus
+```bash
+## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md
+## 
+cd ~/k8s
+git clone https://github.com/coreos/kube-prometheus.git
+cd kube-prometheus
+sed -i -e 's_quay.io_quay.mirrors.ustc.edu.cn_' manifests/*.yaml manifests/setup/*.yaml # quay.mirrors.ustc.edu.cn源
+
+kubectl apply -f manifests/setup # 安装 prometheus-operator
+kubectl apply -f manifests/ # 安装 promethes metric adapter
+
+
+# https://blog.csdn.net/gui951753/article/details/106160427
+kubectl proxy &
+NAMESPACE=local
+kubectl get namespace $NAMESPACE -o json |jq '.spec = {"finalizers":[]}' >temp.json
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$NAMESPACE/finalize
+
+# https://github.com/rancher/rancher/issues/14715#issuecomment-430194650
+kubectl get customresourcedefinitions | grep cattle.io | awk '{print $1}' | xargs kubectl delete customresourcedefinitions
+```
+
 
 ### 模型概览
 ![k8s-boer](/img/figure/k8s_network_outbound.jpg)
