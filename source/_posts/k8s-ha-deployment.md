@@ -251,6 +251,10 @@ kubectl config view | grep namespace
 # create registry secret
 kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xyz --docker-username=admin --docker-password=Admin@123 --docker-email=boer0924@gmail.com --namespace=boer-public
 
+# join node
+kubeadm token list
+kubeadm token create --print-join-command
+
 kubectl drain $NODENAME
 kubectl uncordon $NODENAME
 
@@ -495,6 +499,8 @@ curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.
 
 # https://github.com/rancher/rancher/issues/14715#issuecomment-430194650
 kubectl get customresourcedefinitions | grep cattle.io | awk '{print $1}' | xargs kubectl delete customresourcedefinitions
+
+Grafana@12345
 ```
 
 
@@ -503,5 +509,4 @@ kubectl get customresourcedefinitions | grep cattle.io | awk '{print $1}' | xarg
 
 ### Reference
 - https://github.com/opsnull/follow-me-install-kubernetes-cluster
-- https://my.oschina.net/baobao/blog/3031712
-- https://kubernetes.io/zh/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/
+- https://www.qikqiak.com/k8strain
