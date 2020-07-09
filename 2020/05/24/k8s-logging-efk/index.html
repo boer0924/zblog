@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="念念不忘 必有回响">
+  <meta name="author" content="boer">
+  <meta name="keywords" content="新基建, 数字化, Bigdata, 5G, AI, Cloud, Java, Golang, Linux, Ansible, Kubernetes, DevOps, Middleware">
+  <title>Kubernetes日志系统EFK · ~·boer·~ 乌托邦</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-05-24 10:16">
+      2020年5月24日 上午
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>Elasticsearch + Filebeat + Kibana = EFK<br>F: it’s not Fluentd</p>
+<ul>
+<li>Fluentd需要学习配置语法, Filebeat相对熟悉</li>
+</ul>
+<p><a href="https://github.com/elastic/helm-charts" target="_blank" rel="noopener">https://github.com/elastic/helm-charts</a></p>
+<a id="more"></a>
+
+<h3 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h3><ul>
+<li>Helm &gt;=2.8.0 and &lt;3.0.0</li>
+<li>Kubernetes &gt;=1.8</li>
+<li>3 Work-node</li>
+<li>1GB of RAM for the JVM heap</li>
+</ul>
+<h3 id="Helm-Charts"><a href="#Helm-Charts" class="headerlink" title="Helm Charts"></a>Helm Charts</h3><div class="hljs"><pre><code class="hljs bash">helm repo add elastic https://helm.elastic.co
+helm repo update
+
+<span class="hljs-built_in">cd</span> ~/k8s/helm/charts
+
+helm search elasticsearch --version 7.6.2
+helm search filebeat --version 7.6.2
+helm search kibana --version 7.6.2
+
+helm fetch elastic/elasticsearch --version 7.6.2
+helm fetch elastic/filebeat --version 7.6.2
+helm fetch elastic/kibana --version 7.6.2
+
+tar -zxf elasticsearch-7.6.2.tgz
+tar -zxf filebeat-7.6.2.tgz
+tar -zxf kibana-7.6.2.tgz
+
+<span class="hljs-comment"># 安装</span>
+helm install --name elasticsearch -f values.yaml . --namespace logging
+helm install --name filebeat -f values.yaml . --namespace logging
+helm install --name kibana -f values.yaml . --namespace logging
+<span class="hljs-comment"># 更新</span>
+helm upgrade -f values.yaml elasticsearch . --namespace logging
+helm upgrade -f values.yaml filebeat . --namespace logging
+helm upgrade -f values.yaml kibana . --namespace logging
+<span class="hljs-comment"># 删除</span>
+helm delete --purge elasticsearch
+helm delete --purge filebeat
+helm delete --purge kibana
+<span class="hljs-comment"># 删除es-pvc *仅测试</span>
+kubectl -n logging delete pvc -l app=elasticsearch-logging</code></pre></div>
+
+<h3 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h3><h4 id="创建CA证书"><a href="#创建CA证书" class="headerlink" title="创建CA证书"></a>创建CA证书</h4><div class="hljs"><pre><code class="hljs bash">curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-linux-x86_64.tar.gz
+tar -zxf elasticsearch-7.6.2-linux-x86_64.tar.gz
+<span class="hljs-built_in">cd</span> elasticsearch-7.6.2
+<span class="hljs-comment"># 生成RootCA</span>
+bin/elasticsearch-certutil ca --days 36500 <span class="hljs-comment"># elastic-stack-ca.p12</span>
+<span class="hljs-comment"># 签发证书</span>
+bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12 --days 36500 <span class="hljs-comment"># elastic-certificates.p12</span>
+
+<span class="hljs-comment"># 转换证书、验证有效期</span>
+openssl pkcs12 -<span class="hljs-keyword">in</span> elastic-certificates.p12 -out elastic-certificates.pem -nodes
+openssl x509 -<span class="hljs-keyword">in</span> elastic-certificates.pem -noout -dates
+
+<span class="hljs-comment"># CA secret</span>
+kubectl -n logging create secret generic elastic-certificates --from-file=elastic-certificates.p12
+<span class="hljs-comment"># 挂载secret</span>
+<span class="hljs-comment">## 详见下面values.yaml</span>
+secretMounts:
+  - name: elastic-certificates
+    secretName: elastic-certificates
+    path: /usr/share/elasticsearch/config/certs
+<span class="hljs-comment"># 使用CA</span>
+<span class="hljs-comment">## 详见下面values.yaml</span>
+xpack.security.enabled: <span class="hljs-literal">true</span>
+xpack.security.transport.ssl.enabled: <span class="hljs-literal">true</span>
+xpack.security.transport.ssl.verification_mode: certificate 
+xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
+xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</code></pre></div>
+<h4 id="Elasticsearch-Helm-Values配置"><a href="#Elasticsearch-Helm-Values配置" class="headerlink" title="Elasticsearch Helm Values配置"></a>Elasticsearch Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim values.yaml</span>
+<span class="hljs-attr">clusterName:</span> <span class="hljs-string">"elasticsearch"</span>
+<span class="hljs-attr">nodeGroup:</span> <span class="hljs-string">"logging"</span>
+<span class="hljs-comment"># The service that non master groups will try to connect to when joining the cluster</span>
+<span class="hljs-comment"># This should be set to clusterName + "-" + nodeGroup for your master group</span>
+<span class="hljs-attr">masterService:</span> <span class="hljs-string">"elasticsearch-logging"</span>
+<span class="hljs-attr">esConfig:</span>
+  <span class="hljs-attr">elasticsearch.yml:</span> <span class="hljs-string">|</span>
+    <span class="hljs-attr">xpack.security.enabled:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 开启xpack.security, 所以需要下面ssl证书, 所以需要下面extraEnvs</span>
+    <span class="hljs-attr">xpack.security.transport.ssl.enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">xpack.security.transport.ssl.verification_mode:</span> <span class="hljs-string">certificate</span>
+    <span class="hljs-attr">xpack.security.transport.ssl.keystore.path:</span> <span class="hljs-string">certs/elastic-certificates.p12</span>
+    <span class="hljs-attr">xpack.security.transport.ssl.truststore.path:</span> <span class="hljs-string">certs/elastic-certificates.p12</span>
+    <span class="hljs-attr">xpack.monitoring.enabled:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 开启xpack.monitoring监控</span>
+    <span class="hljs-attr">xpack.monitoring.collection.enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">xpack.monitoring.exporters.my_local:</span> <span class="hljs-comment"># 监控数据export当前集群。用自己监控自己, not最佳实践</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">local</span>
+      <span class="hljs-attr">use_ingest:</span> <span class="hljs-literal">false</span>
+<span class="hljs-attr">extraEnvs:</span> <span class="hljs-comment"># 不安全。应该使用secrets存储密码 @TODO</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ELASTIC_USERNAME</span>
+    <span class="hljs-attr">value:</span> <span class="hljs-string">"elastic"</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ELASTIC_PASSWORD</span>
+    <span class="hljs-attr">value:</span> <span class="hljs-string">"123456"</span>
+<span class="hljs-attr">secretMounts:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">elastic-certificates</span>
+    <span class="hljs-attr">secretName:</span> <span class="hljs-string">elastic-certificates</span>
+    <span class="hljs-attr">path:</span> <span class="hljs-string">/usr/share/elasticsearch/config/certs</span>
+<span class="hljs-attr">esJavaOpts:</span> <span class="hljs-string">"-Xmx1g -Xms1g"</span> <span class="hljs-comment"># es heapsize</span>
+<span class="hljs-attr">resources:</span>
+  <span class="hljs-attr">requests:</span>
+    <span class="hljs-attr">cpu:</span> <span class="hljs-string">"1000m"</span>
+    <span class="hljs-attr">memory:</span> <span class="hljs-string">"2Gi"</span>
+  <span class="hljs-attr">limits:</span>
+    <span class="hljs-attr">cpu:</span> <span class="hljs-string">"1000m"</span>
+    <span class="hljs-attr">memory:</span> <span class="hljs-string">"2Gi"</span>
+<span class="hljs-attr">volumeClaimTemplate:</span>
+  <span class="hljs-attr">accessModes:</span> <span class="hljs-string">[</span> <span class="hljs-string">"ReadWriteOnce"</span> <span class="hljs-string">]</span>
+  <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">"openebs-hostpath"</span> <span class="hljs-comment"># StorageClass # 建议LocalPV 性能好</span>
+  <span class="hljs-attr">resources:</span>
+    <span class="hljs-attr">requests:</span>
+      <span class="hljs-attr">storage:</span> <span class="hljs-string">200Gi</span>
+<span class="hljs-attr">clusterHealthCheckParams:</span> <span class="hljs-string">"wait_for_status=green&amp;timeout=3s"</span> <span class="hljs-comment"># readinessProbe</span>
+<span class="hljs-attr">ingress:</span> <span class="hljs-comment"># 是否Ingress暴露</span>
+  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">annotations:</span>
+    <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">nginx</span>
+  <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
+  <span class="hljs-attr">hosts:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch.boer.xyz</span></code></pre></div>
+
+<h3 id="Filebeat"><a href="#Filebeat" class="headerlink" title="Filebeat"></a>Filebeat</h3><h4 id="Filebeat-Helm-Values配置"><a href="#Filebeat-Helm-Values配置" class="headerlink" title="Filebeat Helm Values配置"></a>Filebeat Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
+<span class="hljs-attr">filebeatConfig:</span>
+  <span class="hljs-attr">filebeat.yml:</span> <span class="hljs-string">|</span>
+    <span class="hljs-attr">filebeat.inputs:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">docker</span>
+      <span class="hljs-attr">containers.ids:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">'*'</span>
+    <span class="hljs-attr">processors:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">add_kubernetes_metadata:</span> <span class="hljs-string">~</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">drop_fields:</span> <span class="hljs-comment"># drop掉不需要的字段</span>
+          <span class="hljs-attr">fields:</span> <span class="hljs-string">["ecs",</span> <span class="hljs-string">"log"</span><span class="hljs-string">,</span> <span class="hljs-string">"input"</span><span class="hljs-string">,</span> <span class="hljs-string">"agent"</span><span class="hljs-string">]</span> <span class="hljs-comment"># 缩进很重要</span>
+          <span class="hljs-attr">ignore_missing:</span> <span class="hljs-literal">false</span>
+    
+    <span class="hljs-attr">setup.template.name:</span> <span class="hljs-string">"kube-logging-template"</span>
+    <span class="hljs-attr">setup.template.pattern:</span> <span class="hljs-string">"kube-logging*"</span>
+    <span class="hljs-attr">setup.ilm.enabled:</span> <span class="hljs-literal">false</span> <span class="hljs-comment"># fix输出到filebeat-&lt;version&gt; &#123;now/d&#125;-000001, BUG?</span>
+
+    <span class="hljs-attr">output.elasticsearch:</span>
+      <span class="hljs-attr">host:</span> <span class="hljs-string">'$&#123;NODE_NAME&#125;'</span>
+      <span class="hljs-attr">hosts:</span> <span class="hljs-string">'$&#123;ELASTICSEARCH_HOSTS:elasticsearch-logging:9200&#125;'</span> <span class="hljs-comment"># es-svc:9200</span>
+      <span class="hljs-attr">index:</span> <span class="hljs-string">"kube-logging"</span> <span class="hljs-comment"># iLM管理的alias</span>
+      <span class="hljs-comment"># index: "kube-logging-%&#123;+yyyy.MM.dd&#125;"</span>
+      <span class="hljs-attr">username:</span> <span class="hljs-string">"elastic"</span>
+      <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span></code></pre></div>
+
+<h3 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h3><h4 id="Kibana-Helm-Values配置"><a href="#Kibana-Helm-Values配置" class="headerlink" title="Kibana Helm Values配置"></a>Kibana Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearchHosts:</span> <span class="hljs-string">"http://elasticsearch-logging:9200"</span>
+<span class="hljs-attr">extraEnvs:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">"NODE_OPTIONS"</span>
+    <span class="hljs-attr">value:</span> <span class="hljs-string">"--max-old-space-size=1800"</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ELASTICSEARCH_USERNAME</span>
+    <span class="hljs-attr">value:</span> <span class="hljs-string">"elastic"</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ELASTICSEARCH_PASSWORD</span>
+    <span class="hljs-attr">value:</span> <span class="hljs-string">"123456"</span>
+<span class="hljs-attr">healthCheckPath:</span> <span class="hljs-string">"/app/kibana"</span>
+<span class="hljs-comment"># healthCheckPath: "/api/status" # readinessProbe搞死你</span>
+<span class="hljs-attr">kibanaConfig:</span> <span class="hljs-comment"># exec进pod发现默认配置文件错误</span>
+  <span class="hljs-attr">kibana.yml:</span> <span class="hljs-string">|</span>
+    <span class="hljs-attr">elasticsearch:</span>
+      <span class="hljs-attr">hosts:</span> <span class="hljs-string">[</span> <span class="hljs-string">"http://elasticsearch-logging:9200"</span> <span class="hljs-string">]</span>
+      <span class="hljs-attr">username:</span> <span class="hljs-string">"elastic"</span>
+      <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span>
+<span class="hljs-attr">ingress:</span>
+  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">annotations:</span>
+    <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">nginx</span>
+    <span class="hljs-comment"># kubernetes.io/tls-acme: "true"</span>
+  <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
+  <span class="hljs-attr">hosts:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">logging.boer.xyz</span>
+  <span class="hljs-attr">tls:</span> <span class="hljs-string">[]</span></code></pre></div>
+<h4 id="Kibana-Pod-readinessProbe"><a href="#Kibana-Pod-readinessProbe" class="headerlink" title="Kibana Pod readinessProbe"></a>Kibana Pod readinessProbe</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-function"><span class="hljs-title">http</span></span> () &#123;
+    <span class="hljs-built_in">local</span> path=<span class="hljs-string">"<span class="hljs-variable">$&#123;1&#125;</span>"</span>
+    <span class="hljs-built_in">set</span> -- -XGET -s --fail
+
+    <span class="hljs-keyword">if</span> [ -n <span class="hljs-string">"<span class="hljs-variable">$&#123;ELASTICSEARCH_USERNAME&#125;</span>"</span> ] &amp;&amp; [ -n <span class="hljs-string">"<span class="hljs-variable">$&#123;ELASTICSEARCH_PASSWORD&#125;</span>"</span> ]; <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">set</span> -- <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span> -u <span class="hljs-string">"<span class="hljs-variable">$&#123;ELASTICSEARCH_USERNAME&#125;</span>:<span class="hljs-variable">$&#123;ELASTICSEARCH_PASSWORD&#125;</span>"</span>
+    <span class="hljs-keyword">fi</span>
+
+    STATUS=$(curl --output /dev/null --write-out <span class="hljs-string">"%&#123;http_code&#125;"</span> -k <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span> <span class="hljs-string">"http://localhost:5601<span class="hljs-variable">$&#123;path&#125;</span>"</span>)
+    <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$&#123;STATUS&#125;</span>"</span> -eq 200 ]]; <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">exit</span> 0
+    <span class="hljs-keyword">fi</span>
+
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: Got HTTP code <span class="hljs-variable">$&#123;STATUS&#125;</span> but expected a 200"</span>
+    <span class="hljs-built_in">exit</span> 1
+&#125;
+<span class="hljs-comment"># 解析后的命令</span>
+curl -XGET -s --fail --output /dev/null --write-out <span class="hljs-string">"%&#123;http_code&#125;"</span> -k -u elastic:123456 http://localhost:5601/app/kibana
+<span class="hljs-comment"># exec进pod curl一下</span>
+<span class="hljs-comment"># ready否，请10min再下结论 ***</span></code></pre></div>
+
+<h3 id="iLM管理索引生命周期"><a href="#iLM管理索引生命周期" class="headerlink" title="iLM管理索引生命周期"></a>iLM管理索引生命周期</h3><div class="hljs"><pre><code class="hljs bash">GET _cluster/health
+GET _cat/indices
+<span class="hljs-comment"># iLM策略, 50gb/1d切割, 2d: forcemerge, 5d: freeze, 10d: 删除</span>
+PUT _ilm/policy/kube-logging-policy   
+&#123;
+  <span class="hljs-string">"policy"</span>: &#123;                       
+    <span class="hljs-string">"phases"</span>: &#123;
+      <span class="hljs-string">"hot"</span>: &#123;                      
+        <span class="hljs-string">"actions"</span>: &#123;
+          <span class="hljs-string">"rollover"</span>: &#123;
+            <span class="hljs-string">"max_size"</span>: <span class="hljs-string">"50gb"</span>,
+            <span class="hljs-string">"max_age"</span>: <span class="hljs-string">"1d"</span>
+            <span class="hljs-comment"># "max_docs": 6000</span>
+          &#125;
+        &#125;
+      &#125;,
+      <span class="hljs-string">"warm"</span>: &#123;
+        <span class="hljs-string">"min_age"</span>: <span class="hljs-string">"2d"</span>,
+        <span class="hljs-string">"actions"</span>: &#123;
+          <span class="hljs-string">"forcemerge"</span>: &#123;
+            <span class="hljs-string">"max_num_segments"</span>: 1
+          &#125;
+        &#125;
+      &#125;,
+      <span class="hljs-string">"cold"</span>: &#123;
+        <span class="hljs-string">"min_age"</span>: <span class="hljs-string">"5d"</span>,
+        <span class="hljs-string">"actions"</span>: &#123;
+          <span class="hljs-string">"freeze"</span>: &#123;&#125;
+        &#125;
+      &#125;,
+      <span class="hljs-string">"delete"</span>: &#123;
+        <span class="hljs-string">"min_age"</span>: <span class="hljs-string">"10d"</span>,           
+        <span class="hljs-string">"actions"</span>: &#123;
+          <span class="hljs-string">"delete"</span>: &#123;&#125;              
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;
+<span class="hljs-comment"># 创建索引模板</span>
+PUT _template/kube-logging-template
+&#123;
+  <span class="hljs-string">"index_patterns"</span>: [<span class="hljs-string">"kube-logging*"</span>], 
+  <span class="hljs-string">"settings"</span>: &#123;
+    <span class="hljs-string">"number_of_shards"</span>: 3,
+    <span class="hljs-string">"number_of_replicas"</span>: 1,
+    <span class="hljs-string">"index.lifecycle.name"</span>: <span class="hljs-string">"kube-logging-policy"</span>, 
+    <span class="hljs-string">"index.lifecycle.rollover_alias"</span>: <span class="hljs-string">"kube-logging"</span>,
+    <span class="hljs-string">"index.refresh_interval"</span>: <span class="hljs-string">"30s"</span>,
+    <span class="hljs-string">"index.translog.durability"</span>: <span class="hljs-string">"async"</span>,
+    <span class="hljs-string">"index.translog.sync_interval"</span>:<span class="hljs-string">"30s"</span>
+  &#125;
+&#125;
+<span class="hljs-comment"># 创建第一个关联索引</span>
+PUT %3Ckube-logging-%7Bnow%2Fd%7D-000001%3E
+&#123;
+  <span class="hljs-string">"aliases"</span>: &#123;
+    <span class="hljs-string">"kube-logging"</span>: &#123;&#125;
+  &#125;
+&#125;
+
+GET kube-logging-2020.07.09-000001/_search
+
+<span class="hljs-comment"># iLM生效时间</span>
+PUT _cluster/settings
+&#123;
+  <span class="hljs-string">"persistent"</span>: &#123;
+    <span class="hljs-string">"indices.lifecycle.poll_interval"</span>: <span class="hljs-string">"30s"</span>
+  &#125;
+&#125;
+GET _ilm/status
+POST _ilm/start</code></pre></div>
+
+<h3 id="ES进阶配置"><a href="#ES进阶配置" class="headerlink" title="ES进阶配置"></a>ES进阶配置</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 单机多节点部署避免主副分片被分配到同一物理机</span>
+cluster.routing.allocation.same_shard.host: <span class="hljs-literal">true</span>
+cluster.routing.allocation.awareness.attributes: box_type
+
+index.routing.allocation.require.box_type: hot <span class="hljs-comment"># 冷热分离</span>
+index.routing.allocation.total_shards_per_node: 1</code></pre></div>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Kubernetes/">Kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Kubernetes/">Kubernetes</a>
+                    
+                      <a class="hover-with-bg" href="/tags/logging/">logging</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Elasticsearch/">Elasticsearch</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Filebeat/">Filebeat</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Kibana/">Kibana</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Fluentd/">Fluentd</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/18/theai-train/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">打破认知边界·融入未来世界</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/10/oc-vpn-connect/">
+                        <span class="hidden-mobile">Openconnect VPN</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      function loadDisqus() {
+        var disqus_config = function () {
+          this.page.url = 'https://www.boer.xyz/2020/05/24/k8s-logging-efk/';
+          this.page.identifier = '/2020/05/24/k8s-logging-efk/';
+        };
+        (function () {
+          var d = document,
+            s = d.createElement('script');
+          s.src = '//' + 'boer0924' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      }
+      createObserver(loadDisqus, 'disqus_thread');
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a href="https://disqus.com/?ref_noscript" target="_blank" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <span>&copy;2020</span>
+      <i class="iconfont icon-love"></i>
+      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
+      <span>boer</span>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: 'article.markdown-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Kubernetes日志系统EFK&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
