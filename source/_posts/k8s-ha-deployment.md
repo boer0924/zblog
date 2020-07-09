@@ -1,12 +1,12 @@
 ---
-title: Kubeadm部署HA Kubernetes集群
+title: Kubeadm部署HA高可用Kubernetes集群
 date: 2019-09-24 16:16:16
 index_img: https://picsum.photos/300/200.webp?k8s
 tags:
   - Kubernetes
   - Calico
   - IPVS
-categories: DevOps
+categories: Kubernetes
 ---
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
@@ -460,6 +460,7 @@ docker push registry.boer.xyz/public/mysql:5.7
 
 # hosts
 ansible k8s -m lineinfile -a "dest=/etc/hosts line='10.10.253.17 registry.boer.xyz'"
+ansible k8s -m lineinfile -a "dest=/etc/hosts line='10.10.253.17 registry.boer.xyz' state=absent"
 
 kubectl create secret docker-registry boer-registry --docker-server=registry.boer.xyz --docker-username=deployer --docker-password=<your-password> --docker-email=boer0924@gmail.com --namespace=boer-public
 
@@ -478,19 +479,8 @@ template:
     - name: boer-registry
 ```
 
-### 监控Prometheus
-```bash
-## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md
-## 
-cd ~/k8s
-git clone https://github.com/coreos/kube-prometheus.git
-cd kube-prometheus
-sed -i -e 's_quay.io_quay.mirrors.ustc.edu.cn_' manifests/*.yaml manifests/setup/*.yaml # quay.mirrors.ustc.edu.cn源
-
-kubectl apply -f manifests/setup # 安装 prometheus-operator
-kubectl apply -f manifests/ # 安装 promethes metric adapter
-
-
+### Rancher卸载
+```
 # https://blog.csdn.net/gui951753/article/details/106160427
 kubectl proxy &
 NAMESPACE=local
@@ -499,10 +489,7 @@ curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.
 
 # https://github.com/rancher/rancher/issues/14715#issuecomment-430194650
 kubectl get customresourcedefinitions | grep cattle.io | awk '{print $1}' | xargs kubectl delete customresourcedefinitions
-
-Grafana@12345
 ```
-
 
 ### 模型概览
 ![k8s-boer](/img/figure/k8s_network_outbound.jpg)
