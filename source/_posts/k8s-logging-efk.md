@@ -13,7 +13,7 @@ categories: Kubernetes
 ---
 Elasticsearch + Filebeat + Kibana = EFK
 F: it's not Fluentd
-- Fluentd需要学习配置语法, Filebeat相对熟悉
+> Fluentd需要学习配置语法, Filebeat相对熟悉
 
 https://github.com/elastic/helm-charts
 
