@@ -1,6 +1,6 @@
 ---
 title: Kubernetes日志系统EFK
-date: 2020-05-24 10:16:18
+date: 2019-10-24 10:16:18
 index_img: https://picsum.photos/300/200.webp?efk
 tags:
   - logging

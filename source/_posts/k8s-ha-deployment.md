@@ -452,11 +452,15 @@ kubectl -n harbor delete pvc $(kubectl -n harbor get pvc | grep harbor | awk '{p
 kubectl get secret harbor-harbor-ingress -n kube-ops -o yaml
 # 其中 data 区域中 ca.crt 对应的值就是我们需要证书，不过需要注意还需要做一个 base64 的解码，这样证书配置上以后就可以正常访问了。
 # 保存data区域ca.crt内容到ca.crt
+
+# docker 私有registry证书添加
 mkdir -p /etc/docker/certs.d/registry.boer.xyz
 cp ca.crt /etc/docker/certs.d/registry.boer.xyz # 所有node均需配置
 docker login registry.boer.xyz
 docker tag mysql:5.7 registry.boer.xyz/public/mysql:5.7
 docker push registry.boer.xyz/public/mysql:5.7
+
+# download ca.crt导入浏览器 信任的根证书 目录
 
 # hosts
 ansible k8s -m lineinfile -a "dest=/etc/hosts line='10.10.253.17 registry.boer.xyz'"
