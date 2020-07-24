@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      1.7k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      39
+      32
        分钟
     </span>
   
@@ -531,86 +531,6 @@ spec:
           serviceName: theapp-service
           servicePort: 5000</code></pre></div>
 
-<h3 id="安装Harbor在K8S之上"><a href="#安装Harbor在K8S之上" class="headerlink" title="安装Harbor在K8S之上"></a>安装Harbor在K8S之上</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://www.qikqiak.com/post/harbor-quick-install/</span>
-~/k8s/charts
-helm repo add harbor https://helm.goharbor.io
-helm fetch harbor/harbor --version 1.3.2
-tar -zxf harbor-1.3.2.tgz
-
-vim harbor/values.yaml
-expose:
-  <span class="hljs-built_in">type</span>: ingress
-  tls:
-    enabled: <span class="hljs-literal">true</span>
-  ingress:
-    hosts:
-      core: registry.boer.xyz
-      notary: notary.boer.xyz
-    controller: default
-    annotations:
-      kubernetes.io/ingress.class: <span class="hljs-string">"nginx"</span>
-      ingress.kubernetes.io/ssl-redirect: <span class="hljs-string">"true"</span>
-      ingress.kubernetes.io/proxy-body-size: <span class="hljs-string">"0"</span>
-      nginx.ingress.kubernetes.io/ssl-redirect: <span class="hljs-string">"true"</span>
-      nginx.ingress.kubernetes.io/proxy-body-size: <span class="hljs-string">"0"</span>
-externalURL: https://registry.boer.xyz
-persistence:
-  enabled: <span class="hljs-literal">true</span>
-  resourcePolicy: <span class="hljs-string">"keep"</span>
-  persistentVolumeClaim:
-    registry:
-      storageClass: <span class="hljs-string">"openebs-hostpath"</span>
-    chartmuseum:
-      storageClass: <span class="hljs-string">"openebs-hostpath"</span>
-    jobservice:
-      storageClass: <span class="hljs-string">"openebs-hostpath"</span>
-    database:
-      storageClass: <span class="hljs-string">"openebs-hostpath"</span>
-    redis:
-      storageClass: <span class="hljs-string">"openebs-hostpath"</span>
-harborAdminPassword: <span class="hljs-string">"&lt;your-secret-password&gt;"</span>
-
-helm list
-helm install --name harbor -f values.yaml . --namespace harbor
-helm upgrade -f values.yaml harbor . --namespace harbor
-helm delete --purge harbor
-helm status harbor
-
-kubectl -n harbor delete pvc $(kubectl -n harbor get pvc | grep harbor | awk <span class="hljs-string">'&#123;print $1&#125;'</span>)
-
-kubectl get secret harbor-harbor-ingress -n kube-ops -o yaml
-<span class="hljs-comment"># 其中 data 区域中 ca.crt 对应的值就是我们需要证书，不过需要注意还需要做一个 base64 的解码，这样证书配置上以后就可以正常访问了。</span>
-<span class="hljs-comment"># 保存data区域ca.crt内容到ca.crt</span>
-
-<span class="hljs-comment"># docker 私有registry证书添加</span>
-mkdir -p /etc/docker/certs.d/registry.boer.xyz
-cp ca.crt /etc/docker/certs.d/registry.boer.xyz <span class="hljs-comment"># 所有node均需配置</span>
-docker login registry.boer.xyz
-docker tag mysql:5.7 registry.boer.xyz/public/mysql:5.7
-docker push registry.boer.xyz/public/mysql:5.7
-
-<span class="hljs-comment"># download ca.crt导入浏览器 信任的根证书 目录</span>
-
-<span class="hljs-comment"># hosts</span>
-ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10.10.253.17 registry.boer.xyz'"</span>
-ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10.10.253.17 registry.boer.xyz' state=absent"</span>
-
-kubectl create secret docker-registry boer-registry --docker-server=registry.boer.xyz --docker-username=deployer --docker-password=&lt;your-password&gt; --docker-email=boer0924@gmail.com --namespace=boer-public
-
-<span class="hljs-comment"># 用法demo</span>
-apiVersion: apps/v1
-kind: Deployment
-template:
-  spec:
-    containers:
-    - name: theapp
-      image: registry.boer.xyz/public/theapp:0.0.1
-      imagePullPolicy: Always
-      ports:
-      - containerPort: 5000
-    imagePullSecrets:
-    - name: boer-registry</code></pre></div>
-
 <h3 id="Rancher卸载"><a href="#Rancher卸载" class="headerlink" title="Rancher卸载"></a>Rancher卸载</h3><div class="hljs"><pre><code class="hljs routeros"><span class="hljs-comment"># https://blog.csdn.net/gui951753/article/details/106160427</span>
 kubectl<span class="hljs-built_in"> proxy </span>&amp;
 <span class="hljs-attribute">NAMESPACE</span>=local
@@ -669,8 +589,8 @@ kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | g
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2019/05/09/pinpoint-deployment/">
-                        <span class="hidden-mobile">APM - Pinpoint笔记</span>
+                      <a href="/2019/09/09/k8s-registry-harbor/">
+                        <span class="hidden-mobile">Kubernetes镜像仓库Harbor</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
