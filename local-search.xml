@@ -4,6 +4,74 @@
   
   
   <entry>
+    <title>Kubernetes CICD工具Drone</title>
+    <link href="/2020/06/24/k8s-cicd-drone/"/>
+    <url>/2020/06/24/k8s-cicd-drone/</url>
+    
+    <content type="html"><![CDATA[<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><span class="hljs-attr">kind:</span> <span class="hljs-string">pipeline</span><span class="hljs-attr">type:</span> <span class="hljs-string">kubernetes</span><span class="hljs-attr">name:</span> <span class="hljs-string">boer</span><span class="hljs-attr">steps:</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">build</span>    <span class="hljs-attr">image:</span> <span class="hljs-string">maven:3.6.3-jdk-8</span>    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>    <span class="hljs-attr">volumes:</span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.m2</span>    <span class="hljs-attr">commands:</span>      <span class="hljs-bullet">-</span> <span class="hljs-string">mvn</span> <span class="hljs-string">clean</span> <span class="hljs-string">package</span> <span class="hljs-string">-DskipTests=true</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">package</span>    <span class="hljs-attr">image:</span> <span class="hljs-string">docker:19.03.8</span>    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>    <span class="hljs-attr">volumes:</span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/run/docker.sock</span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker</span>    <span class="hljs-attr">environment:</span>      <span class="hljs-attr">repo:</span> <span class="hljs-string">registry.boer.xyz/public/spring-produce</span>      <span class="hljs-attr">registry:</span> <span class="hljs-string">registry.boer.xyz</span>      <span class="hljs-attr">username:</span>        <span class="hljs-attr">from_secret:</span> <span class="hljs-string">docker_username</span>      <span class="hljs-attr">password:</span>        <span class="hljs-attr">from_secret:</span> <span class="hljs-string">docker_password</span>      <span class="hljs-attr">tags:</span> <span class="hljs-string">"$&#123;DRONE_COMMIT_SHA:0:10&#125;"</span>    <span class="hljs-attr">commands:</span>      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">login</span> <span class="hljs-string">$&#123;registry&#125;</span> <span class="hljs-string">-u</span> <span class="hljs-string">$&#123;username&#125;</span> <span class="hljs-string">-p</span> <span class="hljs-string">$&#123;password&#125;</span>      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">build</span> <span class="hljs-string">-t</span> <span class="hljs-string">"$&#123;repo&#125;:$&#123;tags&#125;"</span> <span class="hljs-string">.</span>      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">push</span> <span class="hljs-string">"$&#123;repo&#125;:$&#123;tags&#125;"</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">k8s</span>    <span class="hljs-attr">image:</span> <span class="hljs-string">boer0924/kubectl:1.18.3</span>    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>    <span class="hljs-attr">volumes:</span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">kube-config</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.kube/config</span>    <span class="hljs-attr">commands:</span>      <span class="hljs-bullet">-</span> <span class="hljs-string">kubectl</span> <span class="hljs-string">get</span> <span class="hljs-string">nodes</span><span class="hljs-attr">trigger:</span>  <span class="hljs-attr">branch:</span>    <span class="hljs-bullet">-</span> <span class="hljs-string">master</span>  <span class="hljs-attr">event:</span>    <span class="hljs-bullet">-</span> <span class="hljs-string">push</span><span class="hljs-attr">volumes:</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>    <span class="hljs-attr">host:</span>      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/cache/.m2</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">kube-config</span>    <span class="hljs-attr">host:</span>      <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.kube/config</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>    <span class="hljs-attr">host:</span>      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker</span>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>    <span class="hljs-attr">host:</span>      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/run/docker.sock</span></code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>Kubernetes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Kubernetes</tag>
+      
+      <tag>CICD</tag>
+      
+      <tag>Jenkins</tag>
+      
+      <tag>Pipeline</tag>
+      
+      <tag>Drone</tag>
+      
+      <tag>Harbor</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Kubernetes CICD工具Jenkins Pipeline</title>
+    <link href="/2020/06/23/k8s-cicd-jenkins-pipeline/"/>
+    <url>/2020/06/23/k8s-cicd-jenkins-pipeline/</url>
+    
+    <content type="html"><![CDATA[<h3 id="KubernetesPod-yaml"><a href="#KubernetesPod-yaml" class="headerlink" title="KubernetesPod.yaml"></a>KubernetesPod.yaml</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><span class="hljs-attr">metadata:</span>  <span class="hljs-attr">labels:</span>    <span class="hljs-attr">jenkins-slave:</span> <span class="hljs-literal">true</span><span class="hljs-attr">spec:</span>  <span class="hljs-attr">volumes:</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>      <span class="hljs-attr">hostPath:</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/cache/.m2</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>      <span class="hljs-attr">hostPath:</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/run/docker.sock</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>      <span class="hljs-attr">hostPath:</span>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker</span>  <span class="hljs-attr">containers:</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">jnlp</span>      <span class="hljs-attr">image:</span> <span class="hljs-string">jenkins/jnlp-slave:3.27-1</span>      <span class="hljs-attr">tty:</span> <span class="hljs-literal">true</span>      <span class="hljs-attr">command:</span>        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven</span>      <span class="hljs-attr">image:</span> <span class="hljs-string">maven:3.6.3-jdk-8</span>      <span class="hljs-attr">command:</span>        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span>      <span class="hljs-attr">tty:</span> <span class="hljs-literal">true</span>      <span class="hljs-attr">volumeMounts:</span>        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/root/.m2</span>          <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker</span>      <span class="hljs-attr">image:</span> <span class="hljs-string">docker:19.03.8</span>      <span class="hljs-attr">volumeMounts:</span>        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/run/docker.sock</span>          <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>        <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/docker</span>          <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>      <span class="hljs-attr">tty:</span> <span class="hljs-literal">true</span>      <span class="hljs-attr">command:</span>        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">kubectl</span>      <span class="hljs-attr">image:</span> <span class="hljs-string">boer0924/kubectl:1.18.3</span>      <span class="hljs-attr">tty:</span> <span class="hljs-literal">true</span>      <span class="hljs-attr">command:</span>        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre></div><h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">pipeline</span> <span class="hljs-string">&#123;</span>  <span class="hljs-string">agent</span> <span class="hljs-string">&#123;</span>    <span class="hljs-string">kubernetes</span> <span class="hljs-string">&#123;</span>      <span class="hljs-string">defaultContainer</span> <span class="hljs-string">'jnlp'</span>      <span class="hljs-string">yamlFile</span> <span class="hljs-string">'manifests/KubernetesPod.yaml'</span>    <span class="hljs-string">&#125;</span>  <span class="hljs-string">&#125;</span>  <span class="hljs-string">environment</span> <span class="hljs-string">&#123;</span>    <span class="hljs-string">name</span> <span class="hljs-string">=</span> <span class="hljs-string">'boer'</span>  <span class="hljs-string">&#125;</span>  <span class="hljs-string">parameters</span> <span class="hljs-string">&#123;</span>    <span class="hljs-string">string(name:</span> <span class="hljs-string">'PERSON'</span><span class="hljs-string">,</span> <span class="hljs-attr">defaultValue:</span> <span class="hljs-string">'Mr Jenkins'</span><span class="hljs-string">,</span> <span class="hljs-attr">description:</span> <span class="hljs-string">'Who should I say hello to?'</span><span class="hljs-string">)</span>  <span class="hljs-string">&#125;</span>  <span class="hljs-string">stages</span> <span class="hljs-string">&#123;</span>    <span class="hljs-string">stage('Test')</span> <span class="hljs-string">&#123;</span>      <span class="hljs-string">steps</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">echo</span> <span class="hljs-string">"单元测试"</span>        <span class="hljs-string">sh</span> <span class="hljs-string">'echo "TEST"'</span>      <span class="hljs-string">&#125;</span>    <span class="hljs-string">&#125;</span>    <span class="hljs-string">stage('Maven')</span> <span class="hljs-string">&#123;</span>      <span class="hljs-string">steps</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">container('maven')</span> <span class="hljs-string">&#123;</span>          <span class="hljs-string">echo</span> <span class="hljs-string">"编译打包"</span>          <span class="hljs-string">sh</span> <span class="hljs-string">"mvn clean package -Dmaven.test.skip=true"</span>        <span class="hljs-string">&#125;</span>      <span class="hljs-string">&#125;</span>    <span class="hljs-string">&#125;</span>    <span class="hljs-string">stage('Docker')</span> <span class="hljs-string">&#123;</span>      <span class="hljs-string">environment</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">registryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">'registry.meitianiot.lo'</span>        <span class="hljs-string">//</span> <span class="hljs-string">registryUser</span> <span class="hljs-string">=</span> <span class="hljs-string">'deployer'</span>        <span class="hljs-string">//</span> <span class="hljs-string">registryPass</span> <span class="hljs-string">=</span> <span class="hljs-string">'Deployer@12345'</span>        <span class="hljs-string">registry</span> <span class="hljs-string">=</span> <span class="hljs-string">credentials('dockerhub')</span>        <span class="hljs-string">registryUser</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registry_USR&#125;"</span>        <span class="hljs-string">registryPass</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registry_PSW&#125;"</span>        <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryUrl&#125;/public/cicd-demo"</span>        <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>      <span class="hljs-string">&#125;</span>      <span class="hljs-string">steps</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">container('docker')</span> <span class="hljs-string">&#123;</span>          <span class="hljs-string">echo</span> <span class="hljs-string">"构建镜像"</span>          <span class="hljs-string">sh</span> <span class="hljs-string">''</span><span class="hljs-string">'</span><span class="hljs-string">          docker login $&#123;registryUrl&#125; -u $&#123;registryUser&#125; -p $&#123;registryPass&#125;</span><span class="hljs-string">          docker build -t $&#123;image&#125;:$&#123;imageTag&#125; .</span><span class="hljs-string">          docker push $&#123;image&#125;:$&#123;imageTag&#125;</span><span class="hljs-string">          '</span><span class="hljs-string">''</span>        <span class="hljs-string">&#125;</span>      <span class="hljs-string">&#125;</span>    <span class="hljs-string">&#125;</span>    <span class="hljs-string">stage('K8S')</span> <span class="hljs-string">&#123;</span>      <span class="hljs-string">environment</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">kubeconfig</span> <span class="hljs-string">=</span> <span class="hljs-string">credentials('kubeconfig')</span>      <span class="hljs-string">&#125;</span>      <span class="hljs-string">steps</span> <span class="hljs-string">&#123;</span>        <span class="hljs-string">container('kubectl')</span> <span class="hljs-string">&#123;</span>          <span class="hljs-string">echo</span> <span class="hljs-string">"Kubernetes发布"</span>          <span class="hljs-string">sh</span> <span class="hljs-string">"kubectl --kubeconfig $kubeconfig get pods"</span>        <span class="hljs-string">&#125;</span>      <span class="hljs-string">&#125;</span>    <span class="hljs-string">&#125;</span>  <span class="hljs-string">&#125;</span><span class="hljs-string">&#125;</span></code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>Kubernetes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Kubernetes</tag>
+      
+      <tag>CICD</tag>
+      
+      <tag>Jenkins</tag>
+      
+      <tag>Pipeline</tag>
+      
+      <tag>Harbor</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>打破认知边界·融入未来世界</title>
     <link href="/2020/06/18/theai-train/"/>
     <url>/2020/06/18/theai-train/</url>
@@ -200,11 +268,11 @@
       
       <tag>Kubernetes</tag>
       
+      <tag>Harbor</tag>
+      
       <tag>Docker</tag>
       
       <tag>Registry</tag>
-      
-      <tag>Harbor</tag>
       
     </tags>
     
