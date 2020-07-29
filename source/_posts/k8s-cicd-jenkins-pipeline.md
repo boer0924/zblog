@@ -83,15 +83,19 @@ persistence:
 
 #### 添加全局凭证
 > 系统管理 -> Manage Credentials -> Stores scoped to Jenkins -> Jenkins -> 全局凭据 (unrestricted) -> 添加凭据
-- 添加`代码仓库`凭证
+- ##### 添加`代码仓库`凭证
 ![key-gitea](/img/jenkins_key_gitea.jpg)
-- 添加Harbor Registry凭证
+- ##### 添加Harbor Registry凭证
 1. 方法同添加`代码仓库`凭证
 2. 注意将公用账户加入**每一个项目**的成员，并赋予**项目管理员**以上权限。[参考](/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret)
-- 添加kubeconfig凭证
+- ##### 添加kubeconfig凭证
 ![key-kubeconfig](/img/jenkins_key_kubeconfig.jpg)
 
 ### KubernetesPod.yaml
+**划重点**
+- maven缓存.m2
+- docker in docker
+- jnlp容器必须有，command不能覆盖jenkins-slave
 ```yaml
 ---
 apiVersion: v1
@@ -140,6 +144,20 @@ spec:
 ```
 
 ### Jenkinsfile
+**划重点**
+- 定义agent label是为在k8s中调度job的pod名字
+- 定义parameters来选择需要部署的环境。即namespace
+- Jenkinsfile的两个全局变量：env/params。
+  - 设置env变量: env.KEY = value
+  - 使用env变量: ${KEY}
+- username&password凭证的使用: registryCre = credentials('registry') [_USR/_PSW]
+  - 获取username: ${registryCre_USR}
+  - 获取passowrd: ${registryCre_PSW}
+- 使用short commit_id作为image_tag 和 kubernetes.io/change-cause, 以保证镜像唯一，和可以回退到指定版本。
+- sed动态修改k8s资源定义文件manifests/k8s.yaml：
+  - <CHANGE_CAUSE>: 便于指定版本回退
+  - <IMAGE_TAG>: 指定版本
+  - <INGRESS>: 不同环境不同域名
 ```yaml
 pipeline {
   agent {
@@ -216,6 +234,7 @@ pipeline {
         container('kubectl') {
           echo "Kubernetes发布"
           sh '''
+          sed -i "s|<CHANGE_CAUSE>|${imageTag}|g" manifests/k8s.yaml
           sed -i "s|<IMAGE>|${image}|g" manifests/k8s.yaml
           sed -i "s|<IMAGE_TAG>|${imageTag}|g" manifests/k8s.yaml
           sed -i "s|<INGRESS>|${INGRESS}|g" manifests/k8s.yaml
