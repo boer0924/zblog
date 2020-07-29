@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.2k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17
+      20
        分钟
     </span>
   
@@ -274,17 +274,21 @@ helm delete --purge jenkins</code></pre></div>
 <p>系统管理 -&gt; Manage Credentials -&gt; Stores scoped to Jenkins -&gt; Jenkins -&gt; 全局凭据 (unrestricted) -&gt; 添加凭据</p>
 </blockquote>
 <ul>
-<li>添加<code>代码仓库</code>凭证<br><img src="/img/jenkins_key_gitea.jpg" srcset="/img/loading.gif" alt="key-gitea"></li>
-<li>添加Harbor Registry凭证</li>
+<li><h5 id="添加代码仓库凭证"><a href="#添加代码仓库凭证" class="headerlink" title="添加代码仓库凭证"></a>添加<code>代码仓库</code>凭证</h5><img src="/img/jenkins_key_gitea.jpg" srcset="/img/loading.gif" alt="key-gitea"></li>
+<li><h5 id="添加Harbor-Registry凭证"><a href="#添加Harbor-Registry凭证" class="headerlink" title="添加Harbor Registry凭证"></a>添加Harbor Registry凭证</h5></li>
 </ul>
 <ol>
 <li>方法同添加<code>代码仓库</code>凭证</li>
 <li>注意将公用账户加入<strong>每一个项目</strong>的成员，并赋予<strong>项目管理员</strong>以上权限。<a href="/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret">参考</a></li>
 </ol>
 <ul>
-<li>添加kubeconfig凭证<br><img src="/img/jenkins_key_kubeconfig.jpg" srcset="/img/loading.gif" alt="key-kubeconfig"></li>
+<li><h5 id="添加kubeconfig凭证"><a href="#添加kubeconfig凭证" class="headerlink" title="添加kubeconfig凭证"></a>添加kubeconfig凭证</h5><img src="/img/jenkins_key_kubeconfig.jpg" srcset="/img/loading.gif" alt="key-kubeconfig"></li>
 </ul>
-<h3 id="KubernetesPod-yaml"><a href="#KubernetesPod-yaml" class="headerlink" title="KubernetesPod.yaml"></a>KubernetesPod.yaml</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
+<h3 id="KubernetesPod-yaml"><a href="#KubernetesPod-yaml" class="headerlink" title="KubernetesPod.yaml"></a>KubernetesPod.yaml</h3><p><strong>划重点</strong></p>
+<ul>
+<li>maven缓存.m2</li>
+<li>docker in docker</li>
+<li>jnlp容器必须有，command不能覆盖jenkins-slave<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span>
 <span class="hljs-attr">metadata:</span>
@@ -329,7 +333,27 @@ helm delete --purge jenkins</code></pre></div>
       <span class="hljs-attr">command:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre></div>
 
-<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">pipeline</span> <span class="hljs-string">&#123;</span>
+</li>
+</ul>
+<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><p><strong>划重点</strong></p>
+<ul>
+<li>定义agent label是为在k8s中调度job的pod名字</li>
+<li>定义parameters来选择需要部署的环境。即namespace</li>
+<li>Jenkinsfile的两个全局变量：env/params。<ul>
+<li>设置env变量: env.KEY = value</li>
+<li>使用env变量: ${KEY}</li>
+</ul>
+</li>
+<li>username&amp;password凭证的使用: registryCre = credentials(‘registry’) [_USR/_PSW]<ul>
+<li>获取username: ${registryCre_USR}</li>
+<li>获取passowrd: ${registryCre_PSW}</li>
+</ul>
+</li>
+<li>使用short commit_id作为image_tag 和 kubernetes.io/change-cause, 以保证镜像唯一，和可以回退到指定版本。</li>
+<li>sed动态修改k8s资源定义文件manifests/k8s.yaml：<ul>
+<li><CHANGE_CAUSE>: 便于指定版本回退</li>
+<li><IMAGE_TAG>: 指定版本</li>
+<li><INGRESS>: 不同环境不同域名<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">pipeline</span> <span class="hljs-string">&#123;</span>
   <span class="hljs-string">agent</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-string">kubernetes</span> <span class="hljs-string">&#123;</span>
       <span class="hljs-string">label</span> <span class="hljs-string">'jenkins-worker'</span>
@@ -404,6 +428,7 @@ helm delete --purge jenkins</code></pre></div>
         <span class="hljs-string">container('kubectl')</span> <span class="hljs-string">&#123;</span>
           <span class="hljs-string">echo</span> <span class="hljs-string">"Kubernetes发布"</span>
           <span class="hljs-string">sh</span> <span class="hljs-string">''</span><span class="hljs-string">'</span>
+<span class="hljs-string">          sed -i "s|&lt;CHANGE_CAUSE&gt;|$&#123;imageTag&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;IMAGE&gt;|$&#123;image&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;IMAGE_TAG&gt;|$&#123;imageTag&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;INGRESS&gt;|$&#123;INGRESS&#125;|g" manifests/k8s.yaml</span>
@@ -440,6 +465,10 @@ helm delete --purge jenkins</code></pre></div>
   <span class="hljs-string">&#125;</span>
 <span class="hljs-string">&#125;</span></code></pre></div>
 
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/" target="_blank" rel="noopener">https://www.jenkins.io/doc/book/pipeline/syntax/</a></li>
 <li><a href="https://github.com/jenkinsci/kubernetes-plugin/tree/master/examples/declarative_from_yaml_file" target="_blank" rel="noopener">https://github.com/jenkinsci/kubernetes-plugin/tree/master/examples/declarative_from_yaml_file</a></li>
