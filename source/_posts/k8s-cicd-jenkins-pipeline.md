@@ -10,15 +10,41 @@ tags:
   - Harbor
 categories: Kubernetes
 ---
-Jenkins流水线是一套插件，它支持实现和集成持续交付流水线到Jenkins。
+持续构建与发布是我们日常工作中必不可少的一个步骤，目前大多公司都采用 Jenkins 集群来搭建符合需求的 CI/CD 流程，然而传统的 Jenkins Slave 一主多从方式会存在一些痛点，比如：
+
+- 主 Master 发生单点故障时，整个流程都不可用了
+- 每个 Slave 的配置环境不一样，来完成不同语言的编译打包等操作，但是这些差异化的配置导致管理起来非常不方便，维护起来也是比较费劲
+- 资源分配不均衡，有的 Slave 要运行的 job 出现排队等待，而有的 Slave 处于空闲状态
+- 资源有浪费，每台 Slave 可能是物理机或者虚拟机，当 Slave 处于空闲状态时，也不会完全释放掉资源。
+
+<!-- more -->
+
+正因为上面的这些种种痛点，我们渴望一种更高效更可靠的方式来完成这个 CI/CD 流程，而 Docker 虚拟化容器技术能很好的解决这个痛点，又特别是在 Kubernetes 集群环境下面能够更好来解决上面的问题，下图是基于 Kubernetes 搭建 Jenkins 集群的简单示意图：
+![](/img/k8s-jenkins-arch.png)
+
+从图上可以看到 Jenkins Master 和 Jenkins Slave 以 Pod 形式运行在 Kubernetes 集群的 Node 上，Master 运行在其中一个节点，并且将其配置数据存储到一个 Volume 上去，Slave 运行在各个节点上，并且它不是一直处于运行状态，它会按照需求动态的创建并自动删除。
+
+这种方式的工作流程大致为：当 Jenkins Master 接受到 Build 请求时，会根据配置的 Label 动态创建一个运行在 Pod 中的 Jenkins Slave 并注册到 Master 上，当运行完 Job 后，这个 Slave 会被注销并且这个 Pod 也会自动删除，恢复到最初状态。
+
+那么我们使用这种方式带来了哪些好处呢？
+
+- 服务高可用，当 Jenkins Master 出现故障时，Kubernetes 会自动创建一个新的 Jenkins Master 容器，并且将 Volume 分配给新创建的容器，保证数据不丢失，从而达到集群服务高可用。
+- 动态伸缩，合理使用资源，每次运行 Job 时，会自动创建一个 Jenkins Slave，Job 完成后，Slave 自动注销并删除容器，资源自动释放，而且 Kubernetes 会根据每个资源的使用情况，动态分配 Slave 到空闲的节点上创建，降低出现因某节点资源利用率高，还排队等待在该节点的情况。
+- 扩展性好，当 Kubernetes 集群的资源严重不足而导致 Job 排队等待时，可以很容易的添加一个 Kubernetes Node 到集群中，从而实现扩展。 当然这也是 Kubernetes 集群本来的便捷性。
+
+### Jenkins Pipeline
+Jenkins流水线是一套插件，它支持实现和集成持续交付流水线到Jenkins中。
+
+Jenkinsfile一般有几个配置管理方式：
+1. 在Jenkins WebUI中配置管理
+2. 检入到源码管理系统中配置管理(推荐方式)
 
 Jenkinsfile: 创建一个检入到源码管理系统中的`Jenkinsfile`带来了一些直接的好处：
 1. 流水线上的代码评审/迭代
 2. 对流水线进行审计跟踪
 3. 流水线的单一可信数据源，能够被项目的多个成员查看和编辑
-流水线支持 两种语法：声明式（在 Pipeline 2.5 引入）和脚本式流水线。
 
-<!-- more -->
+流水线支持 两种语法：声明式（在 Pipeline 2.5 引入）和脚本式流水线。[官方文档](https://www.jenkins.io/doc/book/pipeline/syntax/)
 
 ### Jenkins安装
 ```
@@ -31,6 +57,7 @@ helm delete --purge jenkins
 ```
 > https://github.com/helm/charts/tree/master/stable/jenkins#200-configuration-as-code-now-default--container-does-not-run-as-root-anymore
 ```yaml
+# values.yaml
 clusterZone: "cluster.local"
 master:
   numExecutors: 2 # 允许在master节点上同时执行2个任务
