@@ -291,21 +291,25 @@ helm delete --purge jenkins</code></pre></div>
 <li>localization-zh-cn:1.0.17</li>
 </ul>
 <h3 id="Jenkins配置操作"><a href="#Jenkins配置操作" class="headerlink" title="Jenkins配置操作"></a>Jenkins配置操作</h3><h4 id="全局安全配置"><a href="#全局安全配置" class="headerlink" title="全局安全配置"></a>全局安全配置</h4><blockquote>
-<p>系统管理 -&gt; 全局安全配置 -&gt; Authentication -&gt; 安全域 -&gt; Jenkins专有用户数据库<br><img src="/img/jenkins_auth.png" srcset="/img/loading.gif" alt="auth"></p>
+<p>系统管理 -&gt; 全局安全配置 -&gt; Authentication -&gt; 安全域 -&gt; Jenkins专有用户数据库</p>
 </blockquote>
+<p><img src="/img/jenkins_auth.png" srcset="/img/loading.gif" alt="auth"></p>
 <h4 id="添加全局凭证"><a href="#添加全局凭证" class="headerlink" title="添加全局凭证"></a>添加全局凭证</h4><blockquote>
 <p>系统管理 -&gt; Manage Credentials -&gt; Stores scoped to Jenkins -&gt; Jenkins -&gt; 全局凭据 (unrestricted) -&gt; 添加凭据</p>
 </blockquote>
 <h5 id="1-添加代码仓库凭证"><a href="#1-添加代码仓库凭证" class="headerlink" title="1. 添加代码仓库凭证"></a>1. 添加<code>代码仓库</code>凭证</h5><p><img src="/img/jenkins_key_gitea.jpg" srcset="/img/loading.gif" alt="key-gitea"></p>
 <h5 id="2-添加Harbor-Registry凭证"><a href="#2-添加Harbor-Registry凭证" class="headerlink" title="2. 添加Harbor Registry凭证"></a>2. 添加Harbor Registry凭证</h5><ul>
 <li>方法同添加<code>代码仓库</code>凭证</li>
-<li>注意将公用账户加入<strong>每一个项目</strong>的成员，并赋予<strong>项目管理员</strong>以上权限。<a href="/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret">参考</a><h5 id="3-添加kubeconfig凭证"><a href="#3-添加kubeconfig凭证" class="headerlink" title="3. 添加kubeconfig凭证"></a>3. 添加kubeconfig凭证</h5><img src="/img/jenkins_key_kubeconfig.jpg" srcset="/img/loading.gif" alt="key-kubeconfig"></li>
+<li>添加harbor统一镜像拉取账号 <a href="/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret">参考</a></li>
 </ul>
+<h5 id="3-添加kubeconfig凭证"><a href="#3-添加kubeconfig凭证" class="headerlink" title="3. 添加kubeconfig凭证"></a>3. 添加kubeconfig凭证</h5><p><img src="/img/jenkins_key_kubeconfig.jpg" srcset="/img/loading.gif" alt="key-kubeconfig"></p>
 <h3 id="KubernetesPod-yaml"><a href="#KubernetesPod-yaml" class="headerlink" title="KubernetesPod.yaml"></a>KubernetesPod.yaml</h3><p><strong>划重点</strong></p>
-<ul>
+<ol>
 <li>maven缓存.m2</li>
 <li>docker in docker</li>
-<li>jnlp容器必须有，command不能覆盖jenkins-slave<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
+<li>jnlp容器必须有，command不能覆盖jenkins-slave</li>
+</ol>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span>
 <span class="hljs-attr">metadata:</span>
@@ -350,8 +354,6 @@ helm delete --purge jenkins</code></pre></div>
       <span class="hljs-attr">command:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre></div>
 
-</li>
-</ul>
 <h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><p><strong>划重点</strong></p>
 <ol>
 <li>定义agent label是为在k8s中调度job的pod名字</li>
