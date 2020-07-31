@@ -104,25 +104,35 @@ persistence:
 - localization-zh-cn:1.0.17
 
 ### Jenkins配置操作
+
 #### 全局安全配置
 > 系统管理 -> 全局安全配置 -> Authentication -> 安全域 -> Jenkins专有用户数据库
+
 ![auth](/img/jenkins_auth.png)
 
 #### 添加全局凭证
 > 系统管理 -> Manage Credentials -> Stores scoped to Jenkins -> Jenkins -> 全局凭据 (unrestricted) -> 添加凭据
+
 ##### 1. 添加`代码仓库`凭证
+
 ![key-gitea](/img/jenkins_key_gitea.jpg)
+
 ##### 2. 添加Harbor Registry凭证
+
   - 方法同添加`代码仓库`凭证
-  - 注意将公用账户加入**每一个项目**的成员，并赋予**项目管理员**以上权限。[参考](/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret)
+  - 添加harbor统一镜像拉取账号 [参考](/2019/09/09/k8s-registry-harbor/#%E5%88%9B%E5%BB%BARegistry-secret)
+
 ##### 3. 添加kubeconfig凭证
+
 ![key-kubeconfig](/img/jenkins_key_kubeconfig.jpg)
 
 ### KubernetesPod.yaml
+
 **划重点**
-- maven缓存.m2
-- docker in docker
-- jnlp容器必须有，command不能覆盖jenkins-slave
+1. maven缓存.m2
+2. docker in docker
+3. jnlp容器必须有，command不能覆盖jenkins-slave
+
 ```yaml
 ---
 apiVersion: v1
@@ -171,6 +181,7 @@ spec:
 ```
 
 ### Jenkinsfile
+
 **划重点**
 1. 定义agent label是为在k8s中调度job的pod名字
 2. 定义parameters来选择需要部署的环境。即namespace
