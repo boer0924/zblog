@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      2.4k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      28
+      35
        分钟
     </span>
   
@@ -354,7 +354,7 @@ helm delete --purge jenkins</code></pre></div>
       <span class="hljs-attr">command:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre></div>
 
-<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><p><strong>划重点</strong></p>
+<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><h4 id="声明式Jenkinsfile"><a href="#声明式Jenkinsfile" class="headerlink" title="声明式Jenkinsfile"></a>声明式Jenkinsfile</h4><p><strong>划重点</strong></p>
 <ol>
 <li>定义agent label是为在k8s中调度job的pod名字</li>
 <li>定义parameters来选择需要部署的环境。即namespace</li>
@@ -390,6 +390,9 @@ helm delete --purge jenkins</code></pre></div>
   <span class="hljs-string">environment</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-string">AUTHOR</span> <span class="hljs-string">=</span> <span class="hljs-string">'boer'</span>
     <span class="hljs-string">EMAIL</span> <span class="hljs-string">=</span> <span class="hljs-string">'boer0924@gmail.com'</span>
+    <span class="hljs-string">registryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">'registry.boer.xyz'</span>
+    <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryUrl&#125;/public/spring-consume"</span>
+    <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
   <span class="hljs-string">&#125;</span>
   <span class="hljs-string">stages</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-string">stage('Test')</span> <span class="hljs-string">&#123;</span>
@@ -424,12 +427,9 @@ helm delete --purge jenkins</code></pre></div>
 
     <span class="hljs-string">stage('Docker')</span> <span class="hljs-string">&#123;</span>
       <span class="hljs-string">environment</span> <span class="hljs-string">&#123;</span>
-        <span class="hljs-string">registryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">'registry.boer.xyz'</span>
         <span class="hljs-string">registryCre</span> <span class="hljs-string">=</span> <span class="hljs-string">credentials('dockerhub')</span>
         <span class="hljs-string">registryUser</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryCre_USR&#125;"</span>
         <span class="hljs-string">registryPass</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryCre_PSW&#125;"</span>
-        <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryUrl&#125;/public/spring-consume"</span>
-        <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
       <span class="hljs-string">&#125;</span>
       <span class="hljs-string">steps</span> <span class="hljs-string">&#123;</span>
         <span class="hljs-string">container('docker')</span> <span class="hljs-string">&#123;</span>
@@ -485,6 +485,94 @@ helm delete --purge jenkins</code></pre></div>
         <span class="hljs-string">&#125;</span>
       <span class="hljs-string">&#125;</span>
     <span class="hljs-string">&#125;</span>
+  <span class="hljs-string">&#125;</span>
+<span class="hljs-string">&#125;</span></code></pre></div>
+<h4 id="脚本式Jenkinsfile"><a href="#脚本式Jenkinsfile" class="headerlink" title="脚本式Jenkinsfile"></a>脚本式Jenkinsfile</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">def</span> <span class="hljs-string">label</span> <span class="hljs-string">=</span> <span class="hljs-string">"jenkins-slave"</span>
+
+<span class="hljs-string">podTemplate(label:</span> <span class="hljs-string">label,</span> <span class="hljs-attr">containers:</span> <span class="hljs-string">[</span>
+  <span class="hljs-string">containerTemplate(name:</span> <span class="hljs-string">'maven'</span><span class="hljs-string">,</span> <span class="hljs-attr">image:</span> <span class="hljs-string">'maven:3.6.3-jdk-8'</span><span class="hljs-string">,</span> <span class="hljs-attr">command:</span> <span class="hljs-string">'cat'</span><span class="hljs-string">,</span> <span class="hljs-attr">ttyEnabled:</span> <span class="hljs-literal">true</span><span class="hljs-string">),</span>
+  <span class="hljs-string">containerTemplate(name:</span> <span class="hljs-string">'docker'</span><span class="hljs-string">,</span> <span class="hljs-attr">image:</span> <span class="hljs-string">'docker:19.03.8'</span><span class="hljs-string">,</span> <span class="hljs-attr">command:</span> <span class="hljs-string">'cat'</span><span class="hljs-string">,</span> <span class="hljs-attr">ttyEnabled:</span> <span class="hljs-literal">true</span><span class="hljs-string">),</span>
+  <span class="hljs-string">containerTemplate(name:</span> <span class="hljs-string">'kubectl'</span><span class="hljs-string">,</span> <span class="hljs-attr">image:</span> <span class="hljs-string">'boer0924/kubectl:1.18.3'</span><span class="hljs-string">,</span> <span class="hljs-attr">command:</span> <span class="hljs-string">'cat'</span><span class="hljs-string">,</span> <span class="hljs-attr">ttyEnabled:</span> <span class="hljs-literal">true</span><span class="hljs-string">)],</span> <span class="hljs-attr">serviceAccount:</span> <span class="hljs-string">'jenkins'</span><span class="hljs-string">,</span> <span class="hljs-attr">volumes:</span> <span class="hljs-string">[</span>
+  <span class="hljs-string">hostPathVolume(mountPath:</span> <span class="hljs-string">'/root/.m2'</span><span class="hljs-string">,</span> <span class="hljs-attr">hostPath:</span> <span class="hljs-string">'/var/lib/cache/.m2'</span><span class="hljs-string">),</span>
+  <span class="hljs-string">hostPathVolume(mountPath:</span> <span class="hljs-string">'/var/run/docker.sock'</span><span class="hljs-string">,</span> <span class="hljs-attr">hostPath:</span> <span class="hljs-string">'/var/run/docker.sock'</span><span class="hljs-string">),</span>
+  <span class="hljs-string">hostPathVolume(mountPath:</span> <span class="hljs-string">'/var/lib/docker'</span><span class="hljs-string">,</span> <span class="hljs-attr">hostPath:</span> <span class="hljs-string">'/var/lib/docker'</span><span class="hljs-string">)</span>
+<span class="hljs-string">])</span> <span class="hljs-string">&#123;</span>
+  <span class="hljs-string">node(label)</span> <span class="hljs-string">&#123;</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">myRepo</span> <span class="hljs-string">=</span> <span class="hljs-string">checkout</span> <span class="hljs-string">scm</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">gitCommit</span> <span class="hljs-string">=</span> <span class="hljs-string">myRepo.GIT_COMMIT</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">gitBranch</span> <span class="hljs-string">=</span> <span class="hljs-string">myRepo.GIT_BRANCH</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">dockerRegistryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">"registry.boer.xyz"</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">imageEndpoint</span> <span class="hljs-string">=</span> <span class="hljs-string">"public/spring-produce"</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;dockerRegistryUrl&#125;/$&#123;imageEndpoint&#125;"</span>
+
+    <span class="hljs-string">stage('单元测试')</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">echo</span> <span class="hljs-string">"1.测试阶段"</span>
+    <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">stage('代码编译打包')</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">try</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">container('maven')</span> <span class="hljs-string">&#123;</span>
+          <span class="hljs-string">echo</span> <span class="hljs-string">"2. 代码编译打包阶段"</span>
+          <span class="hljs-string">sh</span> <span class="hljs-string">"mvn clean package -Dmaven.test.skip=true"</span>
+        <span class="hljs-string">&#125;</span>
+      <span class="hljs-string">&#125;</span> <span class="hljs-string">catch</span> <span class="hljs-string">(exc)</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">println</span> <span class="hljs-string">"构建失败 - $&#123;currentBuild.fullDisplayName&#125;"</span>
+        <span class="hljs-string">throw(exc)</span>
+      <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">stage('构建</span> <span class="hljs-string">Docker</span> <span class="hljs-string">镜像')</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">withCredentials([[$class:</span> <span class="hljs-string">'UsernamePasswordMultiBinding'</span><span class="hljs-string">,</span>
+        <span class="hljs-attr">credentialsId:</span> <span class="hljs-string">'dockerhub'</span><span class="hljs-string">,</span>
+        <span class="hljs-attr">usernameVariable:</span> <span class="hljs-string">'DOCKER_HUB_USER'</span><span class="hljs-string">,</span>
+        <span class="hljs-attr">passwordVariable:</span> <span class="hljs-string">'DOCKER_HUB_PASSWORD'</span><span class="hljs-string">]])</span> <span class="hljs-string">&#123;</span>
+          <span class="hljs-string">container('docker')</span> <span class="hljs-string">&#123;</span>
+            <span class="hljs-string">echo</span> <span class="hljs-string">"3. 构建 Docker 镜像阶段"</span>
+            <span class="hljs-string">sh</span> <span class="hljs-string">""</span><span class="hljs-string">"</span>
+<span class="hljs-string">              docker login $&#123;dockerRegistryUrl&#125; -u $&#123;DOCKER_HUB_USER&#125; -p $&#123;DOCKER_HUB_PASSWORD&#125;</span>
+<span class="hljs-string">              docker build -t $&#123;image&#125;:$&#123;imageTag&#125; .</span>
+<span class="hljs-string">              docker push $&#123;image&#125;:$&#123;imageTag&#125;</span>
+<span class="hljs-string">              "</span><span class="hljs-string">""</span>
+          <span class="hljs-string">&#125;</span>
+        <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">stage('运行</span> <span class="hljs-string">Kubectl')</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">withCredentials([file(credentialsId:</span> <span class="hljs-string">'kubeconfig'</span><span class="hljs-string">,</span> <span class="hljs-attr">variable:</span> <span class="hljs-string">'KUBECONFIG'</span><span class="hljs-string">)])</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">container('kubectl')</span> <span class="hljs-string">&#123;</span>
+          <span class="hljs-string">sh</span> <span class="hljs-string">"mkdir -p ~/.kube &amp;&amp; cp $&#123;KUBECONFIG&#125; ~/.kube/config"</span>
+          <span class="hljs-string">echo</span> <span class="hljs-string">"查看当前目录"</span>
+          <span class="hljs-string">sh</span> <span class="hljs-string">"pwd $&#123;env.WORKSPACE&#125;;ls -lh $&#123;env.WORKSPACE&#125;"</span>
+          <span class="hljs-string">sh</span> <span class="hljs-string">""</span><span class="hljs-string">"</span>
+<span class="hljs-string">            sed -i "</span><span class="hljs-string">s|&lt;CHANGE_CAUSE&gt;|$&#123;imageTag&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
+            <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">"s|&lt;IMAGE&gt;|$&#123;image&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
+            <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">"s|&lt;IMAGE_TAG&gt;|$&#123;imageTag&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
+            <span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">manifests/k8s.yaml</span> <span class="hljs-string">--namespace</span> <span class="hljs-string">devops</span>
+          <span class="hljs-string">""</span><span class="hljs-string">"</span>
+<span class="hljs-string">        &#125;</span>
+<span class="hljs-string">      &#125;</span>
+<span class="hljs-string">    &#125;</span>
+<span class="hljs-string"></span>
+<span class="hljs-string">    stage('快速回滚?') &#123;</span>
+<span class="hljs-string">      withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) &#123;</span>
+<span class="hljs-string">        container('kubectl') &#123;</span>
+<span class="hljs-string">          sh "</span><span class="hljs-string">mkdir</span> <span class="hljs-string">-p</span> <span class="hljs-string">~/.kube</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">cp</span> <span class="hljs-string">$&#123;KUBECONFIG&#125;</span> <span class="hljs-string">~/.kube/config"</span>
+          <span class="hljs-string">def</span> <span class="hljs-string">userInput</span> <span class="hljs-string">=</span> <span class="hljs-string">input(</span>
+            <span class="hljs-attr">id:</span> <span class="hljs-string">'userInput'</span><span class="hljs-string">,</span>
+            <span class="hljs-attr">message:</span> <span class="hljs-string">'是否需要快速回滚？'</span><span class="hljs-string">,</span>
+            <span class="hljs-attr">parameters:</span> <span class="hljs-string">[</span>
+              <span class="hljs-string">[</span>
+                <span class="hljs-string">$class:</span> <span class="hljs-string">'ChoiceParameterDefinition'</span><span class="hljs-string">,</span>
+                <span class="hljs-attr">choices:</span> <span class="hljs-string">"Y\nN"</span><span class="hljs-string">,</span>
+                <span class="hljs-attr">name:</span> <span class="hljs-string">'回滚?'</span>
+              <span class="hljs-string">]</span>
+            <span class="hljs-string">]</span>
+          <span class="hljs-string">)</span>
+          <span class="hljs-string">if</span> <span class="hljs-string">(userInput</span> <span class="hljs-string">==</span> <span class="hljs-string">"Y"</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
+            <span class="hljs-string">sh</span> <span class="hljs-string">"kubectl rollout undo deployment produce-deployment -n devops"</span>
+          <span class="hljs-string">&#125;</span>
+        <span class="hljs-string">&#125;</span>
+      <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span>
+
   <span class="hljs-string">&#125;</span>
 <span class="hljs-string">&#125;</span></code></pre></div>
 
