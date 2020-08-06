@@ -302,7 +302,13 @@ pipeline {
           echo "Kubernetes快速回滚"
           script {
             if ("${UNDO}" == 'YES') {
-              sh "kubectl --kubeconfig ${kubeconfig} rollout undo deployment consume-deployment -n ${NAMESPACE}"
+              sh '''
+              # 快速回滚 - 回滚到最近版本
+              kubectl --kubeconfig ${kubeconfig} rollout undo deployment consume-deployment -n ${NAMESPACE}
+              # 回滚到指定版本
+              # kubectl -n ${NAMESPACE} rollout undo deployment consume-deployment --to-revision=$(kubectl -n ${NAMESPACE} rollout history deployment consume-deployment | grep ${COMMIT_ID} | awk '{print $1}')
+              # kubectl -n ${NAMESPACE} rollout status deployment consume-deployment
+              '''
             }
           }
         }
