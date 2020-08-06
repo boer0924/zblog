@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35
+      36
        分钟
     </span>
   
@@ -479,13 +479,19 @@ helm delete --purge jenkins</code></pre></div>
           <span class="hljs-string">echo</span> <span class="hljs-string">"Kubernetes快速回滚"</span>
           <span class="hljs-string">script</span> <span class="hljs-string">&#123;</span>
             <span class="hljs-string">if</span> <span class="hljs-string">("$&#123;UNDO&#125;"</span> <span class="hljs-string">==</span> <span class="hljs-string">'YES'</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
-              <span class="hljs-string">sh</span> <span class="hljs-string">"kubectl --kubeconfig $&#123;kubeconfig&#125; rollout undo deployment consume-deployment -n $&#123;NAMESPACE&#125;"</span>
-            <span class="hljs-string">&#125;</span>
-          <span class="hljs-string">&#125;</span>
-        <span class="hljs-string">&#125;</span>
-      <span class="hljs-string">&#125;</span>
-    <span class="hljs-string">&#125;</span>
-  <span class="hljs-string">&#125;</span>
+              <span class="hljs-string">sh</span> <span class="hljs-string">''</span><span class="hljs-string">'</span>
+<span class="hljs-string">              # 快速回滚 - 回滚到最近版本</span>
+<span class="hljs-string">              kubectl --kubeconfig $&#123;kubeconfig&#125; rollout undo deployment consume-deployment -n $&#123;NAMESPACE&#125;</span>
+<span class="hljs-string">              # 回滚到指定版本</span>
+<span class="hljs-string">              # kubectl -n $&#123;NAMESPACE&#125; rollout undo deployment consume-deployment --to-revision=$(kubectl -n $&#123;NAMESPACE&#125; rollout history deployment consume-deployment | grep $&#123;COMMIT_ID&#125; | awk '</span><span class="hljs-string">&#123;print</span> <span class="hljs-string">$1&#125;')</span>
+              <span class="hljs-comment"># kubectl -n $&#123;NAMESPACE&#125; rollout status deployment consume-deployment</span>
+              <span class="hljs-string">''</span><span class="hljs-string">'</span>
+<span class="hljs-string">            &#125;</span>
+<span class="hljs-string">          &#125;</span>
+<span class="hljs-string">        &#125;</span>
+<span class="hljs-string">      &#125;</span>
+<span class="hljs-string">    &#125;</span>
+<span class="hljs-string">  &#125;</span>
 <span class="hljs-string">&#125;</span></code></pre></div>
 <h4 id="脚本式Jenkinsfile"><a href="#脚本式Jenkinsfile" class="headerlink" title="脚本式Jenkinsfile"></a>脚本式Jenkinsfile</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">def</span> <span class="hljs-string">label</span> <span class="hljs-string">=</span> <span class="hljs-string">"jenkins-slave"</span>
 
