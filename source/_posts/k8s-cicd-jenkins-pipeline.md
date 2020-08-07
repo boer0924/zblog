@@ -131,7 +131,7 @@ persistence:
 **划重点**
 1. maven缓存.m2
 2. docker in docker
-3. jnlp容器必须有，command不能覆盖jenkins-slave
+3. jnlp容器必须有，command不能覆盖`jenkins-slave`
 
 ```yaml
 ---
@@ -185,14 +185,14 @@ spec:
 #### 声明式Jenkinsfile
 **划重点**
 1. 定义agent label是为在k8s中调度job的pod名字
-2. 定义parameters来选择需要部署的环境。即namespace
+2. 定义parameters来选择需要部署的环境。
 3. Jenkinsfile的两个全局变量：env/params。
-  - 设置env变量: env.KEY = value
-  - 使用env变量: ${KEY}
-4. username&password凭证的使用: registryCre = credentials('registry') [_USR/_PSW]
-  - 获取username: ${registryCre_USR}
-  - 获取passowrd: ${registryCre_PSW}
-5. 使用short commit_id作为image_tag 和 kubernetes.io/change-cause, 以保证镜像唯一，和可以回退到指定版本。
+  - 设置env变量: `env.KEY = value`
+  - 使用env变量: `${KEY}`
+4. username&password凭证的使用: `registryCre = credentials('registry')` [_USR/_PSW]
+  - 获取username: `${registryCre_USR}`
+  - 获取passowrd: `${registryCre_PSW}`
+5. 使用short commit_id作为image_tag 和 `kubernetes.io/change-cause`, 以保证镜像唯一，和可以回退到指定版本。
 6. sed动态修改k8s资源定义文件manifests/k8s.yaml：
   - <CHANGE_CAUSE>: 便于指定版本回退
   - <IMAGE_TAG>: 指定版本
@@ -216,6 +216,7 @@ pipeline {
     registryUrl = 'registry.boer.xyz'
     image = "${registryUrl}/public/spring-consume"
     imageTag = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    changeCause = sh(script: "git log --oneline -1 HEAD", returnStdout: true).trim()
   }
   stages {
     stage('Test') {
@@ -274,7 +275,7 @@ pipeline {
         container('kubectl') {
           echo "Kubernetes发布"
           sh '''
-          sed -i "s|<CHANGE_CAUSE>|${imageTag}|g" manifests/k8s.yaml
+          sed -i "s|<CHANGE_CAUSE>|${changeCause}|g" manifests/k8s.yaml
           sed -i "s|<IMAGE>|${image}|g" manifests/k8s.yaml
           sed -i "s|<IMAGE_TAG>|${imageTag}|g" manifests/k8s.yaml
           sed -i "s|<INGRESS>|${INGRESS}|g" manifests/k8s.yaml
@@ -322,6 +323,12 @@ pipeline {
 ```yaml
 def label = "jenkins-slave"
 
+properties([
+   parameters([
+      choice(name: 'ENV', choices: ['test', 'pre', 'prod'], description: '选择部署环境？')
+   ])
+])
+
 podTemplate(label: label, containers: [
   containerTemplate(name: 'maven', image: 'maven:3.6.3-jdk-8', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'docker', image: 'docker:19.03.8', command: 'cat', ttyEnabled: true),
@@ -331,10 +338,23 @@ podTemplate(label: label, containers: [
   hostPathVolume(mountPath: '/var/lib/docker', hostPath: '/var/lib/docker')
 ]) {
   node(label) {
+    if ("${params.ENV}" == 'test') {
+      env.NAMESPACE = 'devops'
+      env.INGRESS = 'test'
+    }
+    if ("${params.ENV}" == 'pre') {
+      env.NAMESPACE = 'pre'
+      env.INGRESS = 'pre'
+    }
+    if ("${params.ENV}" == 'prod') {
+      env.NAMESPACE = 'prod'
+      env.INGRESS = 'prod'
+    }
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
     def gitBranch = myRepo.GIT_BRANCH
     def imageTag = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    def changeCause = sh(script: "git log --oneline -1 HEAD", returnStdout: true).trim()
     def dockerRegistryUrl = "registry.boer.xyz"
     def imageEndpoint = "public/spring-produce"
     def image = "${dockerRegistryUrl}/${imageEndpoint}"
@@ -373,12 +393,12 @@ podTemplate(label: label, containers: [
         container('kubectl') {
           sh "mkdir -p ~/.kube && cp ${KUBECONFIG} ~/.kube/config"
           echo "查看当前目录"
-          sh "pwd ${env.WORKSPACE};ls -lh ${env.WORKSPACE}"
           sh """
-            sed -i "s|<CHANGE_CAUSE>|${imageTag}|g" manifests/k8s.yaml
+            sed -i "s|<CHANGE_CAUSE>|${changeCause}|g" manifests/k8s.yaml
             sed -i "s|<IMAGE>|${image}|g" manifests/k8s.yaml
             sed -i "s|<IMAGE_TAG>|${imageTag}|g" manifests/k8s.yaml
-            kubectl apply -f manifests/k8s.yaml --namespace devops
+            sed -i "s|<INGRESS>|${INGRESS}|g" manifests/k8s.yaml
+            kubectl apply -f manifests/k8s.yaml --namespace ${NAMESPACE}
           """
         }
       }
@@ -394,13 +414,13 @@ podTemplate(label: label, containers: [
             parameters: [
               [
                 $class: 'ChoiceParameterDefinition',
-                choices: "Y\nN",
+                choices: "N\nY",
                 name: '回滚?'
               ]
             ]
           )
           if (userInput == "Y") {
-            sh "kubectl rollout undo deployment produce-deployment -n devops"
+            sh "kubectl rollout undo deployment produce-deployment -n ${NAMESPACE}"
           }
         }
       }
@@ -408,6 +428,26 @@ podTemplate(label: label, containers: [
 
   }
 }
+```
+
+### 版本回退
+> 划重点
+> 1.根据${COMMIT_ID}找出REVISION (`自动`)
+> 2.根据commit_msg找出REVISION (`人工`)
+
+```bash
+$ kubectl -n ${NAMESPACE} rollout history deployment consume-deployment 
+deployment.apps/consume-deployment 
+REVISION  CHANGE-CAUSE
+1         a03d0eb optimize change-cause msg
+2         73f5a5c resource quota
+3         2772a88 resource quota up
+4         254b592 plus probe time
+5         87989d8 更新配置文件
+
+# 1.根据${COMMIT_ID}找出REVISION(自动) 2.根据commit_msg找出REVISION(人工)
+$ kubectl -n ${NAMESPACE} rollout undo deployment consume-deployment --to-revision=$(kubectl -n ${NAMESPACE} rollout history deployment consume-deployment | grep ${COMMIT_ID} | awk '{print $1}')
+$ kubectl -n ${NAMESPACE} rollout status deployment consume-deployment
 ```
 
 ### Ref
