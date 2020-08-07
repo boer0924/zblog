@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.4k 字
+      2.7k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      36
+      40
        分钟
     </span>
   
@@ -307,7 +307,7 @@ helm delete --purge jenkins</code></pre></div>
 <ol>
 <li>maven缓存.m2</li>
 <li>docker in docker</li>
-<li>jnlp容器必须有，command不能覆盖jenkins-slave</li>
+<li>jnlp容器必须有，command不能覆盖<code>jenkins-slave</code></li>
 </ol>
 <div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
@@ -357,18 +357,18 @@ helm delete --purge jenkins</code></pre></div>
 <h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><h4 id="声明式Jenkinsfile"><a href="#声明式Jenkinsfile" class="headerlink" title="声明式Jenkinsfile"></a>声明式Jenkinsfile</h4><p><strong>划重点</strong></p>
 <ol>
 <li>定义agent label是为在k8s中调度job的pod名字</li>
-<li>定义parameters来选择需要部署的环境。即namespace</li>
+<li>定义parameters来选择需要部署的环境。</li>
 <li>Jenkinsfile的两个全局变量：env/params。<ul>
-<li>设置env变量: env.KEY = value</li>
-<li>使用env变量: ${KEY}</li>
+<li>设置env变量: <code>env.KEY = value</code></li>
+<li>使用env变量: <code>${KEY}</code></li>
 </ul>
 </li>
-<li>username&amp;password凭证的使用: registryCre = credentials(‘registry’) [_USR/_PSW]<ul>
-<li>获取username: ${registryCre_USR}</li>
-<li>获取passowrd: ${registryCre_PSW}</li>
+<li>username&amp;password凭证的使用: <code>registryCre = credentials(&#39;registry&#39;)</code> [_USR/_PSW]<ul>
+<li>获取username: <code>${registryCre_USR}</code></li>
+<li>获取passowrd: <code>${registryCre_PSW}</code></li>
 </ul>
 </li>
-<li>使用short commit_id作为image_tag 和 kubernetes.io/change-cause, 以保证镜像唯一，和可以回退到指定版本。</li>
+<li>使用short commit_id作为image_tag 和 <code>kubernetes.io/change-cause</code>, 以保证镜像唯一，和可以回退到指定版本。</li>
 <li>sed动态修改k8s资源定义文件manifests/k8s.yaml：<ul>
 <li><CHANGE_CAUSE>: 便于指定版本回退</li>
 <li><IMAGE_TAG>: 指定版本</li>
@@ -393,6 +393,7 @@ helm delete --purge jenkins</code></pre></div>
     <span class="hljs-string">registryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">'registry.boer.xyz'</span>
     <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;registryUrl&#125;/public/spring-consume"</span>
     <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
+    <span class="hljs-string">changeCause</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git log --oneline -1 HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
   <span class="hljs-string">&#125;</span>
   <span class="hljs-string">stages</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-string">stage('Test')</span> <span class="hljs-string">&#123;</span>
@@ -451,7 +452,7 @@ helm delete --purge jenkins</code></pre></div>
         <span class="hljs-string">container('kubectl')</span> <span class="hljs-string">&#123;</span>
           <span class="hljs-string">echo</span> <span class="hljs-string">"Kubernetes发布"</span>
           <span class="hljs-string">sh</span> <span class="hljs-string">''</span><span class="hljs-string">'</span>
-<span class="hljs-string">          sed -i "s|&lt;CHANGE_CAUSE&gt;|$&#123;imageTag&#125;|g" manifests/k8s.yaml</span>
+<span class="hljs-string">          sed -i "s|&lt;CHANGE_CAUSE&gt;|$&#123;changeCause&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;IMAGE&gt;|$&#123;image&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;IMAGE_TAG&gt;|$&#123;imageTag&#125;|g" manifests/k8s.yaml</span>
 <span class="hljs-string">          sed -i "s|&lt;INGRESS&gt;|$&#123;INGRESS&#125;|g" manifests/k8s.yaml</span>
@@ -495,6 +496,12 @@ helm delete --purge jenkins</code></pre></div>
 <span class="hljs-string">&#125;</span></code></pre></div>
 <h4 id="脚本式Jenkinsfile"><a href="#脚本式Jenkinsfile" class="headerlink" title="脚本式Jenkinsfile"></a>脚本式Jenkinsfile</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">def</span> <span class="hljs-string">label</span> <span class="hljs-string">=</span> <span class="hljs-string">"jenkins-slave"</span>
 
+<span class="hljs-string">properties([</span>
+   <span class="hljs-string">parameters([</span>
+      <span class="hljs-string">choice(name:</span> <span class="hljs-string">'ENV'</span><span class="hljs-string">,</span> <span class="hljs-attr">choices:</span> <span class="hljs-string">['test',</span> <span class="hljs-string">'pre'</span><span class="hljs-string">,</span> <span class="hljs-string">'prod'</span><span class="hljs-string">],</span> <span class="hljs-attr">description:</span> <span class="hljs-string">'选择部署环境？'</span><span class="hljs-string">)</span>
+   <span class="hljs-string">])</span>
+<span class="hljs-string">])</span>
+
 <span class="hljs-string">podTemplate(label:</span> <span class="hljs-string">label,</span> <span class="hljs-attr">containers:</span> <span class="hljs-string">[</span>
   <span class="hljs-string">containerTemplate(name:</span> <span class="hljs-string">'maven'</span><span class="hljs-string">,</span> <span class="hljs-attr">image:</span> <span class="hljs-string">'maven:3.6.3-jdk-8'</span><span class="hljs-string">,</span> <span class="hljs-attr">command:</span> <span class="hljs-string">'cat'</span><span class="hljs-string">,</span> <span class="hljs-attr">ttyEnabled:</span> <span class="hljs-literal">true</span><span class="hljs-string">),</span>
   <span class="hljs-string">containerTemplate(name:</span> <span class="hljs-string">'docker'</span><span class="hljs-string">,</span> <span class="hljs-attr">image:</span> <span class="hljs-string">'docker:19.03.8'</span><span class="hljs-string">,</span> <span class="hljs-attr">command:</span> <span class="hljs-string">'cat'</span><span class="hljs-string">,</span> <span class="hljs-attr">ttyEnabled:</span> <span class="hljs-literal">true</span><span class="hljs-string">),</span>
@@ -504,10 +511,23 @@ helm delete --purge jenkins</code></pre></div>
   <span class="hljs-string">hostPathVolume(mountPath:</span> <span class="hljs-string">'/var/lib/docker'</span><span class="hljs-string">,</span> <span class="hljs-attr">hostPath:</span> <span class="hljs-string">'/var/lib/docker'</span><span class="hljs-string">)</span>
 <span class="hljs-string">])</span> <span class="hljs-string">&#123;</span>
   <span class="hljs-string">node(label)</span> <span class="hljs-string">&#123;</span>
+    <span class="hljs-string">if</span> <span class="hljs-string">("$&#123;params.ENV&#125;"</span> <span class="hljs-string">==</span> <span class="hljs-string">'test'</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">env.NAMESPACE</span> <span class="hljs-string">=</span> <span class="hljs-string">'devops'</span>
+      <span class="hljs-string">env.INGRESS</span> <span class="hljs-string">=</span> <span class="hljs-string">'test'</span>
+    <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">if</span> <span class="hljs-string">("$&#123;params.ENV&#125;"</span> <span class="hljs-string">==</span> <span class="hljs-string">'pre'</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">env.NAMESPACE</span> <span class="hljs-string">=</span> <span class="hljs-string">'pre'</span>
+      <span class="hljs-string">env.INGRESS</span> <span class="hljs-string">=</span> <span class="hljs-string">'pre'</span>
+    <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">if</span> <span class="hljs-string">("$&#123;params.ENV&#125;"</span> <span class="hljs-string">==</span> <span class="hljs-string">'prod'</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">env.NAMESPACE</span> <span class="hljs-string">=</span> <span class="hljs-string">'prod'</span>
+      <span class="hljs-string">env.INGRESS</span> <span class="hljs-string">=</span> <span class="hljs-string">'prod'</span>
+    <span class="hljs-string">&#125;</span>
     <span class="hljs-string">def</span> <span class="hljs-string">myRepo</span> <span class="hljs-string">=</span> <span class="hljs-string">checkout</span> <span class="hljs-string">scm</span>
     <span class="hljs-string">def</span> <span class="hljs-string">gitCommit</span> <span class="hljs-string">=</span> <span class="hljs-string">myRepo.GIT_COMMIT</span>
     <span class="hljs-string">def</span> <span class="hljs-string">gitBranch</span> <span class="hljs-string">=</span> <span class="hljs-string">myRepo.GIT_BRANCH</span>
     <span class="hljs-string">def</span> <span class="hljs-string">imageTag</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git rev-parse --short HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
+    <span class="hljs-string">def</span> <span class="hljs-string">changeCause</span> <span class="hljs-string">=</span> <span class="hljs-string">sh(script:</span> <span class="hljs-string">"git log --oneline -1 HEAD"</span><span class="hljs-string">,</span> <span class="hljs-attr">returnStdout:</span> <span class="hljs-literal">true</span><span class="hljs-string">).trim()</span>
     <span class="hljs-string">def</span> <span class="hljs-string">dockerRegistryUrl</span> <span class="hljs-string">=</span> <span class="hljs-string">"registry.boer.xyz"</span>
     <span class="hljs-string">def</span> <span class="hljs-string">imageEndpoint</span> <span class="hljs-string">=</span> <span class="hljs-string">"public/spring-produce"</span>
     <span class="hljs-string">def</span> <span class="hljs-string">image</span> <span class="hljs-string">=</span> <span class="hljs-string">"$&#123;dockerRegistryUrl&#125;/$&#123;imageEndpoint&#125;"</span>
@@ -546,12 +566,12 @@ helm delete --purge jenkins</code></pre></div>
         <span class="hljs-string">container('kubectl')</span> <span class="hljs-string">&#123;</span>
           <span class="hljs-string">sh</span> <span class="hljs-string">"mkdir -p ~/.kube &amp;&amp; cp $&#123;KUBECONFIG&#125; ~/.kube/config"</span>
           <span class="hljs-string">echo</span> <span class="hljs-string">"查看当前目录"</span>
-          <span class="hljs-string">sh</span> <span class="hljs-string">"pwd $&#123;env.WORKSPACE&#125;;ls -lh $&#123;env.WORKSPACE&#125;"</span>
           <span class="hljs-string">sh</span> <span class="hljs-string">""</span><span class="hljs-string">"</span>
-<span class="hljs-string">            sed -i "</span><span class="hljs-string">s|&lt;CHANGE_CAUSE&gt;|$&#123;imageTag&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
+<span class="hljs-string">            sed -i "</span><span class="hljs-string">s|&lt;CHANGE_CAUSE&gt;|$&#123;changeCause&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
             <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">"s|&lt;IMAGE&gt;|$&#123;image&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
             <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">"s|&lt;IMAGE_TAG&gt;|$&#123;imageTag&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
-            <span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">manifests/k8s.yaml</span> <span class="hljs-string">--namespace</span> <span class="hljs-string">devops</span>
+            <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">"s|&lt;INGRESS&gt;|$&#123;INGRESS&#125;|g"</span> <span class="hljs-string">manifests/k8s.yaml</span>
+            <span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">manifests/k8s.yaml</span> <span class="hljs-string">--namespace</span> <span class="hljs-string">$&#123;NAMESPACE&#125;</span>
           <span class="hljs-string">""</span><span class="hljs-string">"</span>
 <span class="hljs-string">        &#125;</span>
 <span class="hljs-string">      &#125;</span>
@@ -567,13 +587,13 @@ helm delete --purge jenkins</code></pre></div>
             <span class="hljs-attr">parameters:</span> <span class="hljs-string">[</span>
               <span class="hljs-string">[</span>
                 <span class="hljs-string">$class:</span> <span class="hljs-string">'ChoiceParameterDefinition'</span><span class="hljs-string">,</span>
-                <span class="hljs-attr">choices:</span> <span class="hljs-string">"Y\nN"</span><span class="hljs-string">,</span>
+                <span class="hljs-attr">choices:</span> <span class="hljs-string">"N\nY"</span><span class="hljs-string">,</span>
                 <span class="hljs-attr">name:</span> <span class="hljs-string">'回滚?'</span>
               <span class="hljs-string">]</span>
             <span class="hljs-string">]</span>
           <span class="hljs-string">)</span>
           <span class="hljs-string">if</span> <span class="hljs-string">(userInput</span> <span class="hljs-string">==</span> <span class="hljs-string">"Y"</span><span class="hljs-string">)</span> <span class="hljs-string">&#123;</span>
-            <span class="hljs-string">sh</span> <span class="hljs-string">"kubectl rollout undo deployment produce-deployment -n devops"</span>
+            <span class="hljs-string">sh</span> <span class="hljs-string">"kubectl rollout undo deployment produce-deployment -n $&#123;NAMESPACE&#125;"</span>
           <span class="hljs-string">&#125;</span>
         <span class="hljs-string">&#125;</span>
       <span class="hljs-string">&#125;</span>
@@ -581,6 +601,22 @@ helm delete --purge jenkins</code></pre></div>
 
   <span class="hljs-string">&#125;</span>
 <span class="hljs-string">&#125;</span></code></pre></div>
+
+<h3 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h3><blockquote>
+<p>划重点<br>1.根据${COMMIT_ID}找出REVISION (<code>自动</code>)<br>2.根据commit_msg找出REVISION (<code>人工</code>)</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs bash">$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout <span class="hljs-built_in">history</span> deployment consume-deployment 
+deployment.apps/consume-deployment 
+REVISION  CHANGE-CAUSE
+1         a03d0eb optimize change-cause msg
+2         73f5a5c resource quota
+3         2772a88 resource quota up
+4         254b592 plus probe time
+5         87989d8 更新配置文件
+
+<span class="hljs-comment"># 1.根据$&#123;COMMIT_ID&#125;找出REVISION(自动) 2.根据commit_msg找出REVISION(人工)</span>
+$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout undo deployment consume-deployment --to-revision=$(kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout <span class="hljs-built_in">history</span> deployment consume-deployment | grep <span class="hljs-variable">$&#123;COMMIT_ID&#125;</span> | awk <span class="hljs-string">'&#123;print $1&#125;'</span>)
+$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout status deployment consume-deployment</code></pre></div>
 
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/" target="_blank" rel="noopener">https://www.jenkins.io/doc/book/pipeline/syntax/</a></li>
