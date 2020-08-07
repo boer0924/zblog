@@ -452,6 +452,7 @@ $ kubectl -n ${NAMESPACE} rollout status deployment consume-deployment
 
 ### Ref
 - https://www.jenkins.io/doc/book/pipeline/syntax/
+- https://www.jenkins.io/doc/pipeline/steps/workflow-multibranch/
 - https://github.com/jenkinsci/kubernetes-plugin/tree/master/examples/declarative_from_yaml_file
 - https://plugins.jenkins.io/kubernetes/
 - http://blog.jboost.cn/k8s3-cd.html
