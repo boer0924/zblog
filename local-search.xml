@@ -171,11 +171,11 @@
     
     <tags>
       
+      <tag>Elasticsearch</tag>
+      
       <tag>Kubernetes</tag>
       
       <tag>logging</tag>
-      
-      <tag>Elasticsearch</tag>
       
       <tag>Filebeat</tag>
       
@@ -298,6 +298,35 @@
     <tags>
       
       <tag>APM</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Elasticsearch数据迁移</title>
+    <link href="/2019/03/24/es-data-migrate/"/>
+    <url>/2019/03/24/es-data-migrate/</url>
+    
+    <content type="html"><![CDATA[<ol><li>_reindex适用场景 <code>https://www.elastic.co/guide/en/elasticsearch/reference/6.1/docs-reindex.html</code><ul><li>同一集群不同索引数据迁移</li><li>不同集群索引数据迁移</li></ul></li><li>动态调整迁移速度</li><li>随时取消任务</li><li>Built-in，无需安装(反例logstash)</li><li>5.x - 7.x版本api均包含以上功能(可做为es数据迁移通用方案)</li><li>_reindex、logstash等都通过scroll\bulk API实现读写，性能一样</li><li>logstash等三方工具适合blue-green网络不可达的情况下，作为代理迁移数据 （blue - green不通，blue -&gt; logstash -&gt; green代理）</li></ol><a id="more"></a><h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>es集群<br>| node | type |<br>| - | - |<br>| 10.10.62.20 | - |<br>| 10.10.62.21 | - |<br>| 10.10.62.22 | - |<br>| 10.10.62.80 | hot |<br>| 10.10.62.81 | hot |<br>| 10.10.62.82 | hot |</p><p>索引<code>message_qq_201812</code>在节点<code>10.10.62.20, 10.10.62.21, 10.10.62.22</code>, 计划迁移到节点<code>10.10.62.80, 10.10.62.81, 10.10.62.82</code>的<code>message_wechat_201812</code>索引, 观察无异常后下线节点<code>10.10.62.20, 10.10.62.21, 10.10.62.22</code></p><h2 id="1、创建index模板"><a href="#1、创建index模板" class="headerlink" title="1、创建index模板"></a>1、创建index模板</h2><p><strong>消息平台已存在index模板</strong></p><div class="hljs"><pre><code class="hljs bash">curl -XPUT http://&lt;es-client&gt;:9200/_template/message_wechat_template -H <span class="hljs-string">'Content-Type: application/json'</span> -d <span class="hljs-string">'&#123;</span><span class="hljs-string">  "order": 0,</span><span class="hljs-string">  "index_patterns": [</span><span class="hljs-string">    "message_wechat*"</span><span class="hljs-string">  ],</span><span class="hljs-string">  "settings": &#123;</span><span class="hljs-string">    "index": &#123;</span><span class="hljs-string">      "number_of_shards": "1",</span><span class="hljs-string">      "number_of_replicas": "1",</span><span class="hljs-string">      "routing": &#123;</span><span class="hljs-string">        "allocation": &#123;</span><span class="hljs-string">          "require": &#123;</span><span class="hljs-string">            "box_type": "hot"</span><span class="hljs-string">          &#125;</span><span class="hljs-string">        &#125;</span><span class="hljs-string">      &#125;</span><span class="hljs-string">    &#125;</span><span class="hljs-string">  &#125;,</span><span class="hljs-string">  "mappings": &#123;&#125;,</span><span class="hljs-string">  "aliases": &#123;</span><span class="hljs-string">    "message_wechat": &#123;&#125;</span><span class="hljs-string">  &#125;</span><span class="hljs-string">&#125;'</span></code></pre></div><h2 id="2、-创建index"><a href="#2、-创建index" class="headerlink" title="2、 创建index"></a>2、 创建index</h2><div class="hljs"><pre><code class="hljs bash">curl -XPUT http://&lt;es-client&gt;:9200/message_wechat_201812curl http://&lt;es-client&gt;:9200/_cat/shards/message_wechat_201812 <span class="hljs-comment"># 确认shards在目标主机</span></code></pre></div><h2 id="3、执行迁移"><a href="#3、执行迁移" class="headerlink" title="3、执行迁移"></a>3、执行迁移</h2><p>message_qq_201812 -&gt; message_wechat_201812</p><div class="hljs"><pre><code class="hljs bash">curl -XPOST http: //&lt;es-client&gt;:9200/_reindex?wait_for_completion=<span class="hljs-literal">false</span> -H <span class="hljs-string">'Content-Type: application/json'</span> -d <span class="hljs-string">'&#123;</span><span class="hljs-string">  "source": &#123;</span><span class="hljs-string">    "index": "message_qq_201812",</span><span class="hljs-string">    "size": 1000</span><span class="hljs-string">  &#125;,</span><span class="hljs-string">  "dest": &#123;</span><span class="hljs-string">    "index": "message_wechat_201812"</span><span class="hljs-string">  &#125;</span><span class="hljs-string">&#125;'</span></code></pre></div><blockquote><p><strong>记录taskId</strong> <code>{&quot;task&quot;:&quot;YoYJXpjnQICRtr5EErLZQA:3208554&quot;}</code></p></blockquote><h2 id="4、动态调整速度"><a href="#4、动态调整速度" class="headerlink" title="4、动态调整速度"></a>4、动态调整速度</h2><div class="hljs"><pre><code class="hljs bash">curl -XPOST http://&lt;es-client&gt;:9200/_reindex/YoYJXpjnQICRtr5EErLZQA:3208554/_rethrottle?requests_per_second=1000</code></pre></div><h2 id="5、取消任务"><a href="#5、取消任务" class="headerlink" title="5、取消任务"></a>5、取消任务</h2><p><code>curl -XPOST http://&lt;es-client&gt;:9200/_tasks/YoYJXpjnQICRtr5EErLZQA:3208554/_cancel</code></p><h2 id="6、删除老index"><a href="#6、删除老index" class="headerlink" title="6、删除老index"></a>6、删除老index</h2><p><code>curl -XDELETE http://&lt;es-client&gt;:9200/message_qq_201812</code></p><h2 id="7、-task索引"><a href="#7、-task索引" class="headerlink" title="7、.task索引"></a>7、.task索引</h2><p>手动创建_reindex等task后，es会自动创建一个.task的index</p><ol><li>删除.task，如序6</li><li>让es自动迁移.tasks, 如序8</li></ol><h2 id="8、逐台下线老节点"><a href="#8、逐台下线老节点" class="headerlink" title="8、逐台下线老节点"></a>8、逐台下线老节点</h2><p><strong>注意: 逐台平滑下线</strong></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Elastic</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Elasticsearch</tag>
+      
+      <tag>Logstash</tag>
+      
+      <tag>reindex</tag>
       
     </tags>
     
