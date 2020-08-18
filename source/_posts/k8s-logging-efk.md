@@ -312,3 +312,72 @@ cluster.routing.allocation.awareness.attributes: box_type
 index.routing.allocation.require.box_type: hot # 冷热分离
 index.routing.allocation.total_shards_per_node: 1
 ```
+
+### Filebeat配置
+```yaml
+filebeat.inputs:
+- type: log
+  paths: 
+    - /home/apps/Logs/*.boer.lo/*.log
+  fields: {ip: ipv4address, log_type: apps}
+  fields_under_root: true
+  multiline.match: after
+  multiline.negate: true
+  multiline.pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}
+  tail_files: true
+  symlinks: true
+
+- type: log
+  paths: [/home/apps/Logs/nginx/*.log]
+  fields: {ip: ipv4address, log_type: elb}
+  fields_under_root: true
+  tail_files: true
+  symlinks: true
+
+- type: log
+  paths: [/var/log/messages, /var/log/secure, /var/log/cron, /var/log/spooler, /var/log/audit/audit.log]
+  fields: {ip: ipv4address, log_type: syslog}
+  fields_under_root: true
+  tail_files: true
+  symlinks: true
+
+- type: log
+  paths: [/home/apps/Logs/*.boer.lo/monitor/*.log]
+  fields: {ip: ipv4address, log_type: monitor}
+  fields_under_root: true
+  tail_files: true 
+  symlinks: true
+
+- type: log
+  paths:
+    - "/home/apps/Logs/*.boer.lo/audit/*.log"
+    - "/home/apps/Logs/*.boer.xyz/audit/*.log"
+  fields: {ip: ipv4address, log_type: audit}
+  fields_under_root: true
+  tail_files: true
+  symlinks: true
+
+processors:
+- rename:
+    fields:
+     - from: "log.file.path"
+       to: "source"
+    ignore_missing: false
+    fail_on_error: true
+- drop_fields:
+    fields: ["log","ecs","host","agent"] 
+- drop_fields:
+    when:
+      equals:
+        log_type: monitor
+    fields: ["input_type","source"]    
+
+output.kafka:
+  hosts: ["node1.kafka.boer.lo:9092", "node2.kafka.boer.lo:9092", "node3.kafka.boer.lo:9092", "node4.kafka.boer.lo:9092"]
+  topic: "%{[log_type]}"
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: lz4
+  max_message_bytes: 1000000
+```
