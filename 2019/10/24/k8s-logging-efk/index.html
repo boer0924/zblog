@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.4k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      25
        分钟
     </span>
   
@@ -476,6 +476,72 @@ cluster.routing.allocation.awareness.attributes: box_type
 
 index.routing.allocation.require.box_type: hot <span class="hljs-comment"># 冷热分离</span>
 index.routing.allocation.total_shards_per_node: 1</code></pre></div>
+
+<h3 id="Filebeat配置"><a href="#Filebeat配置" class="headerlink" title="Filebeat配置"></a>Filebeat配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
+  <span class="hljs-attr">paths:</span> 
+    <span class="hljs-bullet">-</span> <span class="hljs-string">/home/apps/Logs/*.boer.lo/*.log</span>
+  <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">apps&#125;</span>
+  <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">multiline.match:</span> <span class="hljs-string">after</span>
+  <span class="hljs-attr">multiline.negate:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">multiline.pattern:</span> <span class="hljs-string">^[0-9]&#123;4&#125;-[0-9]&#123;2&#125;-[0-9]&#123;2&#125;</span>
+  <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
+  <span class="hljs-attr">paths:</span> <span class="hljs-string">[/home/apps/Logs/nginx/*.log]</span>
+  <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">elb&#125;</span>
+  <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
+  <span class="hljs-attr">paths:</span> <span class="hljs-string">[/var/log/messages,</span> <span class="hljs-string">/var/log/secure,</span> <span class="hljs-string">/var/log/cron,</span> <span class="hljs-string">/var/log/spooler,</span> <span class="hljs-string">/var/log/audit/audit.log]</span>
+  <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">syslog&#125;</span>
+  <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
+  <span class="hljs-attr">paths:</span> <span class="hljs-string">[/home/apps/Logs/*.boer.lo/monitor/*.log]</span>
+  <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">monitor&#125;</span>
+  <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span> 
+  <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
+  <span class="hljs-attr">paths:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">"/home/apps/Logs/*.boer.lo/audit/*.log"</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">"/home/apps/Logs/*.boer.xyz/audit/*.log"</span>
+  <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">audit&#125;</span>
+  <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-attr">processors:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">rename:</span>
+    <span class="hljs-attr">fields:</span>
+     <span class="hljs-bullet">-</span> <span class="hljs-attr">from:</span> <span class="hljs-string">"log.file.path"</span>
+       <span class="hljs-attr">to:</span> <span class="hljs-string">"source"</span>
+    <span class="hljs-attr">ignore_missing:</span> <span class="hljs-literal">false</span>
+    <span class="hljs-attr">fail_on_error:</span> <span class="hljs-literal">true</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">drop_fields:</span>
+    <span class="hljs-attr">fields:</span> <span class="hljs-string">["log","ecs","host","agent"]</span> 
+<span class="hljs-bullet">-</span> <span class="hljs-attr">drop_fields:</span>
+    <span class="hljs-attr">when:</span>
+      <span class="hljs-attr">equals:</span>
+        <span class="hljs-attr">log_type:</span> <span class="hljs-string">monitor</span>
+    <span class="hljs-attr">fields:</span> <span class="hljs-string">["input_type","source"]</span>    
+
+<span class="hljs-attr">output.kafka:</span>
+  <span class="hljs-attr">hosts:</span> <span class="hljs-string">["node1.kafka.boer.lo:9092",</span> <span class="hljs-string">"node2.kafka.boer.lo:9092"</span><span class="hljs-string">,</span> <span class="hljs-string">"node3.kafka.boer.lo:9092"</span><span class="hljs-string">,</span> <span class="hljs-string">"node4.kafka.boer.lo:9092"</span><span class="hljs-string">]</span>
+  <span class="hljs-attr">topic:</span> <span class="hljs-string">"<span class="hljs-template-variable">%&#123;[log_type]&#125;</span>"</span>
+  <span class="hljs-attr">partition.round_robin:</span>
+    <span class="hljs-attr">reachable_only:</span> <span class="hljs-literal">false</span>
+  <span class="hljs-attr">required_acks:</span> <span class="hljs-number">1</span>
+  <span class="hljs-attr">compression:</span> <span class="hljs-string">lz4</span>
+  <span class="hljs-attr">max_message_bytes:</span> <span class="hljs-number">1000000</span></code></pre></div>
             </article>
             <hr>
             <div>
