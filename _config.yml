@@ -6,7 +6,7 @@
 title: ~·boer·~ 乌托邦
 subtitle: 'Stay Hungry, Stay Foolish.'
 description: '念念不忘 必有回响'
-keywords: '新基建, 数字化, Bigdata, 5G, AI, Cloud, Java, Golang, Linux, Ansible, Kubernetes, DevOps, Middleware'
+keywords: '新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务'
 author: boer
 language: zh-CN
 timezone: 'Asia/Chongqing'
@@ -99,3 +99,12 @@ theme: fluid
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: ''
+
+# Plugin hexo-generator-sitemap configure
+## https://github.com/hexojs/hexo-generator-sitemap
+sitemap:
+  path: sitemap.xml
+  # template: ./sitemap_template.xml
+  rel: false
+  tags: true
+  categories: true
