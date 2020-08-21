@@ -280,6 +280,11 @@ prometheus.io/scrape: 'true'
 
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821112157.png?x-oss-process=style/blog-img-watermark)
 
+### Grafana插件
+> https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app
+
+![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821154757.png?x-oss-process=style/blog-img-watermark)
+
 ### Ref
 1. https://github.com/prometheus-operator/prometheus-operator
 2. https://github.com/prometheus-operator/kube-prometheus
