@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      255 字
+      1k 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      18
        分钟
     </span>
   
@@ -204,10 +204,20 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>This repository collects Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.</p>
+              <p>Prometheus : Monitoring &amp; TSDB<br>Alertmanager : 告警中心<br>node-exporter : 宿主机Node基础监控<br>metrics-server (heapster) : 集群资源监控/HPA<br>kube-state-metrics : K8S资源监控<br>Grafana : 用户UI展示</p>
 <a id="more"></a>
-
-<p>Components included in this package:</p>
+<h3 id="Prometheus-Operator"><a href="#Prometheus-Operator" class="headerlink" title="Prometheus Operator"></a>Prometheus Operator</h3><p>The Operator acts on the following custom resource definitions (CRDs):</p>
+<ul>
+<li><strong>Prometheus</strong>, which defines a desired Prometheus deployment. # 定义Prometheus集群</li>
+<li><strong>Alertmanager</strong>, which defines a desired Alertmanager deployment. # 定义Alertmanager集群</li>
+<li><strong>ThanosRuler</strong>, which defines a desired Thanos Ruler deployment.</li>
+<li><strong>ServiceMonitor</strong>, which declaratively specifies how groups of Kubernetes services should be monitored. The Operator automatically generates Prometheus scrape configuration based on the current state of the objects in the API server. # 定义监控项</li>
+<li><strong>PodMonitor</strong>, which declaratively specifies how group of pods should be monitored. The Operator automatically generates Prometheus scrape configuration based on the current state of the objects in the API server.</li>
+<li><strong>Probe</strong>, which declaratively specifies how groups of ingresses or static targets should be monitored. The Operator automatically generates Prometheus scrape configuration based on the definition.</li>
+<li><strong>PrometheusRule</strong>, which defines a desired set of Prometheus alerting and/or recording rules. The Operator generates a rule file, which can be used by Prometheus instances. # 定义告警策略</li>
+</ul>
+<p><a href="https://github.com/prometheus-operator/prometheus-operator#prometheus-operator-vs-kube-prometheus-vs-community-helm-chart" target="_blank" rel="noopener">Prometheus Operator vs. kube-prometheus vs. community helm chart</a></p>
+<h3 id="kube-prometheus"><a href="#kube-prometheus" class="headerlink" title="kube-prometheus"></a>kube-prometheus</h3><p>Components included in this package:</p>
 <ul>
 <li>The Prometheus Operator</li>
 <li>Highly available Prometheus</li>
@@ -218,18 +228,16 @@
 <li>Grafana</li>
 </ul>
 <p>The kube-prometheus stack includes a resource metrics API server, <strong>so the metrics-server addon is not necessary.</strong></p>
-<h3 id="安装Prometheus"><a href="#安装Prometheus" class="headerlink" title="安装Prometheus"></a>安装Prometheus</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</span>
+<h3 id="kube-prometheus方式部署监控方案"><a href="#kube-prometheus方式部署监控方案" class="headerlink" title="kube-prometheus方式部署监控方案"></a>kube-prometheus方式部署监控方案</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</span>
 <span class="hljs-comment">## </span>
 <span class="hljs-built_in">cd</span> ~/k8s
 git <span class="hljs-built_in">clone</span> https://github.com/coreos/kube-prometheus.git
 <span class="hljs-built_in">cd</span> kube-prometheus
 sed -i -e <span class="hljs-string">'s_quay.io_quay.mirrors.ustc.edu.cn_'</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span>
 
-kubectl apply -f manifests/setup/
-kubectl apply -f manifests/</code></pre></div>
+kubectl apply -f manifests/setup/ <span class="hljs-comment"># 先部署Prometheus Operator</span>
+kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Alertmanager等各种CRD资源</span></code></pre></div>
 
-<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/altermanager_groupby.jpg?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
-<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821112157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <h3 id="暴露Ingress"><a href="#暴露Ingress" class="headerlink" title="暴露Ingress"></a>暴露Ingress</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">networking.k8s.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Ingress</span>
 <span class="hljs-attr">metadata:</span>
@@ -264,9 +272,182 @@ kubectl apply -f manifests/</code></pre></div>
           <span class="hljs-attr">serviceName:</span> <span class="hljs-string">alertmanager-main</span>
           <span class="hljs-attr">servicePort:</span> <span class="hljs-number">9093</span></code></pre></div>
 
+<h3 id="kube-prometheus自定义配置"><a href="#kube-prometheus自定义配置" class="headerlink" title="kube-prometheus自定义配置"></a>kube-prometheus自定义配置</h3><p><code>cd ~/k8s/kube-prometheus</code></p>
+<h4 id="Grafana-数据持久化"><a href="#Grafana-数据持久化" class="headerlink" title="Grafana 数据持久化"></a>Grafana 数据持久化</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/grafana-deployment.yaml</span>
+      <span class="hljs-attr">volumes:</span>
+      <span class="hljs-comment"># - emptyDir: &#123;&#125;</span>
+      <span class="hljs-comment">#   name: grafana-storage</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">grafana-storage</span>
+        <span class="hljs-attr">persistentVolumeClaim:</span>
+          <span class="hljs-attr">claimName:</span> <span class="hljs-string">grafana-storage-k8s</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolumeClaim</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">labels:</span>
+    <span class="hljs-attr">app:</span> <span class="hljs-string">grafana</span>
+    <span class="hljs-attr">grafana:</span> <span class="hljs-string">k8s</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">grafana-storage-k8s</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">monitoring</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">accessModes:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteOnce</span>
+  <span class="hljs-attr">resources:</span>
+    <span class="hljs-attr">requests:</span>
+      <span class="hljs-attr">storage:</span> <span class="hljs-string">2Gi</span>
+  <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">openebs-hostpath</span></code></pre></div>
+
+<h4 id="Prometheus自定义配置"><a href="#Prometheus自定义配置" class="headerlink" title="Prometheus自定义配置"></a>Prometheus自定义配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/prometheus-prometheus.yaml</span>
+  <span class="hljs-attr">retention:</span> <span class="hljs-string">72h</span> <span class="hljs-comment"># 数据保存时长</span>
+  <span class="hljs-attr">externalUrl:</span> <span class="hljs-string">http://prometheus.boer.xyz</span> <span class="hljs-comment"># 对应Ingress地址</span>
+  <span class="hljs-attr">additionalScrapeConfigs:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">additional-scrape-configs</span> <span class="hljs-comment"># 自动发现监控&lt;详见下文&gt;</span>
+    <span class="hljs-attr">key:</span> <span class="hljs-string">prometheus-additional.yaml</span>
+  <span class="hljs-attr">storage:</span> <span class="hljs-comment"># 数据持久化</span>
+    <span class="hljs-attr">volumeClaimTemplate:</span>
+      <span class="hljs-attr">spec:</span>
+        <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">openebs-hostpath</span>
+        <span class="hljs-attr">resources:</span>
+          <span class="hljs-attr">requests:</span>
+            <span class="hljs-attr">storage:</span> <span class="hljs-string">5Gi</span></code></pre></div>
+
+<h4 id="Alertmanager自定义配置"><a href="#Alertmanager自定义配置" class="headerlink" title="Alertmanager自定义配置"></a>Alertmanager自定义配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/alertmanager-alertmanager.yaml</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">monitoring.coreos.com/v1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">Alertmanager</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">labels:</span>
+    <span class="hljs-attr">alertmanager:</span> <span class="hljs-string">main</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">main</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">monitoring</span>
+<span class="hljs-attr">spec:</span>
+  <span class="hljs-attr">image:</span> <span class="hljs-string">quay.mirrors.ustc.edu.cn/prometheus/alertmanager:v0.20.0</span>
+  <span class="hljs-attr">nodeSelector:</span>
+    <span class="hljs-attr">kubernetes.io/os:</span> <span class="hljs-string">linux</span>
+  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span>
+  <span class="hljs-attr">securityContext:</span>
+    <span class="hljs-attr">fsGroup:</span> <span class="hljs-number">2000</span>
+    <span class="hljs-attr">runAsNonRoot:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">runAsUser:</span> <span class="hljs-number">1000</span>
+  <span class="hljs-attr">serviceAccountName:</span> <span class="hljs-string">alertmanager-main</span>
+  <span class="hljs-attr">version:</span> <span class="hljs-string">v0.20.0</span>
+  <span class="hljs-attr">externalUrl:</span> <span class="hljs-string">http://alertmanager.boer.xyz</span> <span class="hljs-comment"># 对应Ingress地址</span></code></pre></div>
+
+<h3 id="Alertmanager企业微信告警"><a href="#Alertmanager企业微信告警" class="headerlink" title="Alertmanager企业微信告警"></a>Alertmanager企业微信告警</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim alertmanager-main-secrets.yaml</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span>
+<span class="hljs-attr">type:</span> <span class="hljs-string">Opaque</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">alertmanager-main</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">monitoring</span>
+<span class="hljs-attr">data:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-attr">stringData:</span>
+  <span class="hljs-attr">alertmanager.yaml:</span> <span class="hljs-string">|-</span>
+    <span class="hljs-attr">"global":</span>
+      <span class="hljs-attr">"resolve_timeout":</span> <span class="hljs-string">"5m"</span>
+    <span class="hljs-attr">"inhibit_rules":</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">"equal":</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"namespace"</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"alertname"</span>
+      <span class="hljs-attr">"source_match":</span>
+        <span class="hljs-attr">"severity":</span> <span class="hljs-string">"critical"</span>
+      <span class="hljs-attr">"target_match_re":</span>
+        <span class="hljs-attr">"severity":</span> <span class="hljs-string">"warning|info"</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">"equal":</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"namespace"</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"alertname"</span>
+      <span class="hljs-attr">"source_match":</span>
+        <span class="hljs-attr">"severity":</span> <span class="hljs-string">"warning"</span>
+      <span class="hljs-attr">"target_match_re":</span>
+        <span class="hljs-attr">"severity":</span> <span class="hljs-string">"info"</span>
+    <span class="hljs-attr">"receivers":</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">"name":</span> <span class="hljs-string">"Default"</span>
+      <span class="hljs-attr">"wechat_configs":</span> <span class="hljs-comment"># 企业微信接收告警信息 https://work.weixin.qq.com/api/doc/90000/90135/90236#%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">"corp_id":</span> <span class="hljs-string">"&lt;corp_id&gt;"</span>
+        <span class="hljs-attr">"to_user":</span> <span class="hljs-string">"&lt;user1|user2&gt;"</span>
+        <span class="hljs-attr">"agent_id":</span> <span class="hljs-string">"&lt;1000007&gt;"</span>
+        <span class="hljs-attr">"api_secret":</span> <span class="hljs-string">"&lt;api_secret&gt;"</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">"name":</span> <span class="hljs-string">"Watchdog"</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">"name":</span> <span class="hljs-string">"Critical"</span>
+    <span class="hljs-attr">"route":</span>
+      <span class="hljs-attr">"group_by":</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">"alertname"</span> <span class="hljs-comment"># 按alertname分组告警</span>
+      <span class="hljs-attr">"group_interval":</span> <span class="hljs-string">"5m"</span>
+      <span class="hljs-attr">"group_wait":</span> <span class="hljs-string">"30s"</span>
+      <span class="hljs-attr">"receiver":</span> <span class="hljs-string">"Default"</span>
+      <span class="hljs-attr">"repeat_interval":</span> <span class="hljs-string">"12h"</span> <span class="hljs-comment"># 重复告警间隔时间</span>
+      <span class="hljs-attr">"routes":</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">"match":</span>
+          <span class="hljs-attr">"alertname":</span> <span class="hljs-string">"Watchdog"</span>
+        <span class="hljs-attr">"receiver":</span> <span class="hljs-string">"Default"</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">"match":</span>
+          <span class="hljs-attr">"severity":</span> <span class="hljs-string">"critical"</span>
+        <span class="hljs-attr">"receiver":</span> <span class="hljs-string">"Default"</span>
+<span class="hljs-comment"># 强制应用配置</span>
+<span class="hljs-string">kubectl</span> <span class="hljs-string">delete</span> <span class="hljs-string">-f</span> <span class="hljs-string">alertmanager-main-secrets.yaml</span>
+<span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">alertmanager-main-secrets.yaml</span></code></pre></div>
+
+<h3 id="自动发现监控配置"><a href="#自动发现监控配置" class="headerlink" title="自动发现监控配置"></a>自动发现监控配置</h3><blockquote>
+<p><a href="https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md" target="_blank" rel="noopener">https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md</a></p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim prometheus-additional.yaml</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">'kubernetes-endpoints'</span>
+  <span class="hljs-attr">kubernetes_sd_configs:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">role:</span> <span class="hljs-string">endpoints</span>
+  <span class="hljs-attr">relabel_configs:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_service_annotation_prometheus_io_scrape]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">keep</span>
+    <span class="hljs-attr">regex:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_service_annotation_prometheus_io_scheme]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">__scheme__</span>
+    <span class="hljs-attr">regex:</span> <span class="hljs-string">(https?)</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_service_annotation_prometheus_io_path]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">__metrics_path__</span>
+    <span class="hljs-attr">regex:</span> <span class="hljs-string">(.+)</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__address__,</span> <span class="hljs-string">__meta_kubernetes_service_annotation_prometheus_io_port]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">__address__</span>
+    <span class="hljs-attr">regex:</span> <span class="hljs-string">([^:]+)(?::\d+)?;(\d+)</span>
+    <span class="hljs-attr">replacement:</span> <span class="hljs-string">$1:$2</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">action:</span> <span class="hljs-string">labelmap</span>
+    <span class="hljs-attr">regex:</span> <span class="hljs-string">__meta_kubernetes_service_label_(.+)</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_namespace]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">kubernetes_namespace</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_service_name]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">kubernetes_name</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_labels:</span> <span class="hljs-string">[__meta_kubernetes_pod_name]</span>
+    <span class="hljs-attr">action:</span> <span class="hljs-string">replace</span>
+    <span class="hljs-attr">target_label:</span> <span class="hljs-string">kubernetes_pod_name</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-comment"># vim additional-scrape-configs.yaml</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span>
+<span class="hljs-attr">metadata:</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">additional-scrape-configs</span>
+  <span class="hljs-attr">namespace:</span> <span class="hljs-string">monitoring</span>
+<span class="hljs-attr">data:</span>
+  <span class="hljs-attr">prometheus-additional.yaml:</span> <span class="hljs-string">LSBqb2JfbmFtZTogJ2t1YmVybmV0ZXMtZW5kcG9pbnRzJwogIGt1YmVybmV0ZXNfc2RfY29uZmlnczoKICAtIHJvbGU6IGVuZHBvaW50cwogIHJlbGFiZWxfY29uZmlnczoKICAtIHNvdXJjZV9sYWJlbHM6IFtfX21ldGFfa3ViZXJuZXRlc19zZXJ2aWNlX2Fubm90YXRpb25fcHJvbWV0aGV1c19pb19zY3JhcGVdCiAgICBhY3Rpb246IGtlZXAKICAgIHJlZ2V4OiB0cnVlCiAgLSBzb3VyY2VfbGFiZWxzOiBbX19tZXRhX2t1YmVybmV0ZXNfc2VydmljZV9hbm5vdGF0aW9uX3Byb21ldGhldXNfaW9fc2NoZW1lXQogICAgYWN0aW9uOiByZXBsYWNlCiAgICB0YXJnZXRfbGFiZWw6IF9fc2NoZW1lX18KICAgIHJlZ2V4OiAoaHR0cHM/KQogIC0gc291cmNlX2xhYmVsczogW19fbWV0YV9rdWJlcm5ldGVzX3NlcnZpY2VfYW5ub3RhdGlvbl9wcm9tZXRoZXVzX2lvX3BhdGhdCiAgICBhY3Rpb246IHJlcGxhY2UKICAgIHRhcmdldF9sYWJlbDogX19tZXRyaWNzX3BhdGhfXwogICAgcmVnZXg6ICguKykKICAtIHNvdXJjZV9sYWJlbHM6IFtfX2FkZHJlc3NfXywgX19tZXRhX2t1YmVybmV0ZXNfc2VydmljZV9hbm5vdGF0aW9uX3Byb21ldGhldXNfaW9fcG9ydF0KICAgIGFjdGlvbjogcmVwbGFjZQogICAgdGFyZ2V0X2xhYmVsOiBfX2FkZHJlc3NfXwogICAgcmVnZXg6IChbXjpdKykoPzo6XGQrKT87KFxkKykKICAgIHJlcGxhY2VtZW50OiAkMTokMgogIC0gYWN0aW9uOiBsYWJlbG1hcAogICAgcmVnZXg6IF9fbWV0YV9rdWJlcm5ldGVzX3NlcnZpY2VfbGFiZWxfKC4rKQogIC0gc291cmNlX2xhYmVsczogW19fbWV0YV9rdWJlcm5ldGVzX25hbWVzcGFjZV0KICAgIGFjdGlvbjogcmVwbGFjZQogICAgdGFyZ2V0X2xhYmVsOiBrdWJlcm5ldGVzX25hbWVzcGFjZQogIC0gc291cmNlX2xhYmVsczogW19fbWV0YV9rdWJlcm5ldGVzX3NlcnZpY2VfbmFtZV0KICAgIGFjdGlvbjogcmVwbGFjZQogICAgdGFyZ2V0X2xhYmVsOiBrdWJlcm5ldGVzX25hbWUKICAtIHNvdXJjZV9sYWJlbHM6IFtfX21ldGFfa3ViZXJuZXRlc19wb2RfbmFtZV0KICAgIGFjdGlvbjogcmVwbGFjZQogICAgdGFyZ2V0X2xhYmVsOiBrdWJlcm5ldGVzX3BvZF9uYW1lCg==</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-comment"># 注意manifests/prometheus-prometheus.yaml additionalScrapeConfigs配置项</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-comment"># 需要自动发现监控的应用配置示例: (springboot)</span>
+<span class="hljs-attr">prometheus.io/path:</span> <span class="hljs-string">/actuator/prometheus</span>
+<span class="hljs-attr">prometheus.io/port:</span> <span class="hljs-string">'10080'</span>
+<span class="hljs-attr">prometheus.io/scrape:</span> <span class="hljs-string">'true'</span></code></pre></div>
+
+<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821152346.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/altermanager_groupby.jpg?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821112157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ol>
+<li><a href="https://github.com/prometheus-operator/prometheus-operator" target="_blank" rel="noopener">https://github.com/prometheus-operator/prometheus-operator</a></li>
+<li><a href="https://github.com/prometheus-operator/kube-prometheus" target="_blank" rel="noopener">https://github.com/prometheus-operator/kube-prometheus</a></li>
 <li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</a></li>
 <li><a href="https://www.qikqiak.com/k8strain/monitor/operator/install/" target="_blank" rel="noopener">https://www.qikqiak.com/k8strain/monitor/operator/install/</a></li>
+<li><a href="https://work.weixin.qq.com/api/doc/90000/90135/90236#%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF" target="_blank" rel="noopener">https://work.weixin.qq.com/api/doc/90000/90135/90236#%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF</a></li>
+<li><a href="https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md" target="_blank" rel="noopener">https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md</a></li>
 </ol>
 
             </article>
