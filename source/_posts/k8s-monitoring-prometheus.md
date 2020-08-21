@@ -36,6 +36,9 @@ sed -i -e 's_quay.io_quay.mirrors.ustc.edu.cn_' manifests/*.yaml manifests/setup
 kubectl apply -f manifests/setup/
 kubectl apply -f manifests/
 ```
+
+![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/altermanager_groupby.jpg?x-oss-process=style/blog-img-watermark)
+
 ### 暴露Ingress
 ```yaml
 apiVersion: networking.k8s.io/v1beta1
