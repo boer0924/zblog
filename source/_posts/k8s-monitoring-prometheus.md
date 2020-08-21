@@ -39,6 +39,8 @@ kubectl apply -f manifests/
 
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/altermanager_groupby.jpg?x-oss-process=style/blog-img-watermark)
 
+![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821112157.png?x-oss-process=style/blog-img-watermark)
+
 ### 暴露Ingress
 ```yaml
 apiVersion: networking.k8s.io/v1beta1
