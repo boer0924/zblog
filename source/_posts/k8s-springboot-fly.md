@@ -10,7 +10,7 @@ tags:
 categories: Kubernetes
 ---
 SpringCloud微服务容器云之路
-1. 应用配合Actuator开启：`监控检查`，`优雅停机`，`监控metrics`等endpoints
+1. Springboot应用配合Actuator开启：`监控检查`，`优雅停机`，`监控metrics`等endpoints
 2. 根据`Dockerfile`定义制作Docker镜像并上传`Harbor`私有Docker Registry
 3. 渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制
 
@@ -71,27 +71,32 @@ CMD [ "sh", "-c", "java ${JVM_OPTS} -jar produce-1.0.1.jar ${APP_OPTS}" ]
 ```
 
 ### K8S容器云部署文件模板
-> 在项目根目录下创建`manifests`目录，在目录创建文件`k8s.yaml`
+> 在项目根目录下创建`manifests`目录，在目录下创建文件`k8s.yaml`
+
+1. 全局替换`<change-me>`为您的服务名称
+2. 全局替换`10080`为您的服务端口
+3. 注意`resources`字段服务所申请的资源
+4. 根据实际情况，选择是否需要对外暴露Ingress
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: produce-deployment # deployment名称
+  name: <change-me>-deployment # deployment名称
   annotations:
     kubernetes.io/change-cause: <CHANGE_CAUSE> # 版本说明 - 用于回滚等
 spec:
   selector:
     matchLabels:
-      app: produce # 标签选择器，与下面[Flag_label]对应
+      app: <change-me> # 标签选择器，与下面[Flag_label]对应
   replicas: 1 # 多实例
   template:
     metadata:
       labels:
-        app: produce # [Flag_label]
+        app: <change-me> # [Flag_label]
     spec:
       containers:
-        - name: produce
+        - name: <change-me>
           image: <IMAGE>:<IMAGE_TAG> # 镜像地址:版本
           imagePullPolicy: IfNotPresent
           ports:
@@ -135,13 +140,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: produce-service # 服务名称
+  name: <change-me>-service # 服务名称
   annotations:
     prometheus.io/path: /actuator/prometheus # 应用监控metrics路径 - 对应配置文件开启prometheus
     prometheus.io/port: "10080"
     prometheus.io/scrape: "true"
   labels:
-    app: produce
+    app: <change-me>
 spec:
   # type: LoadBalancer
   # type: NodePort
@@ -151,26 +156,26 @@ spec:
       targetPort: 10080
       # nodePort: 31090
   selector:
-    app: produce
+    app: <change-me>
 ---
 # 请根据实际情况，选择是否需要对外暴露Ingress
 ## 一般微服务架构中，通过Gateway网关统一对外提供服务，不要微服务单独对外暴露Ingress
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: produce-ingress
+  name: <change-me>-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/load-balance: "ip_hash" # session保持
     nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri" # 配合ip_hash使用
 spec:
   rules:
-    - host: produce.meitianiot.lo # Ingress 域名
+    - host: <change-me>.meitianiot.lo # Ingress 域名
       http:
         paths:
           - path: /
             backend:
-              serviceName: produce-service
+              serviceName: <change-me>-service
               servicePort: 10080
 ```
 
@@ -178,14 +183,15 @@ spec:
 > 此过程已通过[Jenkins Pipeline自动化CICD方式实现](/2020/06/23/k8s-cicd-jenkins-pipeline/)
 
 1. **Git clone/pull代码**：`git clone git://gitea.boer.xyz/spring-produce.git`
-2. **Maven编译打包**：`mvn clean package -Dmaven.test.skip=true`
-3. **Docker打包镜像**：`docker build -t ${image}:${imageTag} .`
-4. **Harbor镜像推送**：`docker push ${image}:${imageTag}`
-5. **Sed渲染模板**：
+2. **Junit单元测试**：`mvn test` # 普通程序员都没有单元测试？
+3. **Maven编译打包**：`mvn clean package -Dmaven.test.skip=true`
+4. **Docker打包镜像**：`docker build -t ${image}:${imageTag} .`
+5. **Harbor镜像推送**：`docker push ${image}:${imageTag}`
+6. **Sed渲染模板**：
 ```bash
 sed -i "s|<CHANGE_CAUSE>|${changeCause}|g" manifests/k8s.yaml
 sed -i "s|<IMAGE>|${image}|g" manifests/k8s.yaml
 sed -i "s|<IMAGE_TAG>|${imageTag}|g" manifests/k8s.yaml
 ```
-6. **Kubectl部署应用**：`kubectl --kubeconfig $kubeconfig apply -f manifests/k8s.yaml -n ${NAMESPACE}`
-7. **Rollout快速回滚**：`kubectl --kubeconfig ${kubeconfig} rollout undo deployment consume-deployment -n ${NAMESPACE}`
+7. **Kubectl部署应用**：`kubectl --kubeconfig $kubeconfig apply -f manifests/k8s.yaml -n ${NAMESPACE}`
+8. **Rollout快速回滚**：`kubectl --kubeconfig ${kubeconfig} rollout undo deployment consume-deployment -n ${NAMESPACE}`
