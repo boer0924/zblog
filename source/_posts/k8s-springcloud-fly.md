@@ -13,6 +13,7 @@ SpringCloud微服务容器云之路
 1. Springboot应用配合Actuator开启：`监控检查`，`优雅停机`，`监控metrics`等endpoints
 2. 根据`Dockerfile`定义制作Docker镜像并上传`Harbor`私有Docker Registry
 3. 渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制
+> **Tips:** 步骤2 - 可使用Maven Plugin [dockerfile-maven](https://github.com/spotify/dockerfile-maven)集成到Maven流程中，命令如: `mvn dockerfile:build`, `mvn dockerfile:push`, 详见官方文档
 
 <!-- more -->
 
