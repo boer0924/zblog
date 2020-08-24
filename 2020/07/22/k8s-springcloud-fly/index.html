@@ -208,11 +208,11 @@
 <ol>
 <li>Springboot应用配合Actuator开启：<code>监控检查</code>，<code>优雅停机</code>，<code>监控metrics</code>等endpoints</li>
 <li>根据<code>Dockerfile</code>定义制作Docker镜像并上传<code>Harbor</code>私有Docker Registry</li>
-<li>渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制<blockquote>
+<li>渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制</li>
+</ol>
+<blockquote>
 <p><strong>Tips:</strong> 步骤2 - 可使用Maven Plugin <a href="https://github.com/spotify/dockerfile-maven" target="_blank" rel="noopener">dockerfile-maven</a>集成到Maven流程中，命令如: <code>mvn dockerfile:build</code>, <code>mvn dockerfile:push</code>, 详见官方文档</p>
 </blockquote>
-</li>
-</ol>
 <a id="more"></a>
 
 <h3 id="Springboot配置示例"><a href="#Springboot配置示例" class="headerlink" title="Springboot配置示例"></a>Springboot配置示例</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
