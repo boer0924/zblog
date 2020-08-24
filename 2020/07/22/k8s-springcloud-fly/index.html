@@ -163,7 +163,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      948 字
+      980 字
     </span>
   
 
@@ -173,7 +173,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      14
+      15
        分钟
     </span>
   
@@ -208,7 +208,10 @@
 <ol>
 <li>Springboot应用配合Actuator开启：<code>监控检查</code>，<code>优雅停机</code>，<code>监控metrics</code>等endpoints</li>
 <li>根据<code>Dockerfile</code>定义制作Docker镜像并上传<code>Harbor</code>私有Docker Registry</li>
-<li>渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制</li>
+<li>渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制<blockquote>
+<p><strong>Tips:</strong> 步骤2 - 可使用Maven Plugin <a href="https://github.com/spotify/dockerfile-maven" target="_blank" rel="noopener">dockerfile-maven</a>集成到Maven流程中，命令如: <code>mvn dockerfile:build</code>, <code>mvn dockerfile:push</code>, 详见官方文档</p>
+</blockquote>
+</li>
 </ol>
 <a id="more"></a>
 
@@ -443,8 +446,8 @@ sed -i <span class="hljs-string">"s|&lt;IMAGE_TAG&gt;|<span class="hljs-variable
     <script type="text/javascript">
       function loadDisqus() {
         var disqus_config = function () {
-          this.page.url = 'https://www.boer.xyz/2020/07/22/k8s-springboot-fly/';
-          this.page.identifier = '/2020/07/22/k8s-springboot-fly/';
+          this.page.url = 'https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/';
+          this.page.identifier = '/2020/07/22/k8s-springcloud-fly/';
         };
         (function () {
           var d = document,

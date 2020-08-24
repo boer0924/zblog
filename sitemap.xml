@@ -2,6 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/06/24/jdk-analyze-tools/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
+    
+    <lastmod>2020-08-24</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
     
     <lastmod>2020-08-24</lastmod>
@@ -44,7 +86,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/07/22/k8s-springboot-fly/</loc>
+    <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
     
     <lastmod>2020-08-24</lastmod>
     
@@ -101,48 +143,6 @@
   
   <url>
     <loc>https://www.boer.xyz/about/index.html</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/06/24/jdk-analyze-tools/</loc>
-    
-    <lastmod>2020-08-24</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
     
     <lastmod>2020-08-24</lastmod>
     
