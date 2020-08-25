@@ -270,7 +270,7 @@ disqus:
 gitalk:
   clientID: bfd810bfaf1a918e9808                    # GitHub Application Client ID
   clientSecret: 4c2c9106fc885a31c98c200250aba6d571671013                 # GitHub Application Client Secret
-  repo: boer0924.github.io                        # The repo to store comments
+  repo: theblog                        # The repo to store comments
   owner: boer0924                       # GitHub repository owner. Can be personal user or organization.
   admin: ['boer0924']                       # GitHub repo owner and collaborators, only these guys can initialize github issues, should be like "['admin']" or "['admin1','admin2']"
   id: location.pathname         # The unique id of the page. Length must less than 50.
