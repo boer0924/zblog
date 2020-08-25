@@ -356,7 +356,7 @@ about:  # 关于页需要手动创建，具体请见：https://hexo.fluid-dev.co
   banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg_about.jpg
   banner_img_height: 60  # available: 0 - 100
   banner_mask_alpha: 0.3  # available: 0 - 1.0
-  subtitle:  # 打字机内容
+  subtitle: 我爱过一个人，在我的青春年少里......  # 打字机内容
   avatar: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/top.jpg  # 头像
   name: boer
   introduce: '大道至简'  # 支持 HTML
