@@ -28,6 +28,7 @@ cp linux-amd64/helm /usr/local/bin/helm3
 
 ### 服务器
 > Skywalking后端存储，使用EFK日志系统的ES集群。注意index加前缀区分
+详细的Elasticsearch集群部署可以参考：[Kubernetes日志系统EFK](/2019/10/24/k8s-logging-efk/)
 
 ```bash
 cd ~/k8s/helm/charts
