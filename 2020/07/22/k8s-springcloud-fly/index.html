@@ -217,7 +217,7 @@
 </blockquote>
 <a id="more"></a>
 
-<h3 id="Springboot配置示例"><a href="#Springboot配置示例" class="headerlink" title="Springboot配置示例"></a>Springboot配置示例</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
+<h3 id="1、Springboot配置示例"><a href="#1、Springboot配置示例" class="headerlink" title="1、Springboot配置示例"></a>1、Springboot配置示例</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
   <span class="hljs-attr">application:</span>
     <span class="hljs-attr">name:</span> <span class="hljs-string">spring-produce</span>
   <span class="hljs-attr">profiles:</span>
@@ -249,7 +249,7 @@
   <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;micrometer.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
 
-<h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><blockquote>
+<h3 id="2、Dockerfile"><a href="#2、Dockerfile" class="headerlink" title="2、Dockerfile"></a>2、Dockerfile</h3><blockquote>
 <p>在项目根目录下创建<code>Dockerfile</code></p>
 </blockquote>
 <div class="hljs"><pre><code class="hljs Dockerfile"><span class="hljs-comment"># base镜像 - JDK发行版</span>
@@ -268,7 +268,7 @@
 <span class="hljs-comment">## 2、$&#123;APP_OPTS&#125; - APP配置，如：--spring.profiles.active=dev --spring.kafka.consumer.group-id=xxx.group</span>
 <span class="hljs-keyword">CMD</span><span class="bash"> [ <span class="hljs-string">"sh"</span>, <span class="hljs-string">"-c"</span>, <span class="hljs-string">"java <span class="hljs-variable">$&#123;JVM_OPTS&#125;</span> -jar produce-1.0.1.jar <span class="hljs-variable">$&#123;APP_OPTS&#125;</span>"</span> ]</span></code></pre></div>
 
-<h3 id="K8S容器云部署文件模板"><a href="#K8S容器云部署文件模板" class="headerlink" title="K8S容器云部署文件模板"></a>K8S容器云部署文件模板</h3><blockquote>
+<h3 id="3、K8S容器云部署文件模板"><a href="#3、K8S容器云部署文件模板" class="headerlink" title="3、K8S容器云部署文件模板"></a>3、K8S容器云部署文件模板</h3><blockquote>
 <p>在项目根目录下创建<code>manifests</code>目录，在目录下创建文件<code>k8s.yaml</code></p>
 </blockquote>
 <ol>
@@ -323,7 +323,7 @@
             <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ENVIRONMENT</span>
               <span class="hljs-attr">value:</span> <span class="hljs-string">"pro"</span>
             <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">APP_OPTS</span>
-              <span class="hljs-attr">value:</span> <span class="hljs-string">"--spring.kafka.consumer.group-id=xxx.group"</span>
+              <span class="hljs-attr">value:</span> <span class="hljs-string">"--spring.kafka.consumer.group-id=consumer.group"</span>
             <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">JVM_OPTS</span>
               <span class="hljs-attr">value:</span> <span class="hljs-string">"-Xms512m -Xmx512m -javaagent:/usr/skywalking/agent/skywalking-agent.jar"</span>
           <span class="hljs-attr">livenessProbe:</span> <span class="hljs-comment"># 存活探针</span>
@@ -383,7 +383,7 @@
     <span class="hljs-attr">nginx.ingress.kubernetes.io/upstream-hash-by:</span> <span class="hljs-string">"$request_uri"</span> <span class="hljs-comment"># 配合ip_hash使用</span>
 <span class="hljs-attr">spec:</span>
   <span class="hljs-attr">rules:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">host:</span> <span class="hljs-string">&lt;change-me&gt;.meitianiot.lo</span> <span class="hljs-comment"># Ingress 域名</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-attr">host:</span> <span class="hljs-string">&lt;change-me&gt;.boer.xyz</span> <span class="hljs-comment"># Ingress 域名</span>
       <span class="hljs-attr">http:</span>
         <span class="hljs-attr">paths:</span>
           <span class="hljs-bullet">-</span> <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
@@ -391,7 +391,7 @@
               <span class="hljs-attr">serviceName:</span> <span class="hljs-string">&lt;change-me&gt;-service</span>
               <span class="hljs-attr">servicePort:</span> <span class="hljs-number">10080</span></code></pre></div>
 
-<h3 id="K8S发布"><a href="#K8S发布" class="headerlink" title="K8S发布"></a>K8S发布</h3><blockquote>
+<h3 id="4、K8S发布"><a href="#4、K8S发布" class="headerlink" title="4、K8S发布"></a>4、K8S发布</h3><blockquote>
 <p>此过程已通过<a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">Jenkins Pipeline自动化CICD方式实现</a></p>
 </blockquote>
 <ol>
