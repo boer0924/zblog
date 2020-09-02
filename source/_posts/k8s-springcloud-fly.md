@@ -18,7 +18,7 @@ SpringCloud微服务容器云之路
 
 <!-- more -->
 
-### Springboot配置示例
+### 1、Springboot配置示例
 ```yaml
 spring:
   application:
@@ -55,7 +55,7 @@ eureka:
 </dependency>
 ```
 
-### Dockerfile
+### 2、Dockerfile
 > 在项目根目录下创建`Dockerfile`
 
 ```Dockerfile
@@ -76,7 +76,7 @@ EXPOSE 10080
 CMD [ "sh", "-c", "java ${JVM_OPTS} -jar produce-1.0.1.jar ${APP_OPTS}" ]
 ```
 
-### K8S容器云部署文件模板
+### 3、K8S容器云部署文件模板
 > 在项目根目录下创建`manifests`目录，在目录下创建文件`k8s.yaml`
 
 1. **服务名称** - 全局替换`<change-me>`为您的服务名称
@@ -131,7 +131,7 @@ spec:
             - name: ENVIRONMENT
               value: "pro"
             - name: APP_OPTS
-              value: "--spring.kafka.consumer.group-id=xxx.group"
+              value: "--spring.kafka.consumer.group-id=consumer.group"
             - name: JVM_OPTS
               value: "-Xms512m -Xmx512m -javaagent:/usr/skywalking/agent/skywalking-agent.jar"
           livenessProbe: # 存活探针
@@ -191,7 +191,7 @@ metadata:
     nginx.ingress.kubernetes.io/upstream-hash-by: "$request_uri" # 配合ip_hash使用
 spec:
   rules:
-    - host: <change-me>.meitianiot.lo # Ingress 域名
+    - host: <change-me>.boer.xyz # Ingress 域名
       http:
         paths:
           - path: /
@@ -200,7 +200,7 @@ spec:
               servicePort: 10080
 ```
 
-### K8S发布
+### 4、K8S发布
 > 此过程已通过[Jenkins Pipeline自动化CICD方式实现](/2020/06/23/k8s-cicd-jenkins-pipeline/)
 
 1. **Git clone/pull代码**：`git clone git://gitea.boer.xyz/spring-produce.git`
