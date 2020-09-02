@@ -19,14 +19,14 @@ categories: Kubernetes
 
 > 前面我们介绍过[单纯Docker方式(`docker-compose`)部署Pinpoint](/2019/05/09/pinpoint-deployment/), 可以提供参考。本节我们介绍在Kubernetes上部署Skywalking。
 
-### Helm3
+### 1、Helm3
 ```bash
 curl -LO https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
 tar -zxf helm-v3.2.4-linux-amd64.tar.gz
 cp linux-amd64/helm /usr/local/bin/helm3
 ```
 
-### 服务器
+### 2、服务端
 > Skywalking后端存储，使用EFK日志系统的ES集群。注意index加前缀区分
 详细的Elasticsearch集群部署可以参考：[Kubernetes日志系统EFK](/2019/10/24/k8s-logging-efk/)
 
@@ -93,7 +93,7 @@ elasticsearch:
     password: "<your-es-password>" 
 ```
 
-### 客户端
+### 3、客户端
 #### 制作skywalking-agent镜像
 ```bash
 cd ~/k8s/apps/skywalking-agent
@@ -121,7 +121,7 @@ logging.level=${SW_LOGGING_LEVEL:INFO}
 logging.max_file_size=${SW_LOGGING_MAX_FILE_SIZE:31457280}
 ```
 
-### 使用示例
+### 4、使用示例
 使用`skywalking-agent`一般会想到两种方法：
 - 将 agent 包构建到已经存在的基础镜像中
 - 通过`initContainer`方式拷贝Agent
@@ -203,8 +203,8 @@ spec:
         - name: skywalking-agent
           emptyDir: {}
 ```
-### Skywalking ES存储索引管理
 
+### 5、Skywalking ES存储索引管理
 > 详细[**iLM索引生命周期**](/2019/10/24/k8s-logging-efk/#iLM管理索引生命周期)，见Kubernetes日志系统EFK一文
 
 ```json
@@ -244,7 +244,7 @@ PUT _template/skywalking-template
 }
 ```
 
-### The show
+### 6、The show
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark)
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182157.png?x-oss-process=style/blog-img-watermark)
 
@@ -252,3 +252,4 @@ PUT _template/skywalking-template
 - https://github.com/apache/skywalking-kubernetes
 - https://skywalking.apache.org/zh/blog/2019-08-30-how-to-use-Skywalking-Agent.html
 - https://skywalking.apache.org/zh/blog/2019-02-24-skywalking-pk-pinpoint.html
+- https://skywalking.apache.org/zh/blog/2019-11-07-skywalking-elasticsearch-storage-optimization.html
