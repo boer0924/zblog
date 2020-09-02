@@ -45,6 +45,12 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://eureka-0.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-1.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-2.eureka.micro-public.svc.cluster.local:8761/eureka
+logging:
+  file:
+    max-size: 200MB
+    max-history: 7
+    path: /opt/logs
+    name: /opt/logs/${HOSTNAME}.${spring.application.name}.log
 ```
 **注意：actuator开启prometheus需要添加依赖**
 ```xml
@@ -116,8 +122,10 @@ spec:
           image: <IMAGE>:<IMAGE_TAG> # 镜像地址:版本
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - mountPath: /usr/skywalking/agent
+            - mountPath: /usr/skywalking/agent # 挂载skywalking-agent到pod
               name: skywalking-agent
+            - mountPath: /opt/logs # 挂载app-logs到node
+              name: app-logs
           ports:
             - containerPort: 10080 # 服务暴露端口
           resources: # 服务所需资源申请
@@ -160,6 +168,10 @@ spec:
       volumes:
         - name: skywalking-agent
           emptyDir: {}
+        - name: app-logs
+          hostPath:
+            path: /opt/app-logs/<change-me>
+            type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: Service

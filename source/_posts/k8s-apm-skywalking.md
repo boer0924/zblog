@@ -203,6 +203,46 @@ spec:
         - name: skywalking-agent
           emptyDir: {}
 ```
+### Skywalking ES存储索引管理
+
+> 详细[**iLM索引生命周期**](/2019/10/24/k8s-logging-efk/#iLM管理索引生命周期)，见Kubernetes日志系统EFK一文
+
+```json
+PUT _ilm/policy/skywalking-policy   
+{
+  "policy": {                       
+    "phases": {
+      "warm": {
+        "min_age": "2d",
+        "actions": {
+          "forcemerge": {
+            "max_num_segments": 1
+          }
+        }
+      },
+      "delete": {
+        "min_age": "3d",           
+        "actions": {
+          "delete": {}              
+        }
+      }
+    }
+  }
+}
+
+PUT _template/skywalking-template
+{
+  "index_patterns": ["skywalking_*"], // 这里完全匹配skywalking索引前缀，即SW_NAMESPACE
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 0,
+    "index.lifecycle.name": "skywalking-policy",
+    "index.refresh_interval": "30s",
+    "index.translog.durability": "async",
+    "index.translog.sync_interval":"60s"
+  }
+}
+```
 
 ### The show
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark)
