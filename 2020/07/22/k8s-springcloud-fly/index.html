@@ -165,7 +165,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      1.2k 字
     </span>
   
 
@@ -175,7 +175,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17
+      18
        分钟
     </span>
   
@@ -241,7 +241,13 @@
     <span class="hljs-attr">preferIpAddress:</span> <span class="hljs-literal">true</span>
   <span class="hljs-attr">client:</span>
     <span class="hljs-attr">serviceUrl:</span>
-      <span class="hljs-attr">defaultZone:</span> <span class="hljs-string">http://eureka-0.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-1.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-2.eureka.micro-public.svc.cluster.local:8761/eureka</span></code></pre></div>
+      <span class="hljs-attr">defaultZone:</span> <span class="hljs-string">http://eureka-0.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-1.eureka.micro-public.svc.cluster.local:8761/eureka,http://eureka-2.eureka.micro-public.svc.cluster.local:8761/eureka</span>
+<span class="hljs-attr">logging:</span>
+  <span class="hljs-attr">file:</span>
+    <span class="hljs-attr">max-size:</span> <span class="hljs-string">200MB</span>
+    <span class="hljs-attr">max-history:</span> <span class="hljs-number">7</span>
+    <span class="hljs-attr">path:</span> <span class="hljs-string">/opt/logs</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">/opt/logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.log</span></code></pre></div>
 <p><strong>注意：actuator开启prometheus需要添加依赖</strong></p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
@@ -308,8 +314,10 @@
           <span class="hljs-attr">image:</span> <span class="hljs-string">&lt;IMAGE&gt;:&lt;IMAGE_TAG&gt;</span> <span class="hljs-comment"># 镜像地址:版本</span>
           <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span>
           <span class="hljs-attr">volumeMounts:</span>
-            <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/usr/skywalking/agent</span>
+            <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/usr/skywalking/agent</span> <span class="hljs-comment"># 挂载skywalking-agent到pod</span>
               <span class="hljs-attr">name:</span> <span class="hljs-string">skywalking-agent</span>
+            <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/opt/logs</span> <span class="hljs-comment"># 挂载app-logs到node</span>
+              <span class="hljs-attr">name:</span> <span class="hljs-string">app-logs</span>
           <span class="hljs-attr">ports:</span>
             <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">10080</span> <span class="hljs-comment"># 服务暴露端口</span>
           <span class="hljs-attr">resources:</span> <span class="hljs-comment"># 服务所需资源申请</span>
@@ -352,6 +360,10 @@
       <span class="hljs-attr">volumes:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">skywalking-agent</span>
           <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">&#123;&#125;</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">app-logs</span>
+          <span class="hljs-attr">hostPath:</span>
+            <span class="hljs-attr">path:</span> <span class="hljs-string">/opt/app-logs/&lt;change-me&gt;</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">DirectoryOrCreate</span>
 <span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span>

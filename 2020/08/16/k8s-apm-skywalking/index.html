@@ -165,7 +165,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      939 字
+      1k 字
     </span>
   
 
@@ -175,7 +175,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      14
+      16
        分钟
     </span>
   
@@ -376,6 +376,43 @@ logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZ
       <span class="hljs-attr">volumes:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">skywalking-agent</span>
           <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">&#123;&#125;</span></code></pre></div>
+<h3 id="Skywalking-ES存储索引管理"><a href="#Skywalking-ES存储索引管理" class="headerlink" title="Skywalking ES存储索引管理"></a>Skywalking ES存储索引管理</h3><blockquote>
+<p>详细<a href="/2019/10/24/k8s-logging-efk/#iLM管理索引生命周期"><strong>iLM索引生命周期</strong></a>，见Kubernetes日志系统EFK一文</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs json">PUT _ilm/policy/skywalking-policy   
+&#123;
+  <span class="hljs-attr">"policy"</span>: &#123;                       
+    <span class="hljs-attr">"phases"</span>: &#123;
+      <span class="hljs-attr">"warm"</span>: &#123;
+        <span class="hljs-attr">"min_age"</span>: <span class="hljs-string">"2d"</span>,
+        <span class="hljs-attr">"actions"</span>: &#123;
+          <span class="hljs-attr">"forcemerge"</span>: &#123;
+            <span class="hljs-attr">"max_num_segments"</span>: <span class="hljs-number">1</span>
+          &#125;
+        &#125;
+      &#125;,
+      <span class="hljs-attr">"delete"</span>: &#123;
+        <span class="hljs-attr">"min_age"</span>: <span class="hljs-string">"3d"</span>,           
+        <span class="hljs-attr">"actions"</span>: &#123;
+          <span class="hljs-attr">"delete"</span>: &#123;&#125;              
+        &#125;
+      &#125;
+    &#125;
+  &#125;
+&#125;
+
+PUT _template/skywalking-template
+&#123;
+  <span class="hljs-attr">"index_patterns"</span>: [<span class="hljs-string">"skywalking_*"</span>], <span class="hljs-comment">// 这里完全匹配skywalking索引前缀，即SW_NAMESPACE</span>
+  <span class="hljs-attr">"settings"</span>: &#123;
+    <span class="hljs-attr">"number_of_shards"</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">"number_of_replicas"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"index.lifecycle.name"</span>: <span class="hljs-string">"skywalking-policy"</span>,
+    <span class="hljs-attr">"index.refresh_interval"</span>: <span class="hljs-string">"30s"</span>,
+    <span class="hljs-attr">"index.translog.durability"</span>: <span class="hljs-string">"async"</span>,
+    <span class="hljs-attr">"index.translog.sync_interval"</span>:<span class="hljs-string">"60s"</span>
+  &#125;
+&#125;</code></pre></div>
 
 <h3 id="The-show"><a href="#The-show" class="headerlink" title="The show"></a>The show</h3><p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""><br><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
