@@ -165,7 +165,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.1k 字
     </span>
   
 
@@ -213,11 +213,11 @@
 <blockquote>
 <p>前面我们介绍过<a href="/2019/05/09/pinpoint-deployment/">单纯Docker方式(<code>docker-compose</code>)部署Pinpoint</a>, 可以提供参考。本节我们介绍在Kubernetes上部署Skywalking。</p>
 </blockquote>
-<h3 id="Helm3"><a href="#Helm3" class="headerlink" title="Helm3"></a>Helm3</h3><div class="hljs"><pre><code class="hljs bash">curl -LO https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+<h3 id="1、Helm3"><a href="#1、Helm3" class="headerlink" title="1、Helm3"></a>1、Helm3</h3><div class="hljs"><pre><code class="hljs bash">curl -LO https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
 tar -zxf helm-v3.2.4-linux-amd64.tar.gz
 cp linux-amd64/helm /usr/<span class="hljs-built_in">local</span>/bin/helm3</code></pre></div>
 
-<h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><blockquote>
+<h3 id="2、服务端"><a href="#2、服务端" class="headerlink" title="2、服务端"></a>2、服务端</h3><blockquote>
 <p>Skywalking后端存储，使用EFK日志系统的ES集群。注意index加前缀区分<br>详细的Elasticsearch集群部署可以参考：<a href="/2019/10/24/k8s-logging-efk/">Kubernetes日志系统EFK</a></p>
 </blockquote>
 <div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/helm/charts
@@ -278,7 +278,7 @@ helm3 -n skywalking upgrade skywalking --values ./skywalking/values.yaml</code><
     <span class="hljs-attr">user:</span> <span class="hljs-string">"elastic"</span> 
     <span class="hljs-attr">password:</span> <span class="hljs-string">"&lt;your-es-password&gt;"</span></code></pre></div>
 
-<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><h4 id="制作skywalking-agent镜像"><a href="#制作skywalking-agent镜像" class="headerlink" title="制作skywalking-agent镜像"></a>制作skywalking-agent镜像</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/apps/skywalking-agent
+<h3 id="3、客户端"><a href="#3、客户端" class="headerlink" title="3、客户端"></a>3、客户端</h3><h4 id="制作skywalking-agent镜像"><a href="#制作skywalking-agent镜像" class="headerlink" title="制作skywalking-agent镜像"></a>制作skywalking-agent镜像</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/apps/skywalking-agent
 tar -zxf apache-skywalking-apm-es7-8.1.0.tar.gz
 cp apache-skywalking-apm-bin-es7/agent agent
 vim Dockerfile <span class="hljs-comment"># 准备Dockerfile, 详见Dockerfile</span>
@@ -296,7 +296,7 @@ logging.file_name=<span class="hljs-variable">$&#123;SW_LOGGING_FILE_NAME:skywal
 logging.level=<span class="hljs-variable">$&#123;SW_LOGGING_LEVEL:INFO&#125;</span>
 logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZE:31457280&#125;</span></code></pre></div>
 
-<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><p>使用<code>skywalking-agent</code>一般会想到两种方法：</p>
+<h3 id="4、使用示例"><a href="#4、使用示例" class="headerlink" title="4、使用示例"></a>4、使用示例</h3><p>使用<code>skywalking-agent</code>一般会想到两种方法：</p>
 <ul>
 <li>将 agent 包构建到已经存在的基础镜像中</li>
 <li>通过<code>initContainer</code>方式拷贝Agent</li>
@@ -376,7 +376,8 @@ logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZ
       <span class="hljs-attr">volumes:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">skywalking-agent</span>
           <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">&#123;&#125;</span></code></pre></div>
-<h3 id="Skywalking-ES存储索引管理"><a href="#Skywalking-ES存储索引管理" class="headerlink" title="Skywalking ES存储索引管理"></a>Skywalking ES存储索引管理</h3><blockquote>
+
+<h3 id="5、Skywalking-ES存储索引管理"><a href="#5、Skywalking-ES存储索引管理" class="headerlink" title="5、Skywalking ES存储索引管理"></a>5、Skywalking ES存储索引管理</h3><blockquote>
 <p>详细<a href="/2019/10/24/k8s-logging-efk/#iLM管理索引生命周期"><strong>iLM索引生命周期</strong></a>，见Kubernetes日志系统EFK一文</p>
 </blockquote>
 <div class="hljs"><pre><code class="hljs json">PUT _ilm/policy/skywalking-policy   
@@ -414,11 +415,12 @@ PUT _template/skywalking-template
   &#125;
 &#125;</code></pre></div>
 
-<h3 id="The-show"><a href="#The-show" class="headerlink" title="The show"></a>The show</h3><p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""><br><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
+<h3 id="6、The-show"><a href="#6、The-show" class="headerlink" title="6、The show"></a>6、The show</h3><p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""><br><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a href="https://github.com/apache/skywalking-kubernetes" target="_blank" rel="noopener">https://github.com/apache/skywalking-kubernetes</a></li>
 <li><a href="https://skywalking.apache.org/zh/blog/2019-08-30-how-to-use-Skywalking-Agent.html" target="_blank" rel="noopener">https://skywalking.apache.org/zh/blog/2019-08-30-how-to-use-Skywalking-Agent.html</a></li>
 <li><a href="https://skywalking.apache.org/zh/blog/2019-02-24-skywalking-pk-pinpoint.html" target="_blank" rel="noopener">https://skywalking.apache.org/zh/blog/2019-02-24-skywalking-pk-pinpoint.html</a></li>
+<li><a href="https://skywalking.apache.org/zh/blog/2019-11-07-skywalking-elasticsearch-storage-optimization.html" target="_blank" rel="noopener">https://skywalking.apache.org/zh/blog/2019-11-07-skywalking-elasticsearch-storage-optimization.html</a></li>
 </ul>
 
             </article>
