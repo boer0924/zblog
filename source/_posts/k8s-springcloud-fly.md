@@ -67,6 +67,8 @@ logging:
 ```Dockerfile
 # base镜像 - JDK发行版
 FROM adoptopenjdk:8u252-b09-jdk-hotspot
+# 署名
+MAINTAINER Boer Zhang <boer0924@gmail.com>
 # 工作目录 - 即jar包所在目录
 WORKDIR /opt
 # mvn clean package -Dmaven.test.skip=true
