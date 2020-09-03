@@ -260,6 +260,8 @@
 </blockquote>
 <div class="hljs"><pre><code class="hljs Dockerfile"><span class="hljs-comment"># base镜像 - JDK发行版</span>
 <span class="hljs-keyword">FROM</span> adoptopenjdk:<span class="hljs-number">8</span>u252-b09-jdk-hotspot
+<span class="hljs-comment"># 署名</span>
+<span class="hljs-keyword">MAINTAINER</span> Boer Zhang &lt;boer0924@gmail.com&gt;
 <span class="hljs-comment"># 工作目录 - 即jar包所在目录</span>
 <span class="hljs-keyword">WORKDIR</span><span class="bash"> /opt</span>
 <span class="hljs-comment"># mvn clean package -Dmaven.test.skip=true</span>
