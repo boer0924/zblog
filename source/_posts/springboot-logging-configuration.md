@@ -1,5 +1,5 @@
 ---
-title: Springboot日志配置
+title: Springboot Logback自定义日志
 date: 2018-07-28 10:16:18
 index_img: https://picsum.photos/300/200.webp?logback
 tags:
@@ -23,11 +23,14 @@ Boer-Office.springboot-produce.20180728.1.log
 Boer-Office.springboot-produce.log <- 当前active日志
 ```
 一般根据日志文件的备份脚本会这么写：
-> crontab - rsync: tar -zcf Boer-Office.springboot-produce.$(date +%Y%m%d).tgz Boer-Office.springboot-produce.$(date +%Y%m%d).*.log
+> 伪代码如下：$(date -d "-1 day" +%Y%m%d)
+
+`crontab - rsync: tar -zcf Boer-Office.springboot-produce.$(date -d "-1 day" +%Y%m%d).tgz Boer-Office.springboot-produce.$(date -d "-1 day" +%Y%m%d).*.log`
 
 简单、高效！
 
-这样的话格式一不会有问题，格式二在传统虚拟机的部署方式下也不会有问题，但是在K8S下部署就会存在问题：考虑一下，假如当前active日志是`Boer-Office.springboot-produce.log`，这时由于某种原因服务挂了，kube-apiserver, kube-controller会配合kube-scheduler将应用重启(有可能会调度到其他node上)，此时当前active日志`Boer-Office.springboot-produce.log`并不会归档为`Boer-Office.springboot-produce.20180728.x.log`的格式，所以当备份脚本运行的时候`Boer-Office.springboot-produce.log`文件的日志就会丢失
+基于此脚本，格式一不会有问题，格式二在传统虚拟机的部署方式下也不会有问题，但是在K8S的`deployment`部署方式下就会存在问题：考虑一下，假设当前active日志是`Boer-Office.springboot-produce.log`，这时由于某种原因服务挂掉，kube-apiserver, kube-controller配合kube-scheduler将应用pod重新调度(有可能会调度到其他node上)，此时当前active日志`Boer-Office.springboot-produce.log`并不会归档为`Boer-Office.springboot-produce.20180728.x.log`的格式，所以当备份脚本运行的时候`Boer-Office.springboot-produce.log`文件的日志就丢失了。
+运维又背锅啦...
 
 <!-- more -->
 
