@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>Springboot日志配置 · ~·boer·~ 乌托邦</title>
+  <title>Springboot Logback自定义日志 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,7 +165,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      836 字
+      869 字
     </span>
   
 
@@ -175,7 +175,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      14
+      15
        分钟
     </span>
   
@@ -216,10 +216,11 @@
 <span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.log</span> &lt;<span class="hljs-selector-tag">-</span> 当前<span class="hljs-selector-tag">active</span>日志</code></pre></div>
 <p>一般根据日志文件的备份脚本会这么写：</p>
 <blockquote>
-<p>crontab - rsync: tar -zcf Boer-Office.springboot-produce.$(date +%Y%m%d).tgz Boer-Office.springboot-produce.$(date +%Y%m%d).*.log</p>
+<p>伪代码如下：$(date -d “-1 day” +%Y%m%d)</p>
 </blockquote>
+<p><code>crontab - rsync: tar -zcf Boer-Office.springboot-produce.$(date -d &quot;-1 day&quot; +%Y%m%d).tgz Boer-Office.springboot-produce.$(date -d &quot;-1 day&quot; +%Y%m%d).*.log</code></p>
 <p>简单、高效！</p>
-<p>这样的话格式一不会有问题，格式二在传统虚拟机的部署方式下也不会有问题，但是在K8S下部署就会存在问题：考虑一下，假如当前active日志是<code>Boer-Office.springboot-produce.log</code>，这时由于某种原因服务挂了，kube-apiserver, kube-controller会配合kube-scheduler将应用重启(有可能会调度到其他node上)，此时当前active日志<code>Boer-Office.springboot-produce.log</code>并不会归档为<code>Boer-Office.springboot-produce.20180728.x.log</code>的格式，所以当备份脚本运行的时候<code>Boer-Office.springboot-produce.log</code>文件的日志就会丢失</p>
+<p>基于此脚本，格式一不会有问题，格式二在传统虚拟机的部署方式下也不会有问题，但是在K8S的<code>deployment</code>部署方式下就会存在问题：考虑一下，假设当前active日志是<code>Boer-Office.springboot-produce.log</code>，这时由于某种原因服务挂掉，kube-apiserver, kube-controller配合kube-scheduler将应用pod重新调度(有可能会调度到其他node上)，此时当前active日志<code>Boer-Office.springboot-produce.log</code>并不会归档为<code>Boer-Office.springboot-produce.20180728.x.log</code>的格式，所以当备份脚本运行的时候<code>Boer-Office.springboot-produce.log</code>文件的日志就丢失了。<br>运维又背锅啦…</p>
 <a id="more"></a>
 
 <h3 id="1、Springboot配置"><a href="#1、Springboot配置" class="headerlink" title="1、Springboot配置"></a>1、Springboot配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">logging:</span>
@@ -534,7 +535,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Springboot日志配置&nbsp;",
+        "Springboot Logback自定义日志&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
