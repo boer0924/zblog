@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -25,11 +25,11 @@
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -38,6 +38,7 @@
 
 
   <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -120,8 +121,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -129,12 +136,12 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/pexels-george-desipris-792381.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
+          <div class="container page-header text-center fade-in-up">
             <span class="h2" id="subtitle">
               
             </span>
@@ -173,21 +180,28 @@
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/08/16/k8s-apm-skywalking/">Kubernetes APM链路追踪Skywalking</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/08/16/k8s-apm-skywalking/">Kubernetes APM链路追踪Skywalking</a>
+      </h1>
 
-      <a href="/2020/08/16/k8s-apm-skywalking/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/08/16/k8s-apm-skywalking/">
           
-        
-        <div>随着RPC框架、微服务、云计算、大数据的发展，业务的规模和深度相比过往也都在增加。一个业务可能横跨多个模块/服务/容器，依赖的中间件也越来越多，其中任何一个节点出现异常，都可能导致业务出现波动或者异常，这就导致服务质量监控和异常诊断/定位变得异常复杂。于是催生了新的业务监控模式：调用链跟踪系统APM</div>
-      </a>
+          
+            
+          
+          随着RPC框架、微服务、云计算、大数据的发展，业务的规模和深度相比过往也都在增加。一个业务可能横跨多个模块/服务/容器，依赖的中间件也越来越多，其中任何一个节点出现异常，都可能导致业务出现波动或者异常，这就导致服务质量监控和异常诊断/定位变得异常复杂。于是催生了新的业务监控模式：调用链跟踪系统APM
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-08-16
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-16 10:16" pubdate>
+              2020-08-16
+            </time>
           </div>
         
         
@@ -215,7 +229,7 @@
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -227,28 +241,35 @@
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/07/22/k8s-springcloud-fly/">Kubernetes SpringCloud微服务容器云之路</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/07/22/k8s-springcloud-fly/">Kubernetes SpringCloud微服务容器云之路</a>
+      </h1>
 
-      <a href="/2020/07/22/k8s-springcloud-fly/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/07/22/k8s-springcloud-fly/">
           
-        
-        <div>SpringCloud微服务容器云之路
+          
+            
+          
+          SpringCloud微服务容器云之路
 
 Springboot应用配合Actuator开启：监控检查，优雅停机，监控metrics等endpoints
 根据Dockerfile定义制作Docker镜像并上传Harbor私有Docker Registry
 渲染K8S部署模板文件并完成应用部署，同时应该考虑快速回滚等保障机制
 
 
-Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
-      </a>
+Tips: 步骤2 - 可使用Maven Plugin dockerfi
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-22
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-22 18:36" pubdate>
+              2020-07-22
+            </time>
           </div>
         
         
@@ -274,7 +295,7 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -286,19 +307,26 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/06/24/k8s-cicd-drone/">Kubernetes CICD工具Drone</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/06/24/k8s-cicd-drone/">Kubernetes CICD工具Drone</a>
+      </h1>
 
-      <a href="/2020/06/24/k8s-cicd-drone/" class="index-excerpt">
-        
-        
-        <div></div>
-      </a>
+      <p class="index-excerpt">
+        <a href="/2020/06/24/k8s-cicd-drone/">
+          
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-06-24 11:36" pubdate>
+              2020-06-24
+            </time>
           </div>
         
         
@@ -328,7 +356,7 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -340,25 +368,32 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/06/23/k8s-cicd-jenkins-pipeline/">Kubernetes CICD工具Jenkins Pipeline</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">Kubernetes CICD工具Jenkins Pipeline</a>
+      </h1>
 
-      <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">
           
-        
-        <div>持续构建与发布是我们日常工作中必不可少的一个步骤，目前大多公司都采用 Jenkins 集群来搭建符合需求的 CI/CD 流程，然而传统的 Jenkins Slave 一主多从方式会存在一些痛点，比如：
+          
+            
+          
+          持续构建与发布是我们日常工作中必不可少的一个步骤，目前大多公司都采用 Jenkins 集群来搭建符合需求的 CI/CD 流程，然而传统的 Jenkins Slave 一主多从方式会存在一些痛点，比如：
 
 主 Master 发生单点故障时，整个流程都不可用了
 每个 Slave 的配置环境不一样，来完成不同语言的编译打包等操作，但是这些差异化的配置导致管理起来非常不方便，维护起来也是比较费劲
-资源分配</div>
-      </a>
+资源分配
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-23
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-06-23 11:36" pubdate>
+              2020-06-23
+            </time>
           </div>
         
         
@@ -386,7 +421,7 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -398,22 +433,29 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/06/18/theai-train/">打破认知边界·融入未来世界</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/06/18/theai-train/">打破认知边界·融入未来世界</a>
+      </h1>
 
-      <a href="/2020/06/18/theai-train/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/06/18/theai-train/">
           
-        
-        <div>《打破认知边界·融入未来世界》培训心得
-不管你接受不接受,人工智能都来了不管是从国家战略「新基建」主要包含5G基建、特高压、城际高速铁路和城际轨道交通、新能源汽车充电桩、大数据中心、人工智能、工业互联网等七大领域。人工智能屹立其中。还是从你能”触摸”的人工智能：苹果公司的语音助手Siri；微软公司的人工智能助理Cortana(小娜)；小米科技打造的智能化语音助手小爱同学及其后续产品小爱音箱等一大批</div>
-      </a>
+          
+            
+          
+          《打破认知边界·融入未来世界》培训心得
+不管你接受不接受,人工智能都来了不管是从国家战略「新基建」主要包含5G基建、特高压、城际高速铁路和城际轨道交通、新能源汽车充电桩、大数据中心、人工智能、工业互联网等七大领域。人工智能屹立其中。还是从你能”触摸”的人工智能：苹果公司的语音助手Siri；微软公司的人工智能助理Cortana(小娜)；小米科技打造的智能化语音助手小爱同学及其后续产品小爱音箱等一大批
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-18
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-06-18 10:16" pubdate>
+              2020-06-18
+            </time>
           </div>
         
         
@@ -433,7 +475,7 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -445,22 +487,29 @@ Tips: 步骤2 - 可使用Maven Plugin dockerfi</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/05/10/oc-vpn-connect/">Openconnect VPN</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/05/10/oc-vpn-connect/">Openconnect VPN</a>
+      </h1>
 
-      <a href="/2020/05/10/oc-vpn-connect/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/05/10/oc-vpn-connect/">
           
-        
-        <div>2020年已注定是不平凡的一年新冠肺炎疫情科比逝世……疫情影响下各个公司启动远程办公，VPN成了必不可少的服务。
-http://www.infradead.org/openconnect/Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management </div>
-      </a>
+          
+            
+          
+          2020年已注定是不平凡的一年新冠肺炎疫情科比逝世……疫情影响下各个公司启动远程办公，VPN成了必不可少的服务。
+http://www.infradead.org/openconnect/Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management 
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-10
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-05-10 10:20" pubdate>
+              2020-05-10
+            </time>
           </div>
         
         
@@ -482,7 +531,7 @@ http://www.infradead.org/openconnect/Openconnect server (ocserv) is an SSL VPN s
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -494,15 +543,18 @@ http://www.infradead.org/openconnect/Openconnect server (ocserv) is an SSL VPN s
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2020/04/24/k8s-codeing-gitea/">Kubernetes部署代码仓库Gitea</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2020/04/24/k8s-codeing-gitea/">Kubernetes部署代码仓库Gitea</a>
+      </h1>
 
-      <a href="/2020/04/24/k8s-codeing-gitea/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2020/04/24/k8s-codeing-gitea/">
           
-        
-        <div>Gitea 是一个开源社区驱动的轻量级代码托管解决方案
+          
+            
+          
+          Gitea 是一个开源社区驱动的轻量级代码托管解决方案
 
 https://docs.gitea.io/zh-cn/comparison/
 
@@ -514,13 +566,17 @@ https://docs.gitea.io/zh-cn/comparison/
 支持用户、组织和仓库管理系统
 支持添加和删除仓库协作者
 支持仓库和组织级别 Web 钩子（包括 Slack 集成）
-支持仓库 </div>
-      </a>
+支持仓库 
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-04-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-24 10:16" pubdate>
+              2020-04-24
+            </time>
           </div>
         
         
@@ -546,7 +602,7 @@ https://docs.gitea.io/zh-cn/comparison/
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -558,25 +614,32 @@ https://docs.gitea.io/zh-cn/comparison/
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/24/k8s-logging-efk/">Kubernetes日志系统EFK</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/10/24/k8s-logging-efk/">Kubernetes日志系统EFK</a>
+      </h1>
 
-      <a href="/2019/10/24/k8s-logging-efk/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/24/k8s-logging-efk/">
           
-        
-        <div>Elasticsearch + Filebeat + Kibana = EFKF: it’s not Fluentd
+          
+            
+          
+          Elasticsearch + Filebeat + Kibana = EFKF: it’s not Fluentd
 
 Fluentd需要学习配置语法, Filebeat相对熟悉
 
-https://github.com/elastic/helm-charts</div>
-      </a>
+https://github.com/elastic/helm-charts
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-24 10:16" pubdate>
+              2019-10-24
+            </time>
           </div>
         
         
@@ -606,7 +669,7 @@ https://github.com/elastic/helm-charts</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -618,21 +681,28 @@ https://github.com/elastic/helm-charts</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/10/10/k8s-monitoring-prometheus/">Kubernetes监控系统Prometheus</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/10/10/k8s-monitoring-prometheus/">Kubernetes监控系统Prometheus</a>
+      </h1>
 
-      <a href="/2019/10/10/k8s-monitoring-prometheus/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/10/10/k8s-monitoring-prometheus/">
           
-        
-        <div>Prometheus : Monitoring &amp; TSDBAlertmanager : 告警中心node-exporter : 宿主机Node基础监控metrics-server (heapster) : 集群资源监控/HPAkube-state-metrics : K8S资源监控Grafana : 用户UI展示</div>
-      </a>
+          
+            
+          
+          Prometheus : Monitoring &amp; TSDBAlertmanager : 告警中心node-exporter : 宿主机Node基础监控metrics-server (heapster) : 集群资源监控/HPAkube-state-metrics : K8S资源监控Grafana : 用户UI展示
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-10-10
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-10-10 10:16" pubdate>
+              2019-10-10
+            </time>
           </div>
         
         
@@ -658,7 +728,7 @@ https://github.com/elastic/helm-charts</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -670,22 +740,29 @@ https://github.com/elastic/helm-charts</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/09/24/k8s-ha-deployment/">Kubeadm部署HA高可用Kubernetes集群</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/09/24/k8s-ha-deployment/">Kubeadm部署HA高可用Kubernetes集群</a>
+      </h1>
 
-      <a href="/2019/09/24/k8s-ha-deployment/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/09/24/k8s-ha-deployment/">
           
-        
-        <div>https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
-system requirement2C2G</div>
-      </a>
+          
+            
+          
+          https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+system requirement2C2G
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-09-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-24 16:16" pubdate>
+              2019-09-24
+            </time>
           </div>
         
         
@@ -709,7 +786,7 @@ system requirement2C2G</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
 
@@ -773,11 +850,12 @@ system requirement2C2G</div>
   <footer class="mt-5">
   <div class="text-center py-3">
     <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
       <span>&copy;2020</span>
       <i class="iconfont icon-love"></i>
-      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
       <span>boer</span>
     </div>
     
@@ -823,6 +901,10 @@ system requirement2C2G</div>
 
   
     <script  src="/js/lazyload.js" ></script>
+  
+
+
+
   
 
 

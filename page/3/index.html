@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -25,11 +25,11 @@
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -38,6 +38,7 @@
 
 
   <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -120,8 +121,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -129,12 +136,12 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/pexels-george-desipris-792381.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
+          <div class="container page-header text-center fade-in-up">
             <span class="h2" id="subtitle">
               
             </span>
@@ -173,22 +180,29 @@
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2012/05/26/the-university-the-dream/">大学，梦起航</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2012/05/26/the-university-the-dream/">大学，梦起航</a>
+      </h1>
 
-      <a href="/2012/05/26/the-university-the-dream/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2012/05/26/the-university-the-dream/">
           
-        
-        <div>写在最前面开头。这是真正的开头。写什么？怎么写？第一章，第一自然段，第一句话，第一个字，一切都是神圣的，似乎是一个生死存亡的
-问题而令人难以选择，令人战战兢兢。</div>
-      </a>
+          
+            
+          
+          写在最前面开头。这是真正的开头。写什么？怎么写？第一章，第一自然段，第一句话，第一个字，一切都是神圣的，似乎是一个生死存亡的
+问题而令人难以选择，令人战战兢兢。
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2012-05-26
+            <i class="iconfont icon-date"></i>
+            <time datetime="2012-05-26 22:18" pubdate>
+              2012-05-26
+            </time>
           </div>
         
         
@@ -208,7 +222,7 @@
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
 
@@ -272,11 +286,12 @@
   <footer class="mt-5">
   <div class="text-center py-3">
     <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
       <span>&copy;2020</span>
       <i class="iconfont icon-love"></i>
-      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
       <span>boer</span>
     </div>
     
@@ -322,6 +337,10 @@
 
   
     <script  src="/js/lazyload.js" ></script>
+  
+
+
+
   
 
 

@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -25,11 +25,11 @@
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -38,6 +38,7 @@
 
 
   <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -120,8 +121,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -129,12 +136,12 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/pexels-george-desipris-792381.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
+          <div class="container page-header text-center fade-in-up">
             <span class="h2" id="subtitle">
               
             </span>
@@ -173,22 +180,29 @@
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/09/09/k8s-registry-harbor/">Kubernetes镜像仓库Harbor</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/09/09/k8s-registry-harbor/">Kubernetes镜像仓库Harbor</a>
+      </h1>
 
-      <a href="/2019/09/09/k8s-registry-harbor/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/09/09/k8s-registry-harbor/">
           
-        
-        <div>在Kubernetes之上部署Harbor
-Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images a</div>
-      </a>
+          
+            
+          
+          在Kubernetes之上部署Harbor
+Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images a
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-09-09
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-09-09 10:20" pubdate>
+              2019-09-09
+            </time>
           </div>
         
         
@@ -214,7 +228,7 @@ Harbor is an open source registry that secures artifacts with policies and role-
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -226,24 +240,31 @@ Harbor is an open source registry that secures artifacts with policies and role-
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/05/09/pinpoint-deployment/">APM - Pinpoint笔记</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/05/09/pinpoint-deployment/">APM - Pinpoint笔记</a>
+      </h1>
 
-      <a href="/2019/05/09/pinpoint-deployment/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/05/09/pinpoint-deployment/">
           
-        
-        <div>Ref
+          
+            
+          
+          Ref
 https://naver.github.io/pinpoint/installation.html
 https://naver.github.io/pinpoint/faq.html
-</div>
-      </a>
+
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-05-09
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-05-09 15:40" pubdate>
+              2019-05-09
+            </time>
           </div>
         
         
@@ -263,7 +284,7 @@ https://naver.github.io/pinpoint/faq.html
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -275,15 +296,18 @@ https://naver.github.io/pinpoint/faq.html
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2019/03/24/es-data-migrate/">Elasticsearch数据迁移</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2019/03/24/es-data-migrate/">Elasticsearch数据迁移</a>
+      </h1>
 
-      <a href="/2019/03/24/es-data-migrate/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2019/03/24/es-data-migrate/">
           
-        
-        <div>
+          
+            
+          
+          
 _reindex适用场景 https://www.elastic.co/guide/en/elasticsearch/reference/6.1/docs-reindex.html
 同一集群不同索引数据迁移
 不同集群索引数据迁移
@@ -293,13 +317,17 @@ _reindex适用场景 https://www.elastic.co/guide/en/elasticsearch/reference/6.1
 随时取消任务
 Built-in，无需安装(反例logstash)
 5.x - 7.x版本api均包含以上功能(可做为es数据迁移通用方案)
-_re</div>
-      </a>
+_re
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2019-03-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-03-24 16:36" pubdate>
+              2019-03-24
+            </time>
           </div>
         
         
@@ -323,7 +351,7 @@ _re</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -335,26 +363,33 @@ _re</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2018/07/28/springboot-logging-configuration/">Springboot Logback自定义日志</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2018/07/28/springboot-logging-configuration/">Springboot Logback自定义日志</a>
+      </h1>
 
-      <a href="/2018/07/28/springboot-logging-configuration/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2018/07/28/springboot-logging-configuration/">
           
-        
-        <div>本文展示两种日志文件命名格式：格式一：
+          
+            
+          
+          本文展示两种日志文件命名格式：格式一：
 Boer-Office.springboot-produce.20180728.0.log
 Boer-Office.springboot-produce.20180728.1.log
 Boer-Office.springboot-produce.20180728.2.log &lt;- 当前active日志
 格式二：
-Boer-Office.springbo</div>
-      </a>
+Boer-Office.springbo
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2018-07-28
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-07-28 10:16" pubdate>
+              2018-07-28
+            </time>
           </div>
         
         
@@ -380,7 +415,7 @@ Boer-Office.springbo</div>
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -392,15 +427,18 @@ Boer-Office.springbo</div>
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2018/06/24/jdk-analyze-tools/">Java分析工具</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2018/06/24/jdk-analyze-tools/">Java分析工具</a>
+      </h1>
 
-      <a href="/2018/06/24/jdk-analyze-tools/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2018/06/24/jdk-analyze-tools/">
           
-        
-        <div>
+          
+            
+          
+          
 jps:查看本机的Java中进程信息。
 jstack:打印线程的栈信息,制作线程Dump。
 jmap:打印内存映射,制作堆Dump。
@@ -408,13 +446,17 @@ jstat:性能监控工具。
 jhat:内存分析工具。
 jconsole:简易的可视化控制台。
 jvisualvm:功能强大的控制台。
-</div>
-      </a>
+
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2018-06-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-06-24 11:16" pubdate>
+              2018-06-24
+            </time>
           </div>
         
         
@@ -434,7 +476,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -446,21 +488,28 @@ jvisualvm:功能强大的控制台。
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2018/03/24/srv_initialize/">主机初始化的那些事儿</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2018/03/24/srv_initialize/">主机初始化的那些事儿</a>
+      </h1>
 
-      <a href="/2018/03/24/srv_initialize/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2018/03/24/srv_initialize/">
           
-        
-        <div>集群中加入一个主机后，需要做的那些事儿</div>
-      </a>
+          
+            
+          
+          集群中加入一个主机后，需要做的那些事儿
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2018-03-24
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-03-24 16:30" pubdate>
+              2018-03-24
+            </time>
           </div>
         
         
@@ -482,7 +531,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -494,19 +543,26 @@ jvisualvm:功能强大的控制台。
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2018/02/16/mirror-speed/">各种镜像源加速</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2018/02/16/mirror-speed/">各种镜像源加速</a>
+      </h1>
 
-      <a href="/2018/02/16/mirror-speed/" class="index-excerpt">
-        
-        
-        <div></div>
-      </a>
+      <p class="index-excerpt">
+        <a href="/2018/02/16/mirror-speed/">
+          
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2018-02-16
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-02-16 16:16" pubdate>
+              2018-02-16
+            </time>
           </div>
         
         
@@ -530,7 +586,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -542,19 +598,26 @@ jvisualvm:功能强大的控制台。
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2018/01/18/closewait-timewait/">CLOSE_WAIT &amp; TIME_WAIT</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2018/01/18/closewait-timewait/">CLOSE_WAIT &amp; TIME_WAIT</a>
+      </h1>
 
-      <a href="/2018/01/18/closewait-timewait/" class="index-excerpt">
-        
-        
-        <div></div>
-      </a>
+      <p class="index-excerpt">
+        <a href="/2018/01/18/closewait-timewait/">
+          
+          
+          
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2018-01-18
+            <i class="iconfont icon-date"></i>
+            <time datetime="2018-01-18 18:16" pubdate>
+              2018-01-18
+            </time>
           </div>
         
         
@@ -580,7 +643,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -592,22 +655,29 @@ jvisualvm:功能强大的控制台。
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2012/12/31/for-my2012/">致我的2012</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2012/12/31/for-my2012/">致我的2012</a>
+      </h1>
 
-      <a href="/2012/12/31/for-my2012/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2012/12/31/for-my2012/">
           
-        
-        <div>那些回顾2012，展望2013的话，留给席主习，理总李去说吧！
-开始，应该是从2月11日开始的，有火车票为证；学生生涯的真正结束，应该是在2月27日，有汽车票为证；职员生涯的艰难开始，应该是在3月16日，有工资条为证；结束，2012的结束，毋庸置疑的今天，时间为证。</div>
-      </a>
+          
+            
+          
+          那些回顾2012，展望2013的话，留给席主习，理总李去说吧！
+开始，应该是从2月11日开始的，有火车票为证；学生生涯的真正结束，应该是在2月27日，有汽车票为证；职员生涯的艰难开始，应该是在3月16日，有工资条为证；结束，2012的结束，毋庸置疑的今天，时间为证。
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2012-12-31
+            <i class="iconfont icon-date"></i>
+            <time datetime="2012-12-31 15:15" pubdate>
+              2012-12-31
+            </time>
           </div>
         
         
@@ -627,7 +697,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
   <div class="row mx-auto index-card">
@@ -639,21 +709,28 @@ jvisualvm:功能强大的控制台。
         </a>
       </div>
     
-    <div class="col-12 col-md-8 mx-auto index-info">
-      <a class="index-header" href="/2012/06/14/for-the-girl/">写给那些女生</a>
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2012/06/14/for-the-girl/">写给那些女生</a>
+      </h1>
 
-      <a href="/2012/06/14/for-the-girl/" class="index-excerpt">
-        
-        
+      <p class="index-excerpt">
+        <a href="/2012/06/14/for-the-girl/">
           
-        
-        <div>人，总是在快乐的时候忘记时间不知道是哪一天，她们来了不知不觉的走进了我平淡无奇的生活</div>
-      </a>
+          
+            
+          
+          人，总是在快乐的时候忘记时间不知道是哪一天，她们来了不知不觉的走进了我平淡无奇的生活
+        </a>
+      </p>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2012-06-14
+            <i class="iconfont icon-date"></i>
+            <time datetime="2012-06-14 11:16" pubdate>
+              2012-06-14
+            </time>
           </div>
         
         
@@ -673,7 +750,7 @@ jvisualvm:功能强大的控制台。
           </div>
         
       </div>
-    </div>
+    </article>
   </div>
 
 
@@ -737,11 +814,12 @@ jvisualvm:功能强大的控制台。
   <footer class="mt-5">
   <div class="text-center py-3">
     <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
       <span>&copy;2020</span>
       <i class="iconfont icon-love"></i>
-      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
       <span>boer</span>
     </div>
     
@@ -787,6 +865,10 @@ jvisualvm:功能强大的控制台。
 
   
     <script  src="/js/lazyload.js" ></script>
+  
+
+
+
   
 
 

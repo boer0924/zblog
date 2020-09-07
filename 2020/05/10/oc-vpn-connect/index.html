@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -26,7 +26,11 @@
   <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
   
 
   
@@ -36,11 +40,11 @@
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -49,6 +53,7 @@
 
 
   <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -131,8 +136,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -140,25 +151,28 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
+          <div class="container page-header text-center fade-in-up">
             <span class="h2" id="subtitle">
               
             </span>
 
             
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-05-10 10:20">
-      2020年5月10日 上午
-    </time>
-  </div>
-
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-05-10 10:20" pubdate>
+        2020年5月10日 上午
+      </time>
+    </span>
+  
+</div>
 
 <div class="mt-1">
   
@@ -203,17 +217,19 @@
     <div class="col-lg-8 nopadding-md">
       <div class="container nopadding-md" id="board-ctn">
         <div class="py-5" id="board">
-          <div class="post-content mx-auto" id="post">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">Openconnect VPN</h1>
             
-            <article class="markdown-body">
+            <div class="markdown-body" id="post-body">
               <p>2020年已注定是不平凡的一年<br>新冠肺炎疫情<br>科比逝世<br>……<br>疫情影响下各个公司启动远程办公，VPN成了必不可少的服务。</p>
 <p><a href="http://www.infradead.org/openconnect/" target="_blank" rel="noopener">http://www.infradead.org/openconnect/</a><br>Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management and control. Openconnect server provides user management interfaces and back-ends necessary in enterprise environments, as well as security features, such as isolation of connected clients, features currently not available to any existing VPN servers.</p>
 <a id="more"></a>
-<h3 id="1-安装ocserv"><a href="#1-安装ocserv" class="headerlink" title="1. 安装ocserv"></a>1. 安装ocserv</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># ocserv 已经在epel仓库中提供了，所以可以直接通过yum安装</span>
+<h3 id="1-安装ocserv"><a href="#1-安装ocserv" class="headerlink" title="1. 安装ocserv"></a>1. 安装ocserv</h3><pre><code class="hljs bash"><span class="hljs-comment"># ocserv 已经在epel仓库中提供了，所以可以直接通过yum安装</span>
 yum install epel-release
-yum install ocserv</code></pre></div>
+yum install ocserv</code></pre>
 
-<h3 id="2-创建-CA"><a href="#2-创建-CA" class="headerlink" title="2. 创建 CA"></a>2. 创建 CA</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/ocserv
+<h3 id="2-创建-CA"><a href="#2-创建-CA" class="headerlink" title="2. 创建 CA"></a>2. 创建 CA</h3><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/ocserv
 mkdir CA
 <span class="hljs-built_in">cd</span> CA
 <span class="hljs-comment">## Root CA</span>
@@ -248,9 +264,9 @@ certtool --generate-certificate --load-privkey server-key.pem --load-ca-certific
 <span class="hljs-comment"># 证书路径（上述步骤创建）：</span>
 /etc/ocserv/CA/ca-cert.pem 
 /etc/ocserv/CA/server-cert.pem
-/etc/ocserv/CA/server-key.pem</code></pre></div>
+/etc/ocserv/CA/server-key.pem</code></pre>
 
-<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3. 配置文件"></a>3. 配置文件</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 创建路由分组管理目录</span>
+<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3. 配置文件"></a>3. 配置文件</h3><pre><code class="hljs bash"><span class="hljs-comment"># 创建路由分组管理目录</span>
 mkdir -p /etc/ocserv/group
 vim /etc/ocserv/ocserv.conf
 auth = <span class="hljs-string">"plain[/etc/ocserv/ocpasswd]"</span>
@@ -298,13 +314,13 @@ dtls-legacy = <span class="hljs-literal">true</span>
 user-profile = profile.xml
 
 <span class="hljs-comment"># 创建一个登陆用的用户名与密码</span>
-ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre></div>
+ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre>
 
 <h3 id="4-转发与安全配置"><a href="#4-转发与安全配置" class="headerlink" title="4. 转发与安全配置"></a>4. 转发与安全配置</h3><ul>
 <li>network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 </li>
 <li>ocserv WAN interface 为eth0</li>
 </ul>
-<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
+<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><pre><code class="hljs bash">vim /etc/sysctl.conf
 <span class="hljs-comment"># Protect from IP Spoofing</span>
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -350,15 +366,15 @@ net.ipv4.conf.default.secure_redirects = 0
 net.ipv6.conf.all.accept_ra = 2
 net.ipv6.conf.eth0.accept_ra = 2
 
-net.ipv4.ip_forward = 1</code></pre></div>
+net.ipv4.ip_forward = 1</code></pre>
 <p>使之生效： sysctl -p</p>
-<h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
+<h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><pre><code class="hljs bash">systemctl stop firewalld
 systemctl <span class="hljs-built_in">disable</span> firewalld
 yum install iptables 
 systemcctl start iptables
-systemcctl <span class="hljs-built_in">enable</span> iptables</code></pre></div>
+systemcctl <span class="hljs-built_in">enable</span> iptables</code></pre>
 
-<h4 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/iptables
+<h4 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h4><pre><code class="hljs bash">vim /etc/sysconfig/iptables
 <span class="hljs-comment"># sample configuration for iptables service</span>
 <span class="hljs-comment"># you can edit this manually or use system-config-firewall</span>
 <span class="hljs-comment"># please do not ask us to add additional ports/services to this default configuration</span>
@@ -445,9 +461,9 @@ COMMIT
 <span class="hljs-comment"># LAST RULE - ACCEPT all traffic - Should be    changed to DROP once custom rules are created.</span>
 -A OUTPUT -j ACCEPT
 <span class="hljs-comment"># END OUTPUT RULES</span>
-COMMIT</code></pre></div>
+COMMIT</code></pre>
 <p>使之生效【重启机器后需要重新生效一下】<br>iptables-restore &lt; /etc/sysconfig/iptables</p>
-<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5. ocserv Oops"></a>5. ocserv Oops</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
+<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5. ocserv Oops"></a>5. ocserv Oops</h3><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
 ocpasswd -c /etc/ocserv/ocpasswd 【用户名】
 <span class="hljs-comment"># 添加用户至某个分组</span>
 ocpasswd -c /etc/ocserv/ocpasswd -g 【分组名称】 【用户名】
@@ -468,18 +484,18 @@ occtl -n show users
 <span class="hljs-comment">## 通过用户名:</span>
 occtl disconnect user 【用户名】
 <span class="hljs-comment">## 通过id:</span>
-occtl disconnect id 【id号】</code></pre></div>
+occtl disconnect id 【id号】</code></pre>
 
-<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6. 客户端"></a>6. 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
+<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6. 客户端"></a>6. 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
 yum install openconnect
-openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>
+openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre>
 
 <h4 id="6-2-Windows-amp-MacOS"><a href="#6-2-Windows-amp-MacOS" class="headerlink" title="6.2 Windows &amp; MacOS"></a>6.2 Windows &amp; MacOS</h4><p><a href="https://github.com/openconnect/openconnect-gui" target="_blank" rel="noopener">https://github.com/openconnect/openconnect-gui</a></p>
 <h4 id="6-3-Android"><a href="#6-3-Android" class="headerlink" title="6.3 Android"></a>6.3 Android</h4><p><a href="https://play.google.com/store/apps/details?id=com.github.digitalsoftwaresolutions.openconnect" target="_blank" rel="noopener">https://play.google.com/store/apps/details?id=com.github.digitalsoftwaresolutions.openconnect</a></p>
 <hr>
 <p>感谢我的同事zp</p>
 
-            </article>
+            </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
@@ -507,7 +523,7 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
               
               
                 <div class="post-prevnext row">
-                  <div class="post-prev col-6">
+                  <article class="post-prev col-6">
                     
                     
                       <a href="/2020/06/18/theai-train/">
@@ -516,8 +532,8 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
-                  </div>
-                  <div class="post-next col-6">
+                  </article>
+                  <article class="post-next col-6">
                     
                     
                       <a href="/2020/04/24/k8s-codeing-gitea/">
@@ -526,43 +542,45 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
-                  </div>
+                  </article>
                 </div>
               
             </div>
 
             
               <!-- Comments -->
-              <div class="comments" id="comments">
+              <article class="comments" id="comments">
                 
                 
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk(){
+    function loadGitalk() {
+      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
       addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
         var gitalk = new Gitalk({
           clientID: 'bfd810bfaf1a918e9808',
           clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
           repo: 'theblog',
           owner: 'boer0924',
-          admin: 'boer0924',
-          id: 'abe2f11339bee105f3f102052ebaa0c7',
+          admin: ["boer0924"],
+          id: md5(location.pathname),
           language: 'zh-CN',
+          labels: "['Gitalk']",
           perPage: 15,
           pagerDirection: 'last',
-          createIssueManually: 'true',
-          distractionFreeMode: 'false'
+          createIssueManually: true,
+          distractionFreeMode: false
         });
         gitalk.render('gitalk-container');
       });
     }
-    createObserver(loadGitalk, 'gitalk-container');
+    waitElementVisible('gitalk-container', loadGitalk);
   </script>
 
 
-              </div>
+              </article>
             
-          </div>
+          </article>
         </div>
       </div>
     </div>
@@ -621,11 +639,12 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
   <footer class="mt-5">
   <div class="text-center py-3">
     <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
       <span>&copy;2020</span>
       <i class="iconfont icon-love"></i>
-      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
       <span>boer</span>
     </div>
     
@@ -675,6 +694,10 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
 
 
 
+  
+
+
+
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
   <script  src="/js/clipboard-use.js" ></script>
 
@@ -694,7 +717,7 @@ openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-
 
       tocbot.init({
         tocSelector: '#tocbot',
-        contentSelector: 'article.markdown-body',
+        contentSelector: '#post-body',
         headingSelector: 'h1,h2,h3,h4,h5,h6',
         linkClass: 'tocbot-link',
         activeLinkClass: 'tocbot-active-link',

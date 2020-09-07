@@ -1,7 +1,7 @@
+
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-
-
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
 
 
 
@@ -26,7 +26,11 @@
   <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
   
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
   
 
   
@@ -36,11 +40,11 @@
 
 <!-- 主题依赖的图标库，不要自行修改 -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
@@ -49,6 +53,7 @@
 
 
   <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
 <meta name="generator" content="Hexo 4.2.1"></head>
 
 
@@ -131,8 +136,14 @@
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
           </li>
         
       </ul>
@@ -140,25 +151,28 @@
   </div>
 </nav>
 
-    <div class="view intro-2" id="background" parallax=true
+    <div class="banner intro-2" id="background" parallax=true
          style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container text-center white-text fadeInUp">
+          <div class="container page-header text-center fade-in-up">
             <span class="h2" id="subtitle">
               
             </span>
 
             
-              
-  <div class="mt-3 post-meta">
-    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-08-16 10:16">
-      2020年8月16日 上午
-    </time>
-  </div>
-
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-08-16 10:16" pubdate>
+        2020年8月16日 上午
+      </time>
+    </span>
+  
+</div>
 
 <div class="mt-1">
   
@@ -203,9 +217,11 @@
     <div class="col-lg-8 nopadding-md">
       <div class="container nopadding-md" id="board-ctn">
         <div class="py-5" id="board">
-          <div class="post-content mx-auto" id="post">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes APM链路追踪Skywalking</h1>
             
-            <article class="markdown-body">
+            <div class="markdown-body" id="post-body">
               <p>随着RPC框架、微服务、云计算、大数据的发展，业务的规模和深度相比过往也都在增加。一个业务可能横跨多个模块/服务/容器，依赖的中间件也越来越多，其中任何一个节点出现异常，都可能导致业务出现波动或者异常，这就导致服务质量监控和异常诊断/定位变得异常复杂。于是催生了新的业务监控模式：调用链跟踪系统APM</p>
 <a id="more"></a>
 
@@ -213,14 +229,14 @@
 <blockquote>
 <p>前面我们介绍过<a href="/2019/05/09/pinpoint-deployment/">单纯Docker方式(<code>docker-compose</code>)部署Pinpoint</a>, 可以提供参考。本节我们介绍在Kubernetes上部署Skywalking。</p>
 </blockquote>
-<h3 id="1、Helm3"><a href="#1、Helm3" class="headerlink" title="1、Helm3"></a>1、Helm3</h3><div class="hljs"><pre><code class="hljs bash">curl -LO https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
+<h3 id="1、Helm3"><a href="#1、Helm3" class="headerlink" title="1、Helm3"></a>1、Helm3</h3><pre><code class="hljs bash">curl -LO https://get.helm.sh/helm-v3.2.4-linux-amd64.tar.gz
 tar -zxf helm-v3.2.4-linux-amd64.tar.gz
-cp linux-amd64/helm /usr/<span class="hljs-built_in">local</span>/bin/helm3</code></pre></div>
+cp linux-amd64/helm /usr/<span class="hljs-built_in">local</span>/bin/helm3</code></pre>
 
 <h3 id="2、服务端"><a href="#2、服务端" class="headerlink" title="2、服务端"></a>2、服务端</h3><blockquote>
 <p>Skywalking后端存储，使用EFK日志系统的ES集群。注意index加前缀区分<br>详细的Elasticsearch集群部署可以参考：<a href="/2019/10/24/k8s-logging-efk/">Kubernetes日志系统EFK</a></p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/helm/charts
+<pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/helm/charts
 git <span class="hljs-built_in">clone</span> https://github.com/apache/skywalking-kubernetes.git
 <span class="hljs-built_in">cd</span> skywalking-kubernetes/chart
 helm dep up skywalking
@@ -232,8 +248,8 @@ vim skywalking/values.yaml
 helm3 install skywalking skywalking -n skywalking --values ./skywalking/values.yaml
 helm3 -n skywalking list
 helm3 -n skywalking delete skywalking
-helm3 -n skywalking upgrade skywalking --values ./skywalking/values.yaml</code></pre></div>
-<h4 id="Helm-Values"><a href="#Helm-Values" class="headerlink" title="Helm Values"></a>Helm Values</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">oap:</span>
+helm3 -n skywalking upgrade skywalking --values ./skywalking/values.yaml</code></pre>
+<h4 id="Helm-Values"><a href="#Helm-Values" class="headerlink" title="Helm Values"></a>Helm Values</h4><pre><code class="hljs yaml"><span class="hljs-attr">oap:</span>
   <span class="hljs-attr">name:</span> <span class="hljs-string">oap</span>
   <span class="hljs-attr">dynamicConfigEnabled:</span> <span class="hljs-literal">false</span>
   <span class="hljs-attr">image:</span>
@@ -276,25 +292,25 @@ helm3 -n skywalking upgrade skywalking --values ./skywalking/values.yaml</code><
       <span class="hljs-attr">http:</span> <span class="hljs-number">9200</span>
     <span class="hljs-attr">host:</span> <span class="hljs-string">"elasticsearch-logging.logging.svc"</span> <span class="hljs-comment"># 日志系统ES地址</span>
     <span class="hljs-attr">user:</span> <span class="hljs-string">"elastic"</span> 
-    <span class="hljs-attr">password:</span> <span class="hljs-string">"&lt;your-es-password&gt;"</span></code></pre></div>
+    <span class="hljs-attr">password:</span> <span class="hljs-string">"&lt;your-es-password&gt;"</span></code></pre>
 
-<h3 id="3、客户端"><a href="#3、客户端" class="headerlink" title="3、客户端"></a>3、客户端</h3><h4 id="制作skywalking-agent镜像"><a href="#制作skywalking-agent镜像" class="headerlink" title="制作skywalking-agent镜像"></a>制作skywalking-agent镜像</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/apps/skywalking-agent
+<h3 id="3、客户端"><a href="#3、客户端" class="headerlink" title="3、客户端"></a>3、客户端</h3><h4 id="制作skywalking-agent镜像"><a href="#制作skywalking-agent镜像" class="headerlink" title="制作skywalking-agent镜像"></a>制作skywalking-agent镜像</h4><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> ~/k8s/apps/skywalking-agent
 tar -zxf apache-skywalking-apm-es7-8.1.0.tar.gz
 cp apache-skywalking-apm-bin-es7/agent agent
 vim Dockerfile <span class="hljs-comment"># 准备Dockerfile, 详见Dockerfile</span>
 docker build -t registry.boer.xyz/public/skywalking-agent:8.1.0 .
-docker push registry.boer.xyz/public/skywalking-agent:8.1.0</code></pre></div>
-<h4 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h4><div class="hljs"><pre><code class="hljs Dockerfile"><span class="hljs-keyword">FROM</span> busybox:latest
+docker push registry.boer.xyz/public/skywalking-agent:8.1.0</code></pre>
+<h4 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h4><pre><code class="hljs Dockerfile"><span class="hljs-keyword">FROM</span> busybox:latest
 <span class="hljs-keyword">ENV</span> LANG=C.UTF-<span class="hljs-number">8</span>
 <span class="hljs-keyword">WORKDIR</span><span class="bash"> /usr/skywalking/agent</span>
-<span class="hljs-keyword">COPY</span><span class="bash"> agent/ .</span></code></pre></div>
-<h4 id="skywalking-agent配置"><a href="#skywalking-agent配置" class="headerlink" title="skywalking-agent配置"></a>skywalking-agent配置</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># vim agent/config</span>
+<span class="hljs-keyword">COPY</span><span class="bash"> agent/ .</span></code></pre>
+<h4 id="skywalking-agent配置"><a href="#skywalking-agent配置" class="headerlink" title="skywalking-agent配置"></a>skywalking-agent配置</h4><pre><code class="hljs bash"><span class="hljs-comment"># vim agent/config</span>
 agent.service_name=<span class="hljs-variable">$&#123;SW_AGENT_NAME:Your_ApplicationName&#125;</span> <span class="hljs-comment"># 服务名：区分不同服务，通过环境变量设置</span>
 agent.instance_name=<span class="hljs-variable">$&#123;HOSTNAME&#125;</span> <span class="hljs-comment"># 实例名：区分多实例，取Pod主机名</span>
 collector.backend_service=<span class="hljs-variable">$&#123;SW_AGENT_COLLECTOR_BACKEND_SERVICES:skywalking-oap.skywalking.svc:11800&#125;</span> <span class="hljs-comment"># 服务端地址</span>
 logging.file_name=<span class="hljs-variable">$&#123;SW_LOGGING_FILE_NAME:skywalking-api.log&#125;</span>
 logging.level=<span class="hljs-variable">$&#123;SW_LOGGING_LEVEL:INFO&#125;</span>
-logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZE:31457280&#125;</span></code></pre></div>
+logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZE:31457280&#125;</span></code></pre>
 
 <h3 id="4、使用示例"><a href="#4、使用示例" class="headerlink" title="4、使用示例"></a>4、使用示例</h3><p>使用<code>skywalking-agent</code>一般会想到两种方法：</p>
 <ul>
@@ -302,7 +318,7 @@ logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZ
 <li>通过<code>initContainer</code>方式拷贝Agent</li>
 </ul>
 <p>initContainer方式将<code>skywalking-agent</code>拷贝到应用Pod中，无需修改基础JVM镜像，所以更推荐此方法：</p>
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
+<pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span>
 <span class="hljs-attr">metadata:</span>
   <span class="hljs-attr">name:</span> <span class="hljs-string">produce-deployment</span>
@@ -375,12 +391,12 @@ logging.max_file_size=<span class="hljs-variable">$&#123;SW_LOGGING_MAX_FILE_SIZ
         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">regcred</span>
       <span class="hljs-attr">volumes:</span>
         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">skywalking-agent</span>
-          <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">&#123;&#125;</span></code></pre></div>
+          <span class="hljs-attr">emptyDir:</span> <span class="hljs-string">&#123;&#125;</span></code></pre>
 
 <h3 id="5、Skywalking-ES存储索引管理"><a href="#5、Skywalking-ES存储索引管理" class="headerlink" title="5、Skywalking ES存储索引管理"></a>5、Skywalking ES存储索引管理</h3><blockquote>
 <p>详细<a href="/2019/10/24/k8s-logging-efk/#iLM管理索引生命周期"><strong>iLM索引生命周期</strong></a>，见Kubernetes日志系统EFK一文</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs json">PUT _ilm/policy/skywalking-policy   
+<pre><code class="hljs json">PUT _ilm/policy/skywalking-policy   
 &#123;
   <span class="hljs-attr">"policy"</span>: &#123;                       
     <span class="hljs-attr">"phases"</span>: &#123;
@@ -413,7 +429,7 @@ PUT _template/skywalking-template
     <span class="hljs-attr">"index.translog.durability"</span>: <span class="hljs-string">"async"</span>,
     <span class="hljs-attr">"index.translog.sync_interval"</span>:<span class="hljs-string">"60s"</span>
   &#125;
-&#125;</code></pre></div>
+&#125;</code></pre>
 
 <h3 id="6、The-show"><a href="#6、The-show" class="headerlink" title="6、The show"></a>6、The show</h3><p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182335.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""><br><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200828182157.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
@@ -423,7 +439,7 @@ PUT _template/skywalking-template
 <li><a href="https://skywalking.apache.org/zh/blog/2019-11-07-skywalking-elasticsearch-storage-optimization.html" target="_blank" rel="noopener">https://skywalking.apache.org/zh/blog/2019-11-07-skywalking-elasticsearch-storage-optimization.html</a></li>
 </ul>
 
-            </article>
+            </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
@@ -457,11 +473,11 @@ PUT _template/skywalking-template
               
               
                 <div class="post-prevnext row">
-                  <div class="post-prev col-6">
+                  <article class="post-prev col-6">
                     
                     
-                  </div>
-                  <div class="post-next col-6">
+                  </article>
+                  <article class="post-next col-6">
                     
                     
                       <a href="/2020/07/22/k8s-springcloud-fly/">
@@ -470,43 +486,45 @@ PUT _template/skywalking-template
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
-                  </div>
+                  </article>
                 </div>
               
             </div>
 
             
               <!-- Comments -->
-              <div class="comments" id="comments">
+              <article class="comments" id="comments">
                 
                 
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk(){
+    function loadGitalk() {
+      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
       addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
         var gitalk = new Gitalk({
           clientID: 'bfd810bfaf1a918e9808',
           clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
           repo: 'theblog',
           owner: 'boer0924',
-          admin: 'boer0924',
-          id: 'abe2f11339bee105f3f102052ebaa0c7',
+          admin: ["boer0924"],
+          id: md5(location.pathname),
           language: 'zh-CN',
+          labels: "['Gitalk']",
           perPage: 15,
           pagerDirection: 'last',
-          createIssueManually: 'true',
-          distractionFreeMode: 'false'
+          createIssueManually: true,
+          distractionFreeMode: false
         });
         gitalk.render('gitalk-container');
       });
     }
-    createObserver(loadGitalk, 'gitalk-container');
+    waitElementVisible('gitalk-container', loadGitalk);
   </script>
 
 
-              </div>
+              </article>
             
-          </div>
+          </article>
         </div>
       </div>
     </div>
@@ -565,11 +583,12 @@ PUT _template/skywalking-template
   <footer class="mt-5">
   <div class="text-center py-3">
     <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> -->
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
       <span>&copy;2020</span>
       <i class="iconfont icon-love"></i>
-      <!-- <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
       <span>boer</span>
     </div>
     
@@ -619,6 +638,10 @@ PUT _template/skywalking-template
 
 
 
+  
+
+
+
   <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
   <script  src="/js/clipboard-use.js" ></script>
 
@@ -638,7 +661,7 @@ PUT _template/skywalking-template
 
       tocbot.init({
         tocSelector: '#tocbot',
-        contentSelector: 'article.markdown-body',
+        contentSelector: '#post-body',
         headingSelector: 'h1,h2,h3,h4,h5,h6',
         linkClass: 'tocbot-link',
         activeLinkClass: 'tocbot-active-link',
