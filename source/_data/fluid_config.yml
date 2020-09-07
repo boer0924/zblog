@@ -19,11 +19,17 @@ title_join_string: ' · '  # 浏览器标签页中的标题分隔符，效果：
 
 force_https: false  # 强制所有链接升级为 HTTPS（适用于图片等资源出现 HTTP 混入报错）
 
-highlight: # 代码高亮
-  enable: true
-  style: 'Monokai'  # 高亮样式见：https://highlightjs.org/static/demo/  在页面挑选 style 填入
-  bg_color: true  # 是否根据 style 改变代码背景色，**如果 style 是深色背景别忘了开启此项**
+code:  # 代码块相关的配置
   copy_btn: true  # 是否开启复制代码的按钮
+  highlight:  # 代码高亮
+    enable: true
+    lib: 'highlightjs'  # 实现高亮的库，可选：highlightjs | prismjs，对应下面的配置项
+    highlightjs:
+      style: 'Github Gist'  # 高亮样式见：https://highlightjs.org/static/demo/  在页面挑选 style 填入
+      bg_color: false  # 是否根据 style 改变代码背景色，**如果 style 是深色背景别忘了开启此项**
+    prismjs:
+      style: 'default'  # 高亮样式见：https://prismjs.com/  在页面右侧的圆形按钮挑选 style 填入，也可以直接填入 css 链接
+      preprocess: true  # 设为 true 高亮将本地静态生成（并只支持部分 prismjs 插件），设为 false 高亮将在浏览器通过 js 生成
 
 fun_features: # 一些好玩的功能
   typing: # 为 subtitle 添加打字机效果
@@ -41,18 +47,33 @@ fun_features: # 一些好玩的功能
     enable: false
     style: values # 目前设置两个值：values（价值观词汇） | love（爱心）
 
+dark_mode:   # 主题暗色模式，开启后菜单中会出现切换按钮，用户浏览器会存储切换选项，并且会遵循 prefers-color-scheme 自动切换
+  enable: true
+  default: auto  # 默认的模式：auto | light | dark，选择 auto 时优先遵循 prefers-color-scheme，其次按用户本地时间 18 点到次日 6 点之间进入暗色模式，**注意：当用户手动切换后则不再按照默认模式**
+
 color:  # 主题颜色配置，不一定能每一处都生效，可能会被局部样式覆盖，这种情况建议用自定义 css 解决。配色可以在这获得启发： https://www.webdesignrankings.com/resources/lolcolors/
   body_bg_color: "#eee"             # body 背景色
+  body_bg_color_dark: "#181c27"     # 暗色模式下的 body 背景色，下同
   navbar_bg_color: "#2f4154"        # 顶部菜单背景色
-  navbar_text_color: "white"        # 顶部菜单字体色
+  navbar_bg_color_dark: "#1f3144"
+  navbar_text_color: "#fff"         # 顶部菜单字体色
+  navbar_text_color_dark: "#d0d0d0"
   text_color: "#3c4858"             # 全局字体色
+  text_color_dark: "#c4c6c9"
   sec_text_color: "#718096"         # 全局次级字体色（摘要、简介等位置）
+  sec_text_color_dark: "#a7a9ad"
   post_text_color: "#2c3e50"        # 文章正文字体色
+  post_text_color_dark: "#c4c6c9"
   post_heading_color: "#1a202c"     # 文章标题标签字体色（h1 h2 h3...）
-  link_color: "#3c4858"             # 超链接字体色
-  link_hover_color: "#1abc9c"       # 超链接悬浮时字体色
+  post_heading_color_dark: "#c4c6c9"
+  post_link_color: "#0366d6"        # 文章超链接字体色
+  post_link_color_dark: "#1589e9"
+  link_hover_color: "#30a9de"       # 超链接悬浮时字体色
+  link_hover_color_dark: "#30a9de"
   link_hover_bg_color: "#f8f9fa"    # 超链接悬浮背景色
+  link_hover_bg_color_dark: "#364151"
   board_color: "#fff"               # 主面板背景色
+  board_color_dark: "#252d38"
 
 font:  # 主题字体配置
   font_size: 16px                   # 全局字号
@@ -191,7 +212,9 @@ post:  # 部分配置同时控制自定义页面，注意备注
   banner_img_height: 70  # available: 0 - 100
   banner_mask_alpha: 0.3  # available: 0 - 1.0
   meta:  # 文章标题下方的信息
-    date:  # 文章日期
+    author:  # 作者，优先根据 front-matter 里 author 字段，其次是 hexo 配置中 author 值
+      enable: false
+    date:  # 文章日期，优先根据 front-matter 里 date 字段，其次是 md 文件日期
       enable: true
       format: "LL a"  # 格式参照 ISO-8601 日期格式化，可参照 http://momentjs.cn/docs/#/parsing/string-format/
     wordcount:  # 字数统计
