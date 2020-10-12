@@ -455,6 +455,37 @@
   
   
   <entry>
+    <title>快速文件共享分发的几个方式</title>
+    <link href="/2018/03/29/quick-file-share/"/>
+    <url>/2018/03/29/quick-file-share/</url>
+    
+    <content type="html"><![CDATA[<p>在办公环境下和同事之间互传文件是再正常不过的需求了，但当微信、企业微信等工具文件传输功能被限制的时候，问题就变的棘手。<br>下面分享几个小方法来互传分享文件。</p><a id="more"></a><h3 id="1、FileZilla"><a href="#1、FileZilla" class="headerlink" title="1、FileZilla"></a>1、FileZilla</h3><p>传统FTP方式，推荐FileZilla工具，既有服务端(Windows only)，又有客户端(All platforms)。</p><h3 id="2、Python"><a href="#2、Python" class="headerlink" title="2、Python"></a>2、Python</h3><p>注意python2和python3不同的模块，默认监听在<code>Serving HTTP on 0.0.0.0 port 8000</code></p><h5 id="python2"><a href="#python2" class="headerlink" title="python2"></a>python2</h5><p><code>python -m SimpleHTTPServer</code></p><h5 id="python3"><a href="#python3" class="headerlink" title="python3"></a>python3</h5><p><code>python -m http.server</code></p><h3 id="3、Golang"><a href="#3、Golang" class="headerlink" title="3、Golang"></a>3、Golang</h3><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<span class="hljs-keyword">import</span> (<span class="hljs-string">"flag"</span><span class="hljs-string">"fmt"</span><span class="hljs-string">"net/http"</span>)<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<span class="hljs-keyword">var</span> d = flag.String(<span class="hljs-string">"d"</span>, <span class="hljs-string">"."</span>, <span class="hljs-string">"指定需要代理的文件目录"</span>)flag.Parse()h := http.FileServer(http.Dir(*d))fmt.Println(<span class="hljs-string">"Serving HTTP on 0.0.0.0 port 10924 (http://0.0.0.0:10924/) ..."</span>)http.ListenAndServe(<span class="hljs-string">":10924"</span>, h)&#125;</code></pre><blockquote><p>使用：</p></blockquote><ol><li>Build: <code>go build ghttp.go</code></li><li>Help: <code>./ghttp.exe -h</code></li><li>Demo: <code>./ghttp.exe -d E:/workspaces/daily</code></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Golang</tag>
+      
+      <tag>Python</tag>
+      
+      <tag>FileZilla</tag>
+      
+      <tag>SimpleHTTPServer</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>主机初始化的那些事儿</title>
     <link href="/2018/03/24/srv_initialize/"/>
     <url>/2018/03/24/srv_initialize/</url>
