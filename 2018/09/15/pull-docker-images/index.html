@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="念念不忘 必有回响">
+  <meta name="author" content="boer">
+  <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  <title>那些年，拉取Docker镜像犯的困 · ~·boer·~ 乌托邦</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-09-15 16:16" pubdate>
+        2018年9月15日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">那些年，拉取Docker镜像犯的困</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <p>曾多少次，你在拉取Docker镜像时出现Timeout<br>曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像<br>又有多少回，即使你有梯子也越不过<code>GCR</code>, <code>Quay</code>等镜像仓库的墙…</p>
+<a id="more"></a>
+
+<p>以下，我们列举几种拉取镜像的场景并给出解决方法</p>
+<ol>
+<li>安装K8S集群时</li>
+<li>Docker客户端拉取时</li>
+<li>无需Docker客户端拉取镜像</li>
+<li>翻越<code>Quay</code>等镜像仓库的墙</li>
+</ol>
+<h3 id="1-K8S"><a href="#1-K8S" class="headerlink" title="1. K8S"></a>1. K8S</h3><blockquote>
+<p>registry.aliyuncs.com/google_containers</p>
+</blockquote>
+<pre><code class="hljs yaml"><span class="hljs-comment">## kubeadm-config.yaml</span>
+<span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span>
+<span class="hljs-comment"># kubeadm config print init-defaults</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
+<span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span>
+<span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">k8s.meitianiot.lo:6443</span>
+<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
+<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
+<span class="hljs-attr">apiServer:</span>
+  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span>
+<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
+<span class="hljs-attr">networking:</span>
+  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
+  <span class="hljs-attr">podSubnet:</span> <span class="hljs-number">172.30</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/16</span>
+  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
+<span class="hljs-attr">dns:</span>
+  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
+<span class="hljs-attr">etcd:</span>
+  <span class="hljs-attr">local:</span>
+    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
+<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span></code></pre>
+
+<h3 id="2-Docker镜像加速"><a href="#2-Docker镜像加速" class="headerlink" title="2. Docker镜像加速"></a>2. Docker镜像加速</h3><blockquote>
+<p><a href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</a></p>
+</blockquote>
+<pre><code class="hljs json">&#123;
+  <span class="hljs-attr">"registry-mirrors"</span>: [<span class="hljs-string">"https://890une7x.mirror.aliyuncs.com"</span>],
+  <span class="hljs-attr">"exec-opts"</span>: [<span class="hljs-string">"native.cgroupdriver=systemd"</span>],
+  <span class="hljs-attr">"log-driver"</span>: <span class="hljs-string">"json-file"</span>,
+  <span class="hljs-attr">"log-opts"</span>: &#123;
+    <span class="hljs-attr">"max-size"</span>: <span class="hljs-string">"100m"</span>
+  &#125;,
+  <span class="hljs-attr">"storage-driver"</span>: <span class="hljs-string">"overlay2"</span>,
+  <span class="hljs-attr">"storage-opts"</span>: [
+    <span class="hljs-string">"overlay2.override_kernel_check=true"</span>
+  ]
+&#125;</code></pre>
+
+<h3 id="3-docker-pull-py"><a href="#3-docker-pull-py" class="headerlink" title="3. docker_pull.py"></a>3. docker_pull.py</h3><blockquote>
+<p>无客户端拉取镜像 <a href="https://github.com/NotGlop/docker-drag" target="_blank" rel="noopener">https://github.com/NotGlop/docker-drag</a><br>以下脚本只是站在巨人的肩膀上，加入了<code>proxies</code>功能，以应对中国局域网。</p>
+</blockquote>
+<pre><code class="hljs python"><span class="hljs-keyword">import</span> functools
+<span class="hljs-keyword">import</span> gzip
+<span class="hljs-keyword">import</span> hashlib
+<span class="hljs-keyword">import</span> json
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> shutil
+<span class="hljs-keyword">import</span> sys
+<span class="hljs-keyword">import</span> tarfile
+<span class="hljs-keyword">from</span> io <span class="hljs-keyword">import</span> BytesIO
+
+<span class="hljs-keyword">import</span> requests
+<span class="hljs-keyword">import</span> urllib3
+
+proxies = &#123;
+    <span class="hljs-string">'http'</span>: <span class="hljs-string">'http://127.0.0.1:1081'</span>,
+    <span class="hljs-string">'https'</span>: <span class="hljs-string">'http://127.0.0.1:1081'</span>
+&#125;
+
+proxy_get = functools.partial(requests.get, proxies=proxies)
+
+urllib3.disable_warnings()
+
+<span class="hljs-keyword">if</span> len(sys.argv) != <span class="hljs-number">2</span>:
+    print(<span class="hljs-string">'Usage:\n\tdocker_pull.py [registry/][repository/]image[:tag|@digest]\n'</span>)
+    exit(<span class="hljs-number">1</span>)
+
+<span class="hljs-comment"># Look for the Docker image to download</span>
+repo = <span class="hljs-string">'library'</span>
+tag = <span class="hljs-string">'latest'</span>
+imgparts = sys.argv[<span class="hljs-number">1</span>].split(<span class="hljs-string">'/'</span>)
+<span class="hljs-keyword">try</span>:
+    img, tag = imgparts[<span class="hljs-number">-1</span>].split(<span class="hljs-string">'@'</span>)
+<span class="hljs-keyword">except</span> ValueError:
+    <span class="hljs-keyword">try</span>:
+        img, tag = imgparts[<span class="hljs-number">-1</span>].split(<span class="hljs-string">':'</span>)
+    <span class="hljs-keyword">except</span> ValueError:
+        img = imgparts[<span class="hljs-number">-1</span>]
+<span class="hljs-comment"># Docker client doesn't seem to consider the first element as a potential registry unless there is a '.' or ':'</span>
+<span class="hljs-keyword">if</span> len(imgparts) &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-string">'.'</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>] <span class="hljs-keyword">or</span> <span class="hljs-string">':'</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>]):
+    registry = imgparts[<span class="hljs-number">0</span>]
+    repo = <span class="hljs-string">'/'</span>.join(imgparts[<span class="hljs-number">1</span>:<span class="hljs-number">-1</span>])
+<span class="hljs-keyword">else</span>:
+    registry = <span class="hljs-string">'registry-1.docker.io'</span>
+    <span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
+        repo = <span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>])
+    <span class="hljs-keyword">else</span>:
+        repo = <span class="hljs-string">'library'</span>
+repository = <span class="hljs-string">'&#123;&#125;/&#123;&#125;'</span>.format(repo, img)
+
+<span class="hljs-comment"># Get Docker authentication endpoint when it is required</span>
+auth_url = <span class="hljs-string">'https://auth.docker.io/token'</span>
+reg_service = <span class="hljs-string">'registry.docker.io'</span>
+resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/'</span>.format(registry), verify=<span class="hljs-literal">False</span>)
+<span class="hljs-keyword">if</span> resp.status_code == <span class="hljs-number">401</span>:
+    auth_url = resp.headers[<span class="hljs-string">'WWW-Authenticate'</span>].split(<span class="hljs-string">'"'</span>)[<span class="hljs-number">1</span>]
+    <span class="hljs-keyword">try</span>:
+        reg_service = resp.headers[<span class="hljs-string">'WWW-Authenticate'</span>].split(<span class="hljs-string">'"'</span>)[<span class="hljs-number">3</span>]
+    <span class="hljs-keyword">except</span> IndexError:
+        reg_service = <span class="hljs-string">""</span>
+
+<span class="hljs-comment"># Get Docker token and fetch manifest v2 (this part is useless for unauthenticated registries like Microsoft)</span>
+resp = proxy_get(<span class="hljs-string">'&#123;&#125;?service=&#123;&#125;&amp;scope=repository:&#123;&#125;:pull'</span>.format(auth_url, reg_service, repository), verify=<span class="hljs-literal">False</span>)
+access_token = resp.json()[<span class="hljs-string">'token'</span>]
+auth_head = &#123;<span class="hljs-string">'Authorization'</span>: <span class="hljs-string">'Bearer '</span> + access_token,
+             <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/vnd.docker.distribution.manifest.v2+json'</span>&#125;
+
+<span class="hljs-comment"># Get image layer digests</span>
+resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;'</span>.format(registry, repository, tag), headers=auth_head, verify=<span class="hljs-literal">False</span>)
+<span class="hljs-keyword">if</span> (resp.status_code != <span class="hljs-number">200</span>):
+    print(<span class="hljs-string">'[-] Cannot fetch manifest for &#123;&#125; [HTTP &#123;&#125;]'</span>.format(repository, resp.status_code))
+    print(resp.content)
+    auth_head = &#123;<span class="hljs-string">'Authorization'</span>: <span class="hljs-string">'Bearer '</span> + access_token,
+                 <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/vnd.docker.distribution.manifest.list.v2+json'</span>&#125;
+    resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;'</span>.format(registry, repository, tag), headers=auth_head,
+                     verify=<span class="hljs-literal">False</span>)
+    <span class="hljs-keyword">if</span> (resp.status_code == <span class="hljs-number">200</span>):
+        print(<span class="hljs-string">'[+] Manifests found for this tag (use the @digest format to pull the corresponding image):'</span>)
+        manifests = resp.json()[<span class="hljs-string">'manifests'</span>]
+        <span class="hljs-keyword">for</span> manifest <span class="hljs-keyword">in</span> manifests:
+            <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> manifest[<span class="hljs-string">"platform"</span>].items():
+                sys.stdout.write(<span class="hljs-string">'&#123;&#125;: &#123;&#125;, '</span>.format(key, value))
+            print(<span class="hljs-string">'digest: &#123;&#125;'</span>.format(manifest[<span class="hljs-string">"digest"</span>]))
+    exit(<span class="hljs-number">1</span>)
+layers = resp.json()[<span class="hljs-string">'layers'</span>]
+
+<span class="hljs-comment"># Create tmp folder that will hold the image</span>
+imgdir = <span class="hljs-string">'tmp_&#123;&#125;_&#123;&#125;'</span>.format(img, tag.replace(<span class="hljs-string">':'</span>, <span class="hljs-string">'@'</span>))
+os.mkdir(imgdir)
+print(<span class="hljs-string">'Creating image structure in: '</span> + imgdir)
+
+config = resp.json()[<span class="hljs-string">'config'</span>][<span class="hljs-string">'digest'</span>]
+confresp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;'</span>.format(registry, repository, config), headers=auth_head,
+                     verify=<span class="hljs-literal">False</span>)
+file = open(<span class="hljs-string">'&#123;&#125;/&#123;&#125;.json'</span>.format(imgdir, config[<span class="hljs-number">7</span>:]), <span class="hljs-string">'wb'</span>)
+file.write(confresp.content)
+file.close()
+
+content = [&#123;
+    <span class="hljs-string">'Config'</span>: config[<span class="hljs-number">7</span>:] + <span class="hljs-string">'.json'</span>,
+    <span class="hljs-string">'RepoTags'</span>: [],
+    <span class="hljs-string">'Layers'</span>: []
+&#125;]
+<span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
+    content[<span class="hljs-number">0</span>][<span class="hljs-string">'RepoTags'</span>].append(<span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>]) + <span class="hljs-string">'/'</span> + img + <span class="hljs-string">':'</span> + tag)
+<span class="hljs-keyword">else</span>:
+    content[<span class="hljs-number">0</span>][<span class="hljs-string">'RepoTags'</span>].append(img + <span class="hljs-string">':'</span> + tag)
+
+empty_json = <span class="hljs-string">'&#123;"created":"1970-01-01T00:00:00Z","container_config":&#123;"Hostname":"","Domainname":"","User":"","AttachStdin":false, \</span>
+<span class="hljs-string">	"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false, "StdinOnce":false,"Env":null,"Cmd":null,"Image":"", \</span>
+<span class="hljs-string">	"Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":null&#125;&#125;'</span>
+
+<span class="hljs-comment"># Build layer folders</span>
+parentid = <span class="hljs-string">''</span>
+<span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> layers:
+    ublob = layer[<span class="hljs-string">'digest'</span>]
+    <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> Creating fake layer ID. Don't know how Docker generates it</span>
+    fake_layerid = hashlib.sha256((parentid + <span class="hljs-string">'\n'</span> + ublob + <span class="hljs-string">'\n'</span>).encode(<span class="hljs-string">'utf-8'</span>)).hexdigest()
+    layerdir = imgdir + <span class="hljs-string">'/'</span> + fake_layerid
+    os.mkdir(layerdir)
+
+    <span class="hljs-comment"># Creating VERSION file</span>
+    file = open(layerdir + <span class="hljs-string">'/VERSION'</span>, <span class="hljs-string">'w'</span>)
+    file.write(<span class="hljs-string">'1.0'</span>)
+    file.close()
+
+    <span class="hljs-comment"># Creating layer.tar file</span>
+    sys.stdout.write(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>] + <span class="hljs-string">': Downloading...'</span>)
+    sys.stdout.flush()
+    bresp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;'</span>.format(registry, repository, ublob), headers=auth_head,
+                      verify=<span class="hljs-literal">False</span>)
+    <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):
+        bresp = proxy_get(layer[<span class="hljs-string">'urls'</span>][<span class="hljs-number">0</span>], headers=auth_head, verify=<span class="hljs-literal">False</span>)
+        <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):
+            print(<span class="hljs-string">'\rERROR: Cannot download layer &#123;&#125; [HTTP &#123;&#125;]'</span>.format(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.status_code,
+                                                                       bresp.headers[<span class="hljs-string">'Content-Length'</span>]))
+            print(bresp.content)
+            exit(<span class="hljs-number">1</span>)
+    print(<span class="hljs-string">"\r&#123;&#125;: Pull complete [&#123;&#125;]"</span>.format(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.headers[<span class="hljs-string">'Content-Length'</span>]))
+    content[<span class="hljs-number">0</span>][<span class="hljs-string">'Layers'</span>].append(fake_layerid + <span class="hljs-string">'/layer.tar'</span>)
+    file = open(layerdir + <span class="hljs-string">'/layer.tar'</span>, <span class="hljs-string">"wb"</span>)
+    mybuff = BytesIO(bresp.content)
+    unzLayer = gzip.GzipFile(fileobj=mybuff)
+    file.write(unzLayer.read())
+    unzLayer.close()
+    file.close()
+
+    <span class="hljs-comment"># Creating json file</span>
+    file = open(layerdir + <span class="hljs-string">'/json'</span>, <span class="hljs-string">'w'</span>)
+    <span class="hljs-comment"># last layer = config manifest - history - rootfs</span>
+    <span class="hljs-keyword">if</span> layers[<span class="hljs-number">-1</span>][<span class="hljs-string">'digest'</span>] == layer[<span class="hljs-string">'digest'</span>]:
+        <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> json.loads() automatically converts to unicode, thus decoding values whereas Docker doesn't</span>
+        json_obj = json.loads(confresp.content)
+        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">'history'</span>]
+        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">'rootfs'</span>]
+    <span class="hljs-keyword">else</span>:  <span class="hljs-comment"># other layers json are empty</span>
+        json_obj = json.loads(empty_json)
+    json_obj[<span class="hljs-string">'id'</span>] = fake_layerid
+    <span class="hljs-keyword">if</span> parentid:
+        json_obj[<span class="hljs-string">'parent'</span>] = parentid
+    parentid = json_obj[<span class="hljs-string">'id'</span>]
+    file.write(json.dumps(json_obj))
+    file.close()
+
+file = open(imgdir + <span class="hljs-string">'/manifest.json'</span>, <span class="hljs-string">'w'</span>)
+file.write(json.dumps(content))
+file.close()
+
+<span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
+    content = &#123;<span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>]) + <span class="hljs-string">'/'</span> + img: &#123;tag: fake_layerid&#125;&#125;
+<span class="hljs-keyword">else</span>:  <span class="hljs-comment"># when pulling only an img (without repo and registry)</span>
+    content = &#123;img: &#123;tag: fake_layerid&#125;&#125;
+file = open(imgdir + <span class="hljs-string">'/repositories'</span>, <span class="hljs-string">'w'</span>)
+file.write(json.dumps(content))
+file.close()
+
+<span class="hljs-comment"># Create image tar and clean tmp folder</span>
+docker_tar = repo.replace(<span class="hljs-string">'/'</span>, <span class="hljs-string">'_'</span>) + <span class="hljs-string">'_'</span> + img + <span class="hljs-string">'.tar'</span>
+tar = tarfile.open(docker_tar, <span class="hljs-string">"w"</span>)
+tar.add(imgdir, arcname=os.path.sep)
+tar.close()
+shutil.rmtree(imgdir)
+print(<span class="hljs-string">'Docker image pulled: '</span> + docker_tar)
+print(<span class="hljs-string">'Compress the tar file with transport: tar -zcf '</span> + docker_tar + <span class="hljs-string">'.gz'</span> + docker_tar)
+print(<span class="hljs-string">'Load the image: docker load -i '</span> + docker_tar)</code></pre>
+
+<h3 id="4-Quay镜像"><a href="#4-Quay镜像" class="headerlink" title="4. Quay镜像"></a>4. Quay镜像</h3><blockquote>
+<p>如：quay.mirrors.ustc.edu.cn</p>
+</blockquote>
+<pre><code class="hljs bash">sed -i -e <span class="hljs-string">'s_quay.io_quay.mirrors.ustc.edu.cn_'</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span></code></pre>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                      <a class="hover-with-bg" href="/tags/DockerHub/">DockerHub</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/03/24/es-data-migrate/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Elasticsearch数据迁移</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2018/07/28/springboot-logging-configuration/">
+                        <span class="hidden-mobile">Springboot Logback自定义日志</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    function loadGitalk() {
+      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
+      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
+        var gitalk = new Gitalk({
+          clientID: 'bfd810bfaf1a918e9808',
+          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
+          repo: 'theblog',
+          owner: 'boer0924',
+          admin: ["boer0924"],
+          id: md5(location.pathname),
+          language: 'zh-CN',
+          labels: ["Gitalk"],
+          perPage: 15,
+          pagerDirection: 'last',
+          createIssueManually: true,
+          distractionFreeMode: false
+        });
+        gitalk.render('gitalk-container');
+      });
+    }
+    waitElementVisible('gitalk-container', loadGitalk);
+  </script>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a> -->
+      <span>&copy;2020</span>
+      <i class="iconfont icon-love"></i>
+      <span>boer</span>
+    </div>
+    
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "那些年，拉取Docker镜像犯的困&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
