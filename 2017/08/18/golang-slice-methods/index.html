@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>CLOSE_WAIT &amp; TIME_WAIT · ~·boer·~ 乌托邦</title>
+  <title>Golang/Python对比学习之Slice/List · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -167,8 +167,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-01-18 18:16" pubdate>
-        2018年1月18日 晚上
+      <time datetime="2017-08-18 16:16" pubdate>
+        2017年8月18日 下午
       </time>
     </span>
   
@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      207 字
+      472 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      8
        分钟
     </span>
   
@@ -219,33 +219,83 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">CLOSE_WAIT &amp; TIME_WAIT</h1>
+            <h1 style="display: none">Golang/Python对比学习之Slice/List</h1>
             
             <div class="markdown-body" id="post-body">
-              <h3 id="一图胜千言"><a href="#一图胜千言" class="headerlink" title="一图胜千言"></a>一图胜千言</h3><p><img src="/img/tcp_hello.webp" srcset="/img/loading.gif" alt="tcp_hello"><br><img src="/img/tcp_bye.webp" srcset="/img/loading.gif" alt="tcp_bye"><br><img src="/img/tcp_state.webp" srcset="/img/loading.gif" alt="tcp_state"></p>
-<h3 id="TIME-WAIT-2msl"><a href="#TIME-WAIT-2msl" class="headerlink" title="TIME_WAIT (2msl)"></a>TIME_WAIT (2msl)</h3><ol>
-<li>正常完成四次挥手</li>
-<li>正常等待2msl后释放资源 (TCP机制)</li>
-<li>服务端能做的 (打铁还须自身硬)</li>
-</ol>
-<ul>
-<li>文件描述符ulimit -Hn</li>
-<li>sysctl内核网络参数优化</li>
-</ul>
-<ol start="4">
-<li>问题的根源在客户端为什么大量请求(短连接)又快速断开？</li>
-</ol>
-<ul>
-<li>秒杀搞活动？ # 短连接 -&gt; 长连接keepalive</li>
-<li><strong>CC攻击？</strong> # 网关限流</li>
-</ul>
-<h3 id="CLOSE-WAIT"><a href="#CLOSE-WAIT" class="headerlink" title="CLOSE_WAIT"></a>CLOSE_WAIT</h3><ol>
-<li>四次挥手未完成。</li>
-<li>客户端关闭连接之后服务器程序没有进一步发出ack信号。四次挥手腰斩。</li>
-<li>有可能就是客户端连接关闭之后，程序里没有检测到，或者程序压根就忘记了这个时候需要关闭连接，于是这个资源就一直被程序占着。 # 服务端程序bug。</li>
-</ol>
-<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><p><a href="https://www.jianshu.com/p/9968b16b607e" target="_blank" rel="noopener">https://www.jianshu.com/p/9968b16b607e</a></p>
+              <p>Python中List列表的使用很方便, 内置电池插上就用, 堪比南孚聚能环</p>
+<p>相比之下, Golang中Slice提供的内置方法就捉襟见肘了</p>
+<p>然而, 习惯了Python动态语言提供的各种便利的内置方法, 对于Golang的静态语言, 自己实现这些方法反而不是那么信手拈来</p>
+<p>下面我们通过对比Python来实现Golang中各个方法</p>
+<a id="more"></a>
 
+<p>方法汇总:</p>
+<ul>
+<li><code>clear</code></li>
+<li><code>copy</code></li>
+<li><code>append</code></li>
+<li><code>extend</code></li>
+<li><code>pop</code></li>
+<li><code>index</code></li>
+<li><code>count</code></li>
+<li><code>insert</code></li>
+<li><code>remove</code></li>
+<li><code>reverse</code>/<code>reversed</code></li>
+<li><code>sort</code>/<code>sorted</code></li>
+<li><code>len</code></li>
+<li><code>max</code>/<code>min</code></li>
+<li><code>contains</code></li>
+<li><code>join</code></li>
+</ul>
+<h3 id="clear-方法"><a href="#clear-方法" class="headerlink" title="clear()方法"></a>clear()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">clear</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+	<span class="hljs-keyword">return</span> lst[:<span class="hljs-number">0</span>]
+&#125;
+<span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
+nums = clear(nums)
+log.Println(nums)</code></pre>
+<p>VS</p>
+<pre><code class="hljs python">nums = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+nums.clear()
+print(nums)</code></pre>
+
+<h3 id="copy-方法"><a href="#copy-方法" class="headerlink" title="copy()方法"></a>copy()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myCopy</span><span class="hljs-params">(dst, src []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">copy</span>(dst, src)
+&#125;</code></pre>
+<pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myAppend</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el ...<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+	<span class="hljs-keyword">return</span> <span class="hljs-built_in">append</span>(lst, el...)
+&#125;</code></pre>
+
+<p>func extend(dst, src []int) []int {<br>    return append(dst, src…)<br>}</p>
+<p>func pop(lst []int) []int {<br>    return lst[:len(lst)-1]<br>}</p>
+<p>func myPop(lst []int, i int) []int {<br>    return append(lst[:i], lst[i+1:]…)<br>}</p>
+<p>func index(lst []int, el int) int {<br>    for i, v := range lst {<br>        if v == el {<br>            return i<br>        }<br>    }<br>    return -1<br>}</p>
+<p>func count(lst []int, el int) int {<br>    maps := map[int]int{}<br>    for _, v := range lst {<br>        if v == el {<br>            maps[el]++<br>        }<br>    }<br>    return maps[el]<br>}</p>
+<p>func insert(lst []int, el, i int) []int {<br>    lst = append(lst[:i+1], lst[i:]…)<br>    lst[i] = el<br>    return lst<br>}</p>
+<p>func remove(lst []int, el int) []int {<br>    for i, v := range lst {<br>        if v == el {<br>            lst = append(lst[:i], lst[i+1:]…)<br>            break<br>        }<br>    }<br>    return lst<br>}</p>
+<p>func reverse(lst []int) []int {<br>    tmp := make([]int, len(lst), cap(lst))<br>    for i := range lst {<br>        tmp[i] = lst[len(lst)-i-1]<br>    }<br>    return tmp<br>}</p>
+<p>func mySort(lst []int) []int {<br>    // sort.Ints(lst)<br>    sort.Sort(sort.Reverse(sort.IntSlice(lst)))<br>    return lst<br>}</p>
+<p>func myLen(lst []int) int {<br>    return len(lst)<br>}</p>
+<p>func myMax(lst []int) int {<br>    t := lst[0]<br>    for _, v := range lst {<br>        if v &gt; t {<br>            t = v<br>        }<br>    }<br>    return t<br>}</p>
+<p>func myMin(lst []int) int {<br>    t := lst[0]<br>    for _, v := range lst {<br>        if v &lt; t {<br>            t = v<br>        }<br>    }<br>    return t<br>}</p>
+<pre><code class="hljs go"><span class="hljs-string">``</span><span class="hljs-string">`</span>
+<span class="hljs-string">`</span><span class="hljs-string">``</span><span class="hljs-keyword">go</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">contains</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span> &#123;
+	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> lst &#123;
+		<span class="hljs-keyword">if</span> v == el &#123;
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+		&#125;
+	&#125;
+	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+&#125;</code></pre>
+
+<pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">join</span><span class="hljs-params">(nums []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">string</span></span> &#123;	
+	<span class="hljs-keyword">var</span> numsText = []<span class="hljs-keyword">string</span>&#123;&#125;
+	<span class="hljs-keyword">for</span> _, n := <span class="hljs-keyword">range</span> nums &#123;
+		text := strconv.Itoa(n)
+		numsText = <span class="hljs-built_in">append</span>(numsText, text)
+	&#125;
+	res := strings.Join(numsText, <span class="hljs-string">"+"</span>)
+	<span class="hljs-keyword">return</span> res
+&#125;</code></pre>
             </div>
             <hr>
             <div>
@@ -254,7 +304,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
+                      <a class="hover-with-bg" href="/categories/Golang/">Golang</a>
                     
                   </div>
                 
@@ -262,13 +312,13 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/TCP-IP/">TCP/IP</a>
+                      <a class="hover-with-bg" href="/tags/Golang/">Golang</a>
                     
-                      <a class="hover-with-bg" href="/tags/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">TCP四次挥手</a>
+                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
                     
-                      <a class="hover-with-bg" href="/tags/CLOSE-WAIT/">CLOSE_WAIT</a>
+                      <a class="hover-with-bg" href="/tags/Slice/">Slice</a>
                     
-                      <a class="hover-with-bg" href="/tags/TIME-WAIT/">TIME_WAIT</a>
+                      <a class="hover-with-bg" href="/tags/List/">List</a>
                     
                   </div>
                 
@@ -281,9 +331,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2018/02/16/mirror-speed/">
+                      <a href="/2018/01/18/closewait-timewait/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">各种镜像源加速</span>
+                        <span class="hidden-mobile">CLOSE_WAIT & TIME_WAIT</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -291,8 +341,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2017/08/18/golang-slice-methods/">
-                        <span class="hidden-mobile">Golang/Python对比学习之Slice/List</span>
+                      <a href="/2017/08/16/golang-slice-reverse/">
+                        <span class="hidden-mobile">Golang - 切片逆序遍历的几种方法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -496,7 +546,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "CLOSE_WAIT & TIME_WAIT&nbsp;",
+        "Golang/Python对比学习之Slice/List&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
