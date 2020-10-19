@@ -9,7 +9,7 @@ categories: DevOps
 ---
 曾多少次，你在拉取Docker镜像时出现Timeout
 曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像
-又有多少回，即使你有梯子也越不过`GCR`, `Quay`等镜像仓库的墙...
+又有多少回，即使你有梯子也翻不过`GCR`, `Quay`等镜像仓库的墙...
 
 <!-- more -->
 
