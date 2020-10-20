@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>快速文件共享分发的几个方式 · ~·boer·~ 乌托邦</title>
+  <title>RPM包制作工具FPM介绍 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -167,8 +167,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-03-29 16:16" pubdate>
-        2018年3月29日 下午
+      <time datetime="2016-07-07 16:16" pubdate>
+        2016年7月7日 下午
       </time>
     </span>
   
@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      202 字
+      610 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      11
        分钟
     </span>
   
@@ -219,39 +219,81 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">快速文件共享分发的几个方式</h1>
+            <h1 style="display: none">RPM包制作工具FPM介绍</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>在办公环境下和同事之间互传文件是再正常不过的需求了，但当微信、企业微信等工具文件传输功能被限制的时候，问题就变的棘手。<br>下面分享几个小方法来互传分享文件。</p>
+              <p>本文记录rpm包制作工具<a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">fpm</a>的使用笔记，分别记录了制作<code>filebeat</code>, <code>osquery</code>, <code>fastdfs</code>包的过程。</p>
 <a id="more"></a>
 
-<h3 id="1、FileZilla"><a href="#1、FileZilla" class="headerlink" title="1、FileZilla"></a>1、FileZilla</h3><p>传统FTP方式，推荐FileZilla工具，既有服务端(Windows only)，又有客户端(All platforms)。</p>
-<h3 id="2、Python"><a href="#2、Python" class="headerlink" title="2、Python"></a>2、Python</h3><p>注意python2和python3不同的模块，默认监听在<code>Serving HTTP on 0.0.0.0 port 8000</code></p>
-<h5 id="python2"><a href="#python2" class="headerlink" title="python2"></a>python2</h5><p><code>python -m SimpleHTTPServer</code></p>
-<h5 id="python3"><a href="#python3" class="headerlink" title="python3"></a>python3</h5><p><code>python -m http.server</code></p>
-<h3 id="3、Golang"><a href="#3、Golang" class="headerlink" title="3、Golang"></a>3、Golang</h3><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+<h3 id="filebeat7"><a href="#filebeat7" class="headerlink" title="filebeat7"></a>filebeat7</h3><pre><code class="hljs bash"><span class="hljs-comment"># cd tmp_install;rpm2cpio ../filebeat-5.5.2-x86_64.rpm | cpio -div  # 解压rpm包</span>
+<span class="hljs-comment"># -p NAME-VERSION-ARCH.rpm \</span>
 
-<span class="hljs-keyword">import</span> (
-	<span class="hljs-string">"flag"</span>
-	<span class="hljs-string">"fmt"</span>
-	<span class="hljs-string">"net/http"</span>
-)
+hostname Boer-RPM
 
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
-	<span class="hljs-keyword">var</span> d = flag.String(<span class="hljs-string">"d"</span>, <span class="hljs-string">"."</span>, <span class="hljs-string">"指定需要代理的文件目录"</span>)
-	flag.Parse()
-	h := http.FileServer(http.Dir(*d))
-	fmt.Println(<span class="hljs-string">"Serving HTTP on 0.0.0.0 port 10924 (http://0.0.0.0:10924/) ..."</span>)
-	http.ListenAndServe(<span class="hljs-string">":10924"</span>, h)
-&#125;</code></pre>
-<blockquote>
-<p>使用：</p>
-</blockquote>
-<ol>
-<li>Build: <code>go build ghttp.go</code></li>
-<li>Help: <code>./ghttp.exe -h</code></li>
-<li>Demo: <code>./ghttp.exe -d E:/workspaces/daily</code></li>
-</ol>
+fpm -s dir -t rpm -n boer-filebeat -v 7.1.1 \
+--verbose --iteration 1 \
+-m boer@boer.xyz \
+--vendor <span class="hljs-string">"Boer RPM"</span> \
+--after-install after_install.sh \
+-C tmp_install .
+
+hostnamectl <span class="hljs-built_in">set</span>-hostname VM_140_39
+
+after_install.sh
+IP=`ip -4 route get 8.8.8.8 | awk <span class="hljs-string">'&#123;print $7&#125;'</span> | tr -d <span class="hljs-string">'\n'</span>`
+<span class="hljs-comment"># IP=$(grep IPADDR /etc/sysconfig/network-scripts/ifcfg-bond?|cut -d '=' -f 2)</span>
+sed -i <span class="hljs-string">"s/ipv4address/<span class="hljs-variable">$IP</span>/"</span> /etc/filebeat7/filebeat.yml
+ver=`cat /etc/redhat-release`
+<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$ver</span> =~ <span class="hljs-string">"release 7"</span> ]];<span class="hljs-keyword">then</span>
+  /usr/bin/systemctl daemon-reload
+  /usr/bin/systemctl start filebeat7
+  /usr/bin/systemctl <span class="hljs-built_in">enable</span> filebeat7
+<span class="hljs-keyword">else</span>
+  /sbin/chkconfig filebeat7 on
+  service filebeat7 start
+<span class="hljs-keyword">fi</span></code></pre>
+
+<h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><pre><code class="hljs bash">fpm -s dir -t rpm -n osquery -v 3.3.2 -m boer@boer.xyz \
+-p NAME-VERSION-ARCH.rpm \
+--after-install after_install.sh \
+--after-remove after_remove.sh \
+-C tmp_install \
+.
+
+after_install.sh
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'export PATH=$PATH:/opt/osquery/usr/bin #deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5'</span> &gt;&gt; /etc/profile
+<span class="hljs-built_in">source</span> /etc/profile
+
+after_remove.sh
+rm -rf /opt/osquery
+sed -i <span class="hljs-string">'/^export.*\#deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5/d'</span> /etc/profile
+<span class="hljs-built_in">source</span> /etc/profile</code></pre>
+
+<h3 id="fastdfs"><a href="#fastdfs" class="headerlink" title="fastdfs"></a>fastdfs</h3><pre><code class="hljs bash"><span class="hljs-comment"># libfastcommon</span>
+./make.sh
+./make.sh install DESTDIR=../tmp_install
+fpm -s dir -t rpm -n libfastcommon -v 1.0.7 -C tmp_install usr
+<span class="hljs-comment"># FastDFS</span>
+vim make.sh
+DESTDIR=/srv/boer/fpm_rpm/fastdfs/FastDFS/tmp_install
+./make.sh
+./make.sh install
+fpm -s dir -t rpm -n fastdfs -v 5.0.8 -d <span class="hljs-string">'libfastcommon'</span> -C tmp_install .
+<span class="hljs-comment"># nginx</span>
+./configure --prefix=/opt/nginx --sbin-path=/opt/nginx/sbin/nginx --conf-path=/opt/nginx/conf/nginx.conf --error-log-path=/home/finance/Logs/nginx/error.log --http-log-path=/home/finance/Logs/nginx/access.log --pid-path=/opt/nginx/var/nginx.pid --lock-path=/opt/nginx/var/nginx.lock --http-client-body-temp-path=/dev/shm/nginx_temp/client_body --http-proxy-temp-path=/dev/shm/nginx_temp/proxy --http-fastcgi-temp-path=/dev/shm/nginx_temp/fastcgi --user=finance --group=finance --with-cpu-opt=pentium4F --without-select_module --without-poll_module --with-http_realip_module --with-http_sub_module --with-http_gzip_static_module --with-http_stub_status_module --without-http_ssi_module --without-http_userid_module --without-http_ssi_module --without-http_userid_module --without-http_geo_module --without-http_map_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --with-http_ssl_module --add-module=../fastdfs-nginx-module/src
+make
+make install DESTDIR=/srv/boer/fpm_rpm/fastdfs/nginx-1.12.0/tmp_install
+fpm -s dir -t rpm -n nginx-with-fastdfs -v 1.12.0 -C tmp_install .</code></pre>
+
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><h5 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h5><pre><code class="hljs bash">./configure --prefix=***
+make install --prefix=***
+make install DESTDIR=***</code></pre>
+<h5 id="A"><a href="#A" class="headerlink" title="A"></a>A</h5><p>Number 2 is simply an error as far as I know.</p>
+<p>Number 1 determines where the package will go when it is installed, and where it will look for its associated files when it is run. It’s what you should use if you’re just compiling something for use on a single host.</p>
+<p>Number 3 is for installing to a temporary directory which is not where the package will be run from. For example this is used when building deb packages. The person building the package doesn’t actually install everything into its final place on his own system. He may have a different version installed already and not want to disturb it, or he may not even be root. So he uses configure –prefix=/usr so the program will expect to be installed in /usr when it runs, then make install DESTDIR=debian/tmp to actually create the directory structure.</p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
+<li><a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">https://github.com/jordansissel/fpm</a></li>
+</ul>
 
             </div>
             <hr>
@@ -269,13 +311,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Golang/">Golang</a>
+                      <a class="hover-with-bg" href="/tags/RPM/">RPM</a>
                     
-                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
-                    
-                      <a class="hover-with-bg" href="/tags/FileZilla/">FileZilla</a>
-                    
-                      <a class="hover-with-bg" href="/tags/SimpleHTTPServer/">SimpleHTTPServer</a>
+                      <a class="hover-with-bg" href="/tags/FPM/">FPM</a>
                     
                   </div>
                 
@@ -288,9 +326,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2018/06/24/jdk-analyze-tools/">
+                      <a href="/2017/08/16/golang-slice-reverse/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java分析工具</span>
+                        <span class="hidden-mobile">Golang - 切片逆序遍历的几种方法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -298,8 +336,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/03/24/srv-initialize/">
-                        <span class="hidden-mobile">主机初始化的那些事儿</span>
+                      <a href="/2012/12/31/for-my2012/">
+                        <span class="hidden-mobile">致我的2012</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -503,7 +541,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "快速文件共享分发的几个方式&nbsp;",
+        "RPM包制作工具FPM介绍&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

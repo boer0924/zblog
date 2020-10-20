@@ -543,8 +543,8 @@
   
   <entry>
     <title>主机初始化的那些事儿</title>
-    <link href="/2018/03/24/srv_initialize/"/>
-    <url>/2018/03/24/srv_initialize/</url>
+    <link href="/2018/03/24/srv-initialize/"/>
+    <url>/2018/03/24/srv-initialize/</url>
     
     <content type="html"><![CDATA[<p>集群中加入一个主机后，需要做的那些事儿</p><a id="more"></a><h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%mkfs.xfs /dev/vdb1mkdir /new_disk<span class="hljs-built_in">echo</span> <span class="hljs-string">"UUID=`blkid /dev/vdb1 | awk -F'"</span><span class="hljs-string">' '</span>&#123;<span class="hljs-built_in">print</span> <span class="hljs-variable">$2</span>&#125;<span class="hljs-string">'` /new_disk xfs defaults 1 1" &gt;&gt; /etc/fstab</span><span class="hljs-string">mount -a</span><span class="hljs-string">df -h</span></code></pre><h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>vim /etc/sysctl.confnet.ipv4.tcp_syncookies = 1net.ipv4.tcp_timestamps = 1net.ipv4.tcp_fin_timeout = 10net.ipv4.tcp_tw_recycle = 0net.ipv4.tcp_tw_reuse = 1net.ipv4.tcp_max_tw_buckets = 8000<span class="hljs-comment"># fs.file-max = 102400000</span>vm.max_map_count = 262144vm.swappiness = 10sysctl –p  <span class="hljs-comment"># 配置生效</span><span class="hljs-comment"># 文件描述符限制</span>vim /etc/security/limits.conf* soft nofile 102400* hard nofile 204800<span class="hljs-built_in">ulimit</span> -Sn<span class="hljs-built_in">ulimit</span> -Hn<span class="hljs-comment"># nproc</span><span class="hljs-comment">## nproc是操作系统级别对每个用户创建的进程数的限制, 在Linux下运行多线程时, 每个线程的实现其实是一个轻量级的进程, 对应的术语是light weight process(LWP)。</span><span class="hljs-comment"># 查看所有用户创建的进程数,使用命令：</span>ps h -Led -o user | sort | uniq -c | sort -n<span class="hljs-comment"># 查看boer用户创建的进程数，使用命令:</span>ps -o nlwp,pid,lwp,args -u boer | sort -nvim /etc/security/limits.d/20-nproc.conf <span class="hljs-comment"># CentOS7</span>*          soft    nproc     65536root       soft    nproc     unlimited<span class="hljs-comment">##</span></code></pre><h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul><li>filebeat</li><li>zabbix/node_exporter</li></ul>]]></content>
     
@@ -683,6 +683,33 @@
       <tag>Go</tag>
       
       <tag>reverse</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>RPM包制作工具FPM介绍</title>
+    <link href="/2016/07/07/fpm-rpm-build/"/>
+    <url>/2016/07/07/fpm-rpm-build/</url>
+    
+    <content type="html"><![CDATA[<p>本文记录rpm包制作工具<a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">fpm</a>的使用笔记，分别记录了制作<code>filebeat</code>, <code>osquery</code>, <code>fastdfs</code>包的过程。</p><a id="more"></a><h3 id="filebeat7"><a href="#filebeat7" class="headerlink" title="filebeat7"></a>filebeat7</h3><pre><code class="hljs bash"><span class="hljs-comment"># cd tmp_install;rpm2cpio ../filebeat-5.5.2-x86_64.rpm | cpio -div  # 解压rpm包</span><span class="hljs-comment"># -p NAME-VERSION-ARCH.rpm \</span>hostname Boer-RPMfpm -s dir -t rpm -n boer-filebeat -v 7.1.1 \--verbose --iteration 1 \-m boer@boer.xyz \--vendor <span class="hljs-string">"Boer RPM"</span> \--after-install after_install.sh \-C tmp_install .hostnamectl <span class="hljs-built_in">set</span>-hostname VM_140_39after_install.shIP=`ip -4 route get 8.8.8.8 | awk <span class="hljs-string">'&#123;print $7&#125;'</span> | tr -d <span class="hljs-string">'\n'</span>`<span class="hljs-comment"># IP=$(grep IPADDR /etc/sysconfig/network-scripts/ifcfg-bond?|cut -d '=' -f 2)</span>sed -i <span class="hljs-string">"s/ipv4address/<span class="hljs-variable">$IP</span>/"</span> /etc/filebeat7/filebeat.ymlver=`cat /etc/redhat-release`<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$ver</span> =~ <span class="hljs-string">"release 7"</span> ]];<span class="hljs-keyword">then</span>  /usr/bin/systemctl daemon-reload  /usr/bin/systemctl start filebeat7  /usr/bin/systemctl <span class="hljs-built_in">enable</span> filebeat7<span class="hljs-keyword">else</span>  /sbin/chkconfig filebeat7 on  service filebeat7 start<span class="hljs-keyword">fi</span></code></pre><h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><pre><code class="hljs bash">fpm -s dir -t rpm -n osquery -v 3.3.2 -m boer@boer.xyz \-p NAME-VERSION-ARCH.rpm \--after-install after_install.sh \--after-remove after_remove.sh \-C tmp_install \.after_install.sh<span class="hljs-built_in">echo</span> <span class="hljs-string">'export PATH=$PATH:/opt/osquery/usr/bin #deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5'</span> &gt;&gt; /etc/profile<span class="hljs-built_in">source</span> /etc/profileafter_remove.shrm -rf /opt/osquerysed -i <span class="hljs-string">'/^export.*\#deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5/d'</span> /etc/profile<span class="hljs-built_in">source</span> /etc/profile</code></pre><h3 id="fastdfs"><a href="#fastdfs" class="headerlink" title="fastdfs"></a>fastdfs</h3><pre><code class="hljs bash"><span class="hljs-comment"># libfastcommon</span>./make.sh./make.sh install DESTDIR=../tmp_installfpm -s dir -t rpm -n libfastcommon -v 1.0.7 -C tmp_install usr<span class="hljs-comment"># FastDFS</span>vim make.shDESTDIR=/srv/boer/fpm_rpm/fastdfs/FastDFS/tmp_install./make.sh./make.sh installfpm -s dir -t rpm -n fastdfs -v 5.0.8 -d <span class="hljs-string">'libfastcommon'</span> -C tmp_install .<span class="hljs-comment"># nginx</span>./configure --prefix=/opt/nginx --sbin-path=/opt/nginx/sbin/nginx --conf-path=/opt/nginx/conf/nginx.conf --error-log-path=/home/finance/Logs/nginx/error.log --http-log-path=/home/finance/Logs/nginx/access.log --pid-path=/opt/nginx/var/nginx.pid --lock-path=/opt/nginx/var/nginx.lock --http-client-body-temp-path=/dev/shm/nginx_temp/client_body --http-proxy-temp-path=/dev/shm/nginx_temp/proxy --http-fastcgi-temp-path=/dev/shm/nginx_temp/fastcgi --user=finance --group=finance --with-cpu-opt=pentium4F --without-select_module --without-poll_module --with-http_realip_module --with-http_sub_module --with-http_gzip_static_module --with-http_stub_status_module --without-http_ssi_module --without-http_userid_module --without-http_ssi_module --without-http_userid_module --without-http_geo_module --without-http_map_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --with-http_ssl_module --add-module=../fastdfs-nginx-module/srcmakemake install DESTDIR=/srv/boer/fpm_rpm/fastdfs/nginx-1.12.0/tmp_installfpm -s dir -t rpm -n nginx-with-fastdfs -v 1.12.0 -C tmp_install .</code></pre><h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><h5 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h5><pre><code class="hljs bash">./configure --prefix=***make install --prefix=***make install DESTDIR=***</code></pre><h5 id="A"><a href="#A" class="headerlink" title="A"></a>A</h5><p>Number 2 is simply an error as far as I know.</p><p>Number 1 determines where the package will go when it is installed, and where it will look for its associated files when it is run. It’s what you should use if you’re just compiling something for use on a single host.</p><p>Number 3 is for installing to a temporary directory which is not where the package will be run from. For example this is used when building deb packages. The person building the package doesn’t actually install everything into its final place on his own system. He may have a different version installed already and not want to disturb it, or he may not even be root. So he uses configure –prefix=/usr so the program will expect to be installed in /usr when it runs, then make install DESTDIR=debian/tmp to actually create the directory structure.</p><h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul><li><a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">https://github.com/jordansissel/fpm</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>RPM</tag>
+      
+      <tag>FPM</tag>
       
     </tags>
     
