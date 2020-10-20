@@ -278,4 +278,5 @@ func join(nums []int) string {
 ```
 
 ### Ref
+[Go Slices: usage and internals](https://blog.golang.org/slices-intro)
 [python list中的方法和函数](https://www.jianshu.com/p/50da60d54a14)

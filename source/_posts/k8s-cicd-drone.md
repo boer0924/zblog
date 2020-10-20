@@ -11,6 +11,10 @@ tags:
   - Harbor
 categories: Kubernetes
 ---
+Drone是一个Go语言实现的CICD编排工具，超级轻量级。
+
+Drone by Harness™ is a modern Continuous Integration platform that empowers busy teams to automate their build, test and release workflows using a powerful, cloud native pipeline engine.
+<!-- more -->
 
 ```yaml
 ---

@@ -1,5 +1,5 @@
 ---
-title: CLOSE_WAIT & TIME_WAIT
+title: CLOSE_WAIT&TIME_WAIT
 date: 2018-01-18 18:16:16
 index_img: https://picsum.photos/300/200.webp?closetime
 tags:
@@ -9,6 +9,10 @@ tags:
   - TIME_WAIT
 categories: DevOps
 ---
+TCP的几种Wait状态
+
+<!-- more -->
+
 ### 一图胜千言
 ![tcp_hello](/img/tcp_hello.webp)
 ![tcp_bye](/img/tcp_bye.webp)

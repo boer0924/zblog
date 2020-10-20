@@ -8,6 +8,10 @@ tags:
   - npm
 categories: DevOps
 ---
+慢是不能够被接受的
+
+<!-- more -->
+
 ### 阿里云镜像站
 `https://developer.aliyun.com/mirror/`
 
