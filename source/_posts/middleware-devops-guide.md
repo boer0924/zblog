@@ -8,6 +8,7 @@ tags:
   - Elasticsearch
 categories: DevOps
 ---
+本文记录中间件`RabbitMQ`, `Kafka`, `Elasticsearch`系统的集群部署，需求方必备信息，日常巡检等应该check的重要节点。
 
 <!-- more -->
 

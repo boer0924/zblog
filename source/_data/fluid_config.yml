@@ -34,7 +34,7 @@ code:  # 代码块相关的配置
 fun_features: # 一些好玩的功能
   typing: # 为 subtitle 添加打字机效果
     enable: true
-    typeSpeed: 70  # 打印速度，数字越大越慢
+    typeSpeed: 80  # 打印速度，数字越大越慢
     cursorChar: "_" # 游标字符
     loop: false # 是否循环播放效果
   anchorjs: # 为文章内容中的标题添加锚图标
