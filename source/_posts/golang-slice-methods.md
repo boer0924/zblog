@@ -239,7 +239,7 @@ func myMax(lst []int) int {
 	return t
 }
 ```
-### Min()方法
+### min()方法
 ```go
 func myMin(lst []int) int {
 	t := lst[0]
