@@ -25,7 +25,7 @@ code:  # 代码块相关的配置
     enable: true
     lib: 'highlightjs'  # 实现高亮的库，可选：highlightjs | prismjs，对应下面的配置项
     highlightjs:
-      style: 'Github Gist'  # 高亮样式见：https://highlightjs.org/static/demo/  在页面挑选 style 填入
+      style: 'Monokai'  # 高亮样式见：https://highlightjs.org/static/demo/  在页面挑选 style 填入
       bg_color: false  # 是否根据 style 改变代码背景色，**如果 style 是深色背景别忘了开启此项**
     prismjs:
       style: 'default'  # 高亮样式见：https://prismjs.com/  在页面右侧的圆形按钮挑选 style 填入，也可以直接填入 css 链接
