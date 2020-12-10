@@ -9,6 +9,15 @@ tags:
   - 分页
 categories: Golang
 ---
+HTTP处理流程:
+1. 接收参数
+2. 参数验证
+3. 处理逻辑
+4. 入库操作
+5. 返回用户
+
+<!-- more -->
+
 1、接收前端请求，路由到指定Handler
 ```go
 // http://127.0.0.1:8080/api/v1/users?page=1&page_size=10&age=30
