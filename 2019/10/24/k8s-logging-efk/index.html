@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.6k 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      25
+      30
        分钟
     </span>
   
@@ -498,7 +498,7 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
 <h3 id="Filebeat配置"><a href="#Filebeat配置" class="headerlink" title="Filebeat配置"></a>Filebeat配置</h3><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span>
 <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
   <span class="hljs-attr">paths:</span> 
-    <span class="hljs-bullet">-</span> <span class="hljs-string">/home/apps/Logs/*.boer.lo/*.log</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">/home/apps/Logs/*.boer.xyz/*.log</span>
   <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">apps&#125;</span>
   <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
   <span class="hljs-attr">multiline.match:</span> <span class="hljs-string">after</span>
@@ -522,7 +522,7 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
   <span class="hljs-attr">symlinks:</span> <span class="hljs-literal">true</span>
 
 <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
-  <span class="hljs-attr">paths:</span> <span class="hljs-string">[/home/apps/Logs/*.boer.lo/monitor/*.log]</span>
+  <span class="hljs-attr">paths:</span> <span class="hljs-string">[/home/apps/Logs/*.boer.xyz/monitor/*.log]</span>
   <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">monitor&#125;</span>
   <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
   <span class="hljs-attr">tail_files:</span> <span class="hljs-literal">true</span> 
@@ -530,7 +530,6 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
 
 <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
   <span class="hljs-attr">paths:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">"/home/apps/Logs/*.boer.lo/audit/*.log"</span>
     <span class="hljs-bullet">-</span> <span class="hljs-string">"/home/apps/Logs/*.boer.xyz/audit/*.log"</span>
   <span class="hljs-attr">fields:</span> <span class="hljs-string">&#123;ip:</span> <span class="hljs-string">ipv4address,</span> <span class="hljs-attr">log_type:</span> <span class="hljs-string">audit&#125;</span>
   <span class="hljs-attr">fields_under_root:</span> <span class="hljs-literal">true</span>
@@ -560,6 +559,68 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
   <span class="hljs-attr">required_acks:</span> <span class="hljs-number">1</span>
   <span class="hljs-attr">compression:</span> <span class="hljs-string">lz4</span>
   <span class="hljs-attr">max_message_bytes:</span> <span class="hljs-number">1000000</span></code></pre>
+
+<h3 id="Logstash配置"><a href="#Logstash配置" class="headerlink" title="Logstash配置"></a>Logstash配置</h3><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearch:</span>
+  <span class="hljs-attr">host:</span> <span class="hljs-string">elasticsearch-logging</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">9200</span>
+
+<span class="hljs-comment">## ref: https://github.com/elastic/logstash-docker/blob/master/build/logstash/env2yaml/env2yaml.go</span>
+<span class="hljs-attr">config:</span>
+  <span class="hljs-attr">xpack.monitoring.enabled:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">xpack.monitoring.elasticsearch.hosts:</span> <span class="hljs-string">["http://elasticsearch-logging:9200"]</span>
+  <span class="hljs-attr">xpack.monitoring.elasticsearch.username:</span> <span class="hljs-string">"logstash_system"</span>
+  <span class="hljs-attr">xpack.monitoring.elasticsearch.password:</span> <span class="hljs-string">"t6XK9kDvistPyuSvVwK3"</span>
+  <span class="hljs-attr">config.reload.automatic:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">config.reload.interval:</span> <span class="hljs-number">120</span>
+  <span class="hljs-attr">path.config:</span> <span class="hljs-string">/usr/share/logstash/pipeline</span>
+  <span class="hljs-attr">path.data:</span> <span class="hljs-string">/usr/share/logstash/data</span>
+  <span class="hljs-attr">pipeline.workers:</span> <span class="hljs-number">12</span>
+  <span class="hljs-attr">pipeline.batch.size:</span> <span class="hljs-number">16000</span>
+  <span class="hljs-attr">pipeline.batch.delay:</span> <span class="hljs-number">10</span>
+  <span class="hljs-attr">queue.type:</span> <span class="hljs-string">memory</span>
+  <span class="hljs-attr">queue.max_bytes:</span> <span class="hljs-string">5gb</span>
+
+<span class="hljs-attr">inputs:</span>
+  <span class="hljs-attr">main:</span> <span class="hljs-string">|-</span>
+    <span class="hljs-string">input</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">kafka</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">bootstrap_servers</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"10.10.62.38:9092,10.10.62.39:9092,10.10.62.40:9092"</span>
+        <span class="hljs-string">topics</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">["app"]</span>
+        <span class="hljs-string">client_id</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"app-logs"</span>
+        <span class="hljs-string">group_id</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">["app-logs"]</span>
+        <span class="hljs-string">max_poll_records</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"8000"</span>
+        <span class="hljs-string">consumer_threads</span> <span class="hljs-string">=&gt;</span> <span class="hljs-number">4</span>
+        <span class="hljs-string">codec</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"json"</span>
+      <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span>
+
+<span class="hljs-attr">filters:</span>
+  <span class="hljs-attr">main:</span> <span class="hljs-string">|-</span>
+    <span class="hljs-string">filter</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">grok</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">break_on_match</span> <span class="hljs-string">=&gt;</span> <span class="hljs-literal">false</span>
+        <span class="hljs-string">pattern_definitions</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">&#123;</span>
+            <span class="hljs-string">"TXID_PRE"</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"TxId\s*\:\s*"</span>
+            <span class="hljs-string">"SDOT_SUF"</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"\s+\,"</span>
+        <span class="hljs-string">&#125;</span>
+        <span class="hljs-string">match</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">&#123;</span>
+          <span class="hljs-string">"source"</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"/home/boer/Logs/<span class="hljs-template-variable">%&#123;GREEDYDATA:app_name&#125;</span>.(boer|boermall).(lo|com|xyz)/<span class="hljs-template-variable">%&#123;GREEDYDATA:app_logfile&#125;</span>.log"</span>
+          <span class="hljs-string">"message"</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"<span class="hljs-template-variable">%&#123;TIMESTAMP_ISO8601:log_timestamp&#125;</span><span class="hljs-template-variable">%&#123;SPACE&#125;</span><span class="hljs-template-variable">%&#123;WORD:log_level&#125;</span><span class="hljs-template-variable">%&#123;DATA&#125;</span><span class="hljs-template-variable">%&#123;TXID_PRE&#125;</span><span class="hljs-template-variable">%&#123;DATA:log_txid&#125;</span><span class="hljs-template-variable">%&#123;SDOT_SUF&#125;</span><span class="hljs-template-variable">%&#123;GREEDYDATA&#125;</span>"</span>
+        <span class="hljs-string">&#125;</span>
+        <span class="hljs-string">remove_field</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">[</span> <span class="hljs-string">"offset"</span><span class="hljs-string">,</span> <span class="hljs-string">"input_type"</span><span class="hljs-string">,</span> <span class="hljs-string">"input.type"</span><span class="hljs-string">,</span> <span class="hljs-string">"type"</span><span class="hljs-string">,</span> <span class="hljs-string">"tag"</span><span class="hljs-string">,</span> <span class="hljs-string">"source"</span> <span class="hljs-string">]</span>
+      <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span>
+
+<span class="hljs-attr">outputs:</span>
+  <span class="hljs-attr">main:</span> <span class="hljs-string">|-</span>
+    <span class="hljs-string">output</span> <span class="hljs-string">&#123;</span>
+      <span class="hljs-string">elasticsearch</span> <span class="hljs-string">&#123;</span>
+        <span class="hljs-string">hosts</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">["http://elasticsearch-logging:9200"]</span>
+        <span class="hljs-string">index</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"app-logs"</span>
+        <span class="hljs-string">user</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"elastic"</span>
+        <span class="hljs-string">password</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"rAQc9m19NdWcFIfLgNVQ"</span>
+      <span class="hljs-string">&#125;</span>
+    <span class="hljs-string">&#125;</span></code></pre>
             </div>
             <hr>
             <div>

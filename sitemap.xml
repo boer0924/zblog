@@ -2,6 +2,83 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2016/07/07/fpm-rpm-build/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/30/golang-func-mapreduce/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/08/15/golang-gin-gorm-paginate/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/24/golang-map-methods/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/18/golang-slice-methods/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/16/golang-slice-reverse/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/06/24/jdk-analyze-tools/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/04/24/k8s-codeing-gitea/</loc>
+    
+    <lastmod>2020-12-10</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2019/09/24/k8s-ha-deployment/</loc>
     
     <lastmod>2020-12-10</lastmod>
@@ -143,83 +220,6 @@
   
   <url>
     <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2016/07/07/fpm-rpm-build/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/30/golang-func-mapreduce/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/08/15/golang-gin-gorm-paginate/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/24/golang-map-methods/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/18/golang-slice-methods/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/16/golang-slice-reverse/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/06/24/jdk-analyze-tools/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
-    
-    <lastmod>2020-12-10</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/04/24/k8s-codeing-gitea/</loc>
     
     <lastmod>2020-12-10</lastmod>
     
