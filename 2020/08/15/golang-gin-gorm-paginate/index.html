@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      306 字
+      331 字
     </span>
   
 
@@ -222,7 +222,17 @@
             <h1 style="display: none">Golang - Gin&amp;Gorm分页实现</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>1、接收前端请求，路由到指定Handler</p>
+              <p>HTTP处理流程:</p>
+<ol>
+<li>接收参数</li>
+<li>参数验证</li>
+<li>处理逻辑</li>
+<li>入库操作</li>
+<li>返回用户</li>
+</ol>
+<a id="more"></a>
+
+<p>1、接收前端请求，路由到指定Handler</p>
 <pre><code class="hljs go"><span class="hljs-comment">// http://127.0.0.1:8080/api/v1/users?page=1&amp;page_size=10&amp;age=30</span>
 <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;
 	r := gin.Default()
