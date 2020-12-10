@@ -318,7 +318,7 @@ index.routing.allocation.total_shards_per_node: 1
 filebeat.inputs:
 - type: log
   paths: 
-    - /home/apps/Logs/*.boer.lo/*.log
+    - /home/apps/Logs/*.boer.xyz/*.log
   fields: {ip: ipv4address, log_type: apps}
   fields_under_root: true
   multiline.match: after
@@ -342,7 +342,7 @@ filebeat.inputs:
   symlinks: true
 
 - type: log
-  paths: [/home/apps/Logs/*.boer.lo/monitor/*.log]
+  paths: [/home/apps/Logs/*.boer.xyz/monitor/*.log]
   fields: {ip: ipv4address, log_type: monitor}
   fields_under_root: true
   tail_files: true 
@@ -350,7 +350,6 @@ filebeat.inputs:
 
 - type: log
   paths:
-    - "/home/apps/Logs/*.boer.lo/audit/*.log"
     - "/home/apps/Logs/*.boer.xyz/audit/*.log"
   fields: {ip: ipv4address, log_type: audit}
   fields_under_root: true
@@ -380,4 +379,69 @@ output.kafka:
   required_acks: 1
   compression: lz4
   max_message_bytes: 1000000
+```
+
+### Logstash配置
+```yaml
+elasticsearch:
+  host: elasticsearch-logging
+  port: 9200
+
+## ref: https://github.com/elastic/logstash-docker/blob/master/build/logstash/env2yaml/env2yaml.go
+config:
+  xpack.monitoring.enabled: true
+  xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch-logging:9200"]
+  xpack.monitoring.elasticsearch.username: "logstash_system"
+  xpack.monitoring.elasticsearch.password: "t6XK9kDvistPyuSvVwK3"
+  config.reload.automatic: true
+  config.reload.interval: 120
+  path.config: /usr/share/logstash/pipeline
+  path.data: /usr/share/logstash/data
+  pipeline.workers: 12
+  pipeline.batch.size: 16000
+  pipeline.batch.delay: 10
+  queue.type: memory
+  queue.max_bytes: 5gb
+
+inputs:
+  main: |-
+    input {
+      kafka {
+        bootstrap_servers => "10.10.62.38:9092,10.10.62.39:9092,10.10.62.40:9092"
+        topics => ["app"]
+        client_id => "app-logs"
+        group_id => ["app-logs"]
+        max_poll_records => "8000"
+        consumer_threads => 4
+        codec => "json"
+      }
+    }
+
+filters:
+  main: |-
+    filter {
+      grok {
+        break_on_match => false
+        pattern_definitions => {
+            "TXID_PRE" => "TxId\s*\:\s*"
+            "SDOT_SUF" => "\s+\,"
+        }
+        match => {
+          "source" => "/home/boer/Logs/%{GREEDYDATA:app_name}.(boer|boermall).(lo|com|xyz)/%{GREEDYDATA:app_logfile}.log"
+          "message" => "%{TIMESTAMP_ISO8601:log_timestamp}%{SPACE}%{WORD:log_level}%{DATA}%{TXID_PRE}%{DATA:log_txid}%{SDOT_SUF}%{GREEDYDATA}"
+        }
+        remove_field => [ "offset", "input_type", "input.type", "type", "tag", "source" ]
+      }
+    }
+
+outputs:
+  main: |-
+    output {
+      elasticsearch {
+        hosts => ["http://elasticsearch-logging:9200"]
+        index => "app-logs"
+        user => "elastic"
+        password => "rAQc9m19NdWcFIfLgNVQ"
+      }
+    }
 ```
