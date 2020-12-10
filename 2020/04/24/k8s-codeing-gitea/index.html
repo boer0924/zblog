@@ -246,7 +246,7 @@
 </ul>
 <a id="more"></a>
 
-<h3 id="Database"><a href="#Database" class="headerlink" title="Database"></a>Database</h3><h4 id="Fetch-MySQL-Helm-Charts"><a href="#Fetch-MySQL-Helm-Charts" class="headerlink" title="Fetch MySQL Helm Charts"></a>Fetch MySQL Helm Charts</h4><pre><code class="hljs bash">helm repo add stable https://mirror.azure.cn/kubernetes/charts
+<h3 id="Database"><a href="#Database" class="headerlink" title="Database"></a>Database</h3><h4 id="Fetch-MySQL-Helm-Charts"><a href="#Fetch-MySQL-Helm-Charts" class="headerlink" title="Fetch MySQL Helm Charts"></a>Fetch MySQL Helm Charts</h4><div class="hljs"><pre><code class="hljs bash">helm repo add stable https://mirror.azure.cn/kubernetes/charts
 helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
 <span class="hljs-built_in">cd</span> ~/k8s/helm/charts
 helm search mysql --version 1.6.4
@@ -256,13 +256,13 @@ tar -zxf mysql-1.6.4.tgz
 <span class="hljs-comment"># modify values.yaml 详见下文</span>
 helm install --name mysql -f values.yaml . --namespace devops
 helm upgrade -f values.yaml mysql . --namespace devops
-helm delete --purge mysql <span class="hljs-comment"># It's Dangerous</span></code></pre>
+helm delete --purge mysql <span class="hljs-comment"># It's Dangerous</span></code></pre></div>
 <h4 id="MySQL-Helm-values-yaml"><a href="#MySQL-Helm-values-yaml" class="headerlink" title="MySQL Helm values.yaml"></a>MySQL Helm values.yaml</h4><p>划重点</p>
 <ol>
 <li>创建gitea库、用户、密码</li>
 <li>openebs动态持久卷storageClass</li>
 <li>设置默认字符集initializationFiles</li>
-<li>metallb service服务暴露<pre><code class="hljs yaml"><span class="hljs-attr">image:</span> <span class="hljs-string">"mysql"</span>
+<li>metallb service服务暴露<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">image:</span> <span class="hljs-string">"mysql"</span>
 <span class="hljs-attr">imageTag:</span> <span class="hljs-string">"5.7.30"</span>
 <span class="hljs-attr">strategy:</span>
   <span class="hljs-attr">type:</span> <span class="hljs-string">Recreate</span>
@@ -326,7 +326,7 @@ helm delete --purge mysql <span class="hljs-comment"># It's Dangerous</span></co
   <span class="hljs-attr">type:</span> <span class="hljs-string">LoadBalancer</span>
   <span class="hljs-attr">port:</span> <span class="hljs-number">3306</span>
   <span class="hljs-comment"># nodePort: 32000</span>
-  <span class="hljs-comment"># loadBalancerIP:</span></code></pre>
+  <span class="hljs-comment"># loadBalancerIP:</span></code></pre></div>
 
 </li>
 </ol>
@@ -334,7 +334,7 @@ helm delete --purge mysql <span class="hljs-comment"># It's Dangerous</span></co
 <ol>
 <li>openebs动态持久卷storageClass</li>
 <li>metallb service暴露ssh端口</li>
-<li>ingress service暴露http端口<pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
+<li>ingress service暴露http端口<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span>
 <span class="hljs-attr">metadata:</span>
   <span class="hljs-attr">namespace:</span> <span class="hljs-string">devops</span>
@@ -416,7 +416,7 @@ helm delete --purge mysql <span class="hljs-comment"># It's Dangerous</span></co
       <span class="hljs-bullet">-</span> <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
         <span class="hljs-attr">backend:</span>
           <span class="hljs-attr">serviceName:</span> <span class="hljs-string">gitea-service</span>
-          <span class="hljs-attr">servicePort:</span> <span class="hljs-number">3000</span></code></pre>
+          <span class="hljs-attr">servicePort:</span> <span class="hljs-number">3000</span></code></pre></div>
 
 </li>
 </ol>

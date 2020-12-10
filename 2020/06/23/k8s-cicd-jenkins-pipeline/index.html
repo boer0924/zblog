@@ -253,16 +253,16 @@
 <li>流水线的单一可信数据源，能够被项目的多个成员查看和编辑</li>
 </ol>
 <p>流水线支持 两种语法：声明式（在 Pipeline 2.5 引入）和脚本式流水线。<a href="https://www.jenkins.io/doc/book/pipeline/syntax/" target="_blank" rel="noopener">官方文档</a></p>
-<h3 id="Jenkins安装"><a href="#Jenkins安装" class="headerlink" title="Jenkins安装"></a>Jenkins安装</h3><pre><code class="hljs routeros">helm fetch stable/jenkins -version 2.1.2
+<h3 id="Jenkins安装"><a href="#Jenkins安装" class="headerlink" title="Jenkins安装"></a>Jenkins安装</h3><div class="hljs"><pre><code class="hljs routeros">helm fetch stable/jenkins -version 2.1.2
 tar -zxf jenkins-2.1.2.tgz
 vim jenkins/values.yaml
 helm install --name jenkins -f values.yaml . --namespace devops
 helm<span class="hljs-built_in"> upgrade </span>jenkins -f values.yaml . --namespace devops
-helm delete --purge jenkins</code></pre>
+helm delete --purge jenkins</code></pre></div>
 <blockquote>
 <p><a href="https://github.com/helm/charts/tree/master/stable/jenkins#200-configuration-as-code-now-default--container-does-not-run-as-root-anymore" target="_blank" rel="noopener">https://github.com/helm/charts/tree/master/stable/jenkins#200-configuration-as-code-now-default--container-does-not-run-as-root-anymore</a></p>
 </blockquote>
-<pre><code class="hljs yaml"><span class="hljs-comment"># values.yaml</span>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># values.yaml</span>
 <span class="hljs-attr">clusterZone:</span> <span class="hljs-string">"cluster.local"</span>
 <span class="hljs-attr">master:</span>
   <span class="hljs-attr">numExecutors:</span> <span class="hljs-number">2</span> <span class="hljs-comment"># 允许在master节点上同时执行2个任务</span>
@@ -294,7 +294,7 @@ helm delete --purge jenkins</code></pre>
   <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
   <span class="hljs-attr">storageClass:</span> <span class="hljs-string">openebs-hostpath</span>
   <span class="hljs-attr">accessMode:</span> <span class="hljs-string">"ReadWriteOnce"</span>
-  <span class="hljs-attr">size:</span> <span class="hljs-string">"2Gi"</span></code></pre>
+  <span class="hljs-attr">size:</span> <span class="hljs-string">"2Gi"</span></code></pre></div>
 
 <p>必备Plugins:</p>
 <ul>
@@ -327,7 +327,7 @@ helm delete --purge jenkins</code></pre>
 <li>docker in docker</li>
 <li>jnlp容器必须有，command不能覆盖<code>jenkins-slave</code></li>
 </ol>
-<pre><code class="hljs yaml"><span class="hljs-meta">---</span>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span>
 <span class="hljs-attr">metadata:</span>
@@ -370,7 +370,7 @@ helm delete --purge jenkins</code></pre>
       <span class="hljs-attr">image:</span> <span class="hljs-string">boer0924/kubectl:1.18.3</span>
       <span class="hljs-attr">tty:</span> <span class="hljs-literal">true</span>
       <span class="hljs-attr">command:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">cat</span></code></pre></div>
 
 <h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><h4 id="声明式Jenkinsfile"><a href="#声明式Jenkinsfile" class="headerlink" title="声明式Jenkinsfile"></a>声明式Jenkinsfile</h4><p><strong>划重点</strong></p>
 <ol>
@@ -394,7 +394,7 @@ helm delete --purge jenkins</code></pre>
 </ul>
 </li>
 </ol>
-<pre><code class="hljs yaml"><span class="hljs-string">pipeline</span> <span class="hljs-string">&#123;</span>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">pipeline</span> <span class="hljs-string">&#123;</span>
   <span class="hljs-string">agent</span> <span class="hljs-string">&#123;</span>
     <span class="hljs-string">kubernetes</span> <span class="hljs-string">&#123;</span>
       <span class="hljs-string">label</span> <span class="hljs-string">'jenkins-worker'</span>
@@ -511,8 +511,8 @@ helm delete --purge jenkins</code></pre>
 <span class="hljs-string">      &#125;</span>
 <span class="hljs-string">    &#125;</span>
 <span class="hljs-string">  &#125;</span>
-<span class="hljs-string">&#125;</span></code></pre>
-<h4 id="脚本式Jenkinsfile"><a href="#脚本式Jenkinsfile" class="headerlink" title="脚本式Jenkinsfile"></a>脚本式Jenkinsfile</h4><pre><code class="hljs yaml"><span class="hljs-string">def</span> <span class="hljs-string">label</span> <span class="hljs-string">=</span> <span class="hljs-string">"jenkins-slave"</span>
+<span class="hljs-string">&#125;</span></code></pre></div>
+<h4 id="脚本式Jenkinsfile"><a href="#脚本式Jenkinsfile" class="headerlink" title="脚本式Jenkinsfile"></a>脚本式Jenkinsfile</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">def</span> <span class="hljs-string">label</span> <span class="hljs-string">=</span> <span class="hljs-string">"jenkins-slave"</span>
 
 <span class="hljs-string">properties([</span>
    <span class="hljs-string">parameters([</span>
@@ -618,12 +618,12 @@ helm delete --purge jenkins</code></pre>
     <span class="hljs-string">&#125;</span>
 
   <span class="hljs-string">&#125;</span>
-<span class="hljs-string">&#125;</span></code></pre>
+<span class="hljs-string">&#125;</span></code></pre></div>
 
 <h3 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h3><blockquote>
 <p>划重点<br>1.根据${COMMIT_ID}找出REVISION (<code>自动</code>)<br>2.根据commit_msg找出REVISION (<code>人工</code>)</p>
 </blockquote>
-<pre><code class="hljs bash">$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout <span class="hljs-built_in">history</span> deployment consume-deployment 
+<div class="hljs"><pre><code class="hljs bash">$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout <span class="hljs-built_in">history</span> deployment consume-deployment 
 deployment.apps/consume-deployment 
 REVISION  CHANGE-CAUSE
 1         a03d0eb optimize change-cause msg
@@ -634,7 +634,7 @@ REVISION  CHANGE-CAUSE
 
 <span class="hljs-comment"># 1.根据$&#123;COMMIT_ID&#125;找出REVISION(自动) 2.根据commit_msg找出REVISION(人工)</span>
 $ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout undo deployment consume-deployment --to-revision=$(kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout <span class="hljs-built_in">history</span> deployment consume-deployment | grep <span class="hljs-variable">$&#123;COMMIT_ID&#125;</span> | awk <span class="hljs-string">'&#123;print $1&#125;'</span>)
-$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout status deployment consume-deployment</code></pre>
+$ kubectl -n <span class="hljs-variable">$&#123;NAMESPACE&#125;</span> rollout status deployment consume-deployment</code></pre></div>
 
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a href="https://www.jenkins.io/doc/book/pipeline/syntax/" target="_blank" rel="noopener">https://www.jenkins.io/doc/book/pipeline/syntax/</a></li>

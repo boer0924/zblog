@@ -235,7 +235,7 @@
 <li>3 Work-node</li>
 <li>1GB of RAM for the JVM heap</li>
 </ul>
-<h3 id="Helm-Charts"><a href="#Helm-Charts" class="headerlink" title="Helm Charts"></a>Helm Charts</h3><pre><code class="hljs bash">helm repo add elastic https://helm.elastic.co
+<h3 id="Helm-Charts"><a href="#Helm-Charts" class="headerlink" title="Helm Charts"></a>Helm Charts</h3><div class="hljs"><pre><code class="hljs bash">helm repo add elastic https://helm.elastic.co
 helm repo update
 
 <span class="hljs-built_in">cd</span> ~/k8s/helm/charts
@@ -265,9 +265,9 @@ helm delete --purge elasticsearch
 helm delete --purge filebeat
 helm delete --purge kibana
 <span class="hljs-comment"># 删除es-pvc *仅测试</span>
-kubectl -n logging delete pvc -l app=elasticsearch-logging</code></pre>
+kubectl -n logging delete pvc -l app=elasticsearch-logging</code></pre></div>
 
-<h3 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h3><h4 id="创建CA证书"><a href="#创建CA证书" class="headerlink" title="创建CA证书"></a>创建CA证书</h4><pre><code class="hljs bash">curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-linux-x86_64.tar.gz
+<h3 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h3><h4 id="创建CA证书"><a href="#创建CA证书" class="headerlink" title="创建CA证书"></a>创建CA证书</h4><div class="hljs"><pre><code class="hljs bash">curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-linux-x86_64.tar.gz
 tar -zxf elasticsearch-7.6.2-linux-x86_64.tar.gz
 <span class="hljs-built_in">cd</span> elasticsearch-7.6.2
 <span class="hljs-comment"># 生成RootCA</span>
@@ -293,8 +293,8 @@ xpack.security.enabled: <span class="hljs-literal">true</span>
 xpack.security.transport.ssl.enabled: <span class="hljs-literal">true</span>
 xpack.security.transport.ssl.verification_mode: certificate 
 xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12 
-xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</code></pre>
-<h4 id="Elasticsearch-Helm-Values配置"><a href="#Elasticsearch-Helm-Values配置" class="headerlink" title="Elasticsearch Helm Values配置"></a>Elasticsearch Helm Values配置</h4><pre><code class="hljs yaml"><span class="hljs-comment"># vim values.yaml</span>
+xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</code></pre></div>
+<h4 id="Elasticsearch-Helm-Values配置"><a href="#Elasticsearch-Helm-Values配置" class="headerlink" title="Elasticsearch Helm Values配置"></a>Elasticsearch Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim values.yaml</span>
 <span class="hljs-attr">clusterName:</span> <span class="hljs-string">"elasticsearch"</span>
 <span class="hljs-attr">nodeGroup:</span> <span class="hljs-string">"logging"</span>
 <span class="hljs-comment"># The service that non master groups will try to connect to when joining the cluster</span>
@@ -342,9 +342,9 @@ xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</co
     <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">nginx</span>
   <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
   <span class="hljs-attr">hosts:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch.boer.xyz</span></code></pre>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch.boer.xyz</span></code></pre></div>
 
-<h3 id="Filebeat"><a href="#Filebeat" class="headerlink" title="Filebeat"></a>Filebeat</h3><h4 id="Filebeat-Helm-Values配置"><a href="#Filebeat-Helm-Values配置" class="headerlink" title="Filebeat Helm Values配置"></a>Filebeat Helm Values配置</h4><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
+<h3 id="Filebeat"><a href="#Filebeat" class="headerlink" title="Filebeat"></a>Filebeat</h3><h4 id="Filebeat-Helm-Values配置"><a href="#Filebeat-Helm-Values配置" class="headerlink" title="Filebeat Helm Values配置"></a>Filebeat Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
 <span class="hljs-attr">filebeatConfig:</span>
   <span class="hljs-attr">filebeat.yml:</span> <span class="hljs-string">|</span>
     <span class="hljs-attr">filebeat.inputs:</span>
@@ -367,9 +367,9 @@ xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</co
       <span class="hljs-attr">index:</span> <span class="hljs-string">"kube-logging"</span> <span class="hljs-comment"># iLM管理的alias</span>
       <span class="hljs-comment"># index: "kube-logging-%&#123;+yyyy.MM.dd&#125;"</span>
       <span class="hljs-attr">username:</span> <span class="hljs-string">"elastic"</span>
-      <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span></code></pre>
+      <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span></code></pre></div>
 
-<h3 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h3><h4 id="Kibana-Helm-Values配置"><a href="#Kibana-Helm-Values配置" class="headerlink" title="Kibana Helm Values配置"></a>Kibana Helm Values配置</h4><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearchHosts:</span> <span class="hljs-string">"http://elasticsearch-logging:9200"</span>
+<h3 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h3><h4 id="Kibana-Helm-Values配置"><a href="#Kibana-Helm-Values配置" class="headerlink" title="Kibana Helm Values配置"></a>Kibana Helm Values配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearchHosts:</span> <span class="hljs-string">"http://elasticsearch-logging:9200"</span>
 <span class="hljs-attr">extraEnvs:</span>
   <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">"NODE_OPTIONS"</span>
     <span class="hljs-attr">value:</span> <span class="hljs-string">"--max-old-space-size=1800"</span>
@@ -393,8 +393,8 @@ xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</co
   <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
   <span class="hljs-attr">hosts:</span>
     <span class="hljs-bullet">-</span> <span class="hljs-string">logging.boer.xyz</span>
-  <span class="hljs-attr">tls:</span> <span class="hljs-string">[]</span></code></pre>
-<h4 id="Kibana-Pod-readinessProbe"><a href="#Kibana-Pod-readinessProbe" class="headerlink" title="Kibana Pod readinessProbe"></a>Kibana Pod readinessProbe</h4><pre><code class="hljs bash"><span class="hljs-function"><span class="hljs-title">http</span></span> () &#123;
+  <span class="hljs-attr">tls:</span> <span class="hljs-string">[]</span></code></pre></div>
+<h4 id="Kibana-Pod-readinessProbe"><a href="#Kibana-Pod-readinessProbe" class="headerlink" title="Kibana Pod readinessProbe"></a>Kibana Pod readinessProbe</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-function"><span class="hljs-title">http</span></span> () &#123;
     <span class="hljs-built_in">local</span> path=<span class="hljs-string">"<span class="hljs-variable">$&#123;1&#125;</span>"</span>
     <span class="hljs-built_in">set</span> -- -XGET -s --fail
 
@@ -413,9 +413,9 @@ xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</co
 <span class="hljs-comment"># 解析后的命令</span>
 curl -XGET -s --fail --output /dev/null --write-out <span class="hljs-string">"%&#123;http_code&#125;"</span> -k -u elastic:123456 http://localhost:5601/app/kibana
 <span class="hljs-comment"># exec进pod curl一下</span>
-<span class="hljs-comment"># ready否，请10min再下结论 ***</span></code></pre>
+<span class="hljs-comment"># ready否，请10min再下结论 ***</span></code></pre></div>
 
-<h3 id="iLM管理索引生命周期"><a href="#iLM管理索引生命周期" class="headerlink" title="iLM管理索引生命周期"></a>iLM管理索引生命周期</h3><pre><code class="hljs bash">GET _cluster/health
+<h3 id="iLM管理索引生命周期"><a href="#iLM管理索引生命周期" class="headerlink" title="iLM管理索引生命周期"></a>iLM管理索引生命周期</h3><div class="hljs"><pre><code class="hljs bash">GET _cluster/health
 GET _cat/indices
 <span class="hljs-comment"># iLM策略, 50gb/1d切割, 2d: forcemerge, 5d: freeze, 10d: 删除</span>
 PUT _ilm/policy/kube-logging-policy   
@@ -486,16 +486,16 @@ PUT _cluster/settings
   &#125;
 &#125;
 GET _ilm/status
-POST _ilm/start</code></pre>
+POST _ilm/start</code></pre></div>
 
-<h3 id="ES进阶配置"><a href="#ES进阶配置" class="headerlink" title="ES进阶配置"></a>ES进阶配置</h3><pre><code class="hljs bash"><span class="hljs-comment"># 单机多节点部署避免主副分片被分配到同一物理机</span>
+<h3 id="ES进阶配置"><a href="#ES进阶配置" class="headerlink" title="ES进阶配置"></a>ES进阶配置</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 单机多节点部署避免主副分片被分配到同一物理机</span>
 cluster.routing.allocation.same_shard.host: <span class="hljs-literal">true</span>
 cluster.routing.allocation.awareness.attributes: box_type
 
 index.routing.allocation.require.box_type: hot <span class="hljs-comment"># 冷热分离</span>
-index.routing.allocation.total_shards_per_node: 1</code></pre>
+index.routing.allocation.total_shards_per_node: 1</code></pre></div>
 
-<h3 id="Filebeat配置"><a href="#Filebeat配置" class="headerlink" title="Filebeat配置"></a>Filebeat配置</h3><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span>
+<h3 id="Filebeat配置"><a href="#Filebeat配置" class="headerlink" title="Filebeat配置"></a>Filebeat配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span>
 <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span>
   <span class="hljs-attr">paths:</span> 
     <span class="hljs-bullet">-</span> <span class="hljs-string">/home/apps/Logs/*.boer.xyz/*.log</span>
@@ -558,9 +558,9 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
     <span class="hljs-attr">reachable_only:</span> <span class="hljs-literal">false</span>
   <span class="hljs-attr">required_acks:</span> <span class="hljs-number">1</span>
   <span class="hljs-attr">compression:</span> <span class="hljs-string">lz4</span>
-  <span class="hljs-attr">max_message_bytes:</span> <span class="hljs-number">1000000</span></code></pre>
+  <span class="hljs-attr">max_message_bytes:</span> <span class="hljs-number">1000000</span></code></pre></div>
 
-<h3 id="Logstash配置"><a href="#Logstash配置" class="headerlink" title="Logstash配置"></a>Logstash配置</h3><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearch:</span>
+<h3 id="Logstash配置"><a href="#Logstash配置" class="headerlink" title="Logstash配置"></a>Logstash配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">elasticsearch:</span>
   <span class="hljs-attr">host:</span> <span class="hljs-string">elasticsearch-logging</span>
   <span class="hljs-attr">port:</span> <span class="hljs-number">9200</span>
 
@@ -620,7 +620,7 @@ index.routing.allocation.total_shards_per_node: 1</code></pre>
         <span class="hljs-string">user</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"elastic"</span>
         <span class="hljs-string">password</span> <span class="hljs-string">=&gt;</span> <span class="hljs-string">"rAQc9m19NdWcFIfLgNVQ"</span>
       <span class="hljs-string">&#125;</span>
-    <span class="hljs-string">&#125;</span></code></pre>
+    <span class="hljs-string">&#125;</span></code></pre></div>
             </div>
             <hr>
             <div>

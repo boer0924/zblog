@@ -225,14 +225,14 @@
               <p>集群中加入一个主机后，需要做的那些事儿</p>
 <a id="more"></a>
 
-<h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%
+<h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><div class="hljs"><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%
 mkfs.xfs /dev/vdb1
 mkdir /new_disk
 <span class="hljs-built_in">echo</span> <span class="hljs-string">"UUID=`blkid /dev/vdb1 | awk -F'"</span><span class="hljs-string">' '</span>&#123;<span class="hljs-built_in">print</span> <span class="hljs-variable">$2</span>&#125;<span class="hljs-string">'` /new_disk xfs defaults 1 1" &gt;&gt; /etc/fstab</span>
 <span class="hljs-string">mount -a</span>
-<span class="hljs-string">df -h</span></code></pre>
+<span class="hljs-string">df -h</span></code></pre></div>
 
-<h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>
+<h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>
 vim /etc/sysctl.conf
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_timestamps = 1
@@ -263,7 +263,7 @@ vim /etc/security/limits.d/20-nproc.conf <span class="hljs-comment"># CentOS7</s
 *          soft    nproc     65536
 root       soft    nproc     unlimited
 
-<span class="hljs-comment">##</span></code></pre>
+<span class="hljs-comment">##</span></code></pre></div>
 
 <h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul>
 <li>filebeat</li>

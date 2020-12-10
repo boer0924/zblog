@@ -246,7 +246,7 @@
 <li>Grafana</li>
 </ul>
 <p>The kube-prometheus stack includes a resource metrics API server, <strong>so the metrics-server addon is not necessary.</strong></p>
-<h3 id="kube-prometheus方式部署监控方案"><a href="#kube-prometheus方式部署监控方案" class="headerlink" title="kube-prometheus方式部署监控方案"></a>kube-prometheus方式部署监控方案</h3><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</span>
+<h3 id="kube-prometheus方式部署监控方案"><a href="#kube-prometheus方式部署监控方案" class="headerlink" title="kube-prometheus方式部署监控方案"></a>kube-prometheus方式部署监控方案</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-4.kube-prometheus%E6%8F%92%E4%BB%B6.md</span>
 <span class="hljs-comment">## </span>
 <span class="hljs-built_in">cd</span> ~/k8s
 git <span class="hljs-built_in">clone</span> https://github.com/coreos/kube-prometheus.git
@@ -254,9 +254,9 @@ git <span class="hljs-built_in">clone</span> https://github.com/coreos/kube-prom
 sed -i -e <span class="hljs-string">'s_quay.io_quay.mirrors.ustc.edu.cn_'</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span>
 
 kubectl apply -f manifests/setup/ <span class="hljs-comment"># 先部署Prometheus Operator</span>
-kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Alertmanager等各种CRD资源</span></code></pre>
+kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Alertmanager等各种CRD资源</span></code></pre></div>
 
-<h3 id="暴露Ingress"><a href="#暴露Ingress" class="headerlink" title="暴露Ingress"></a>暴露Ingress</h3><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">networking.k8s.io/v1beta1</span>
+<h3 id="暴露Ingress"><a href="#暴露Ingress" class="headerlink" title="暴露Ingress"></a>暴露Ingress</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">networking.k8s.io/v1beta1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Ingress</span>
 <span class="hljs-attr">metadata:</span>
   <span class="hljs-attr">name:</span> <span class="hljs-string">monitoring-ingress</span>
@@ -288,10 +288,10 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
       <span class="hljs-bullet">-</span> <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
         <span class="hljs-attr">backend:</span>
           <span class="hljs-attr">serviceName:</span> <span class="hljs-string">alertmanager-main</span>
-          <span class="hljs-attr">servicePort:</span> <span class="hljs-number">9093</span></code></pre>
+          <span class="hljs-attr">servicePort:</span> <span class="hljs-number">9093</span></code></pre></div>
 
 <h3 id="kube-prometheus自定义配置"><a href="#kube-prometheus自定义配置" class="headerlink" title="kube-prometheus自定义配置"></a>kube-prometheus自定义配置</h3><p><code>cd ~/k8s/kube-prometheus</code></p>
-<h4 id="Grafana-数据持久化"><a href="#Grafana-数据持久化" class="headerlink" title="Grafana 数据持久化"></a>Grafana 数据持久化</h4><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/grafana-deployment.yaml</span>
+<h4 id="Grafana-数据持久化"><a href="#Grafana-数据持久化" class="headerlink" title="Grafana 数据持久化"></a>Grafana 数据持久化</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/grafana-deployment.yaml</span>
       <span class="hljs-attr">volumes:</span>
       <span class="hljs-comment"># - emptyDir: &#123;&#125;</span>
       <span class="hljs-comment">#   name: grafana-storage</span>
@@ -313,9 +313,9 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
   <span class="hljs-attr">resources:</span>
     <span class="hljs-attr">requests:</span>
       <span class="hljs-attr">storage:</span> <span class="hljs-string">2Gi</span>
-  <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">openebs-hostpath</span></code></pre>
+  <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">openebs-hostpath</span></code></pre></div>
 
-<h4 id="Prometheus自定义配置"><a href="#Prometheus自定义配置" class="headerlink" title="Prometheus自定义配置"></a>Prometheus自定义配置</h4><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/prometheus-prometheus.yaml</span>
+<h4 id="Prometheus自定义配置"><a href="#Prometheus自定义配置" class="headerlink" title="Prometheus自定义配置"></a>Prometheus自定义配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/prometheus-prometheus.yaml</span>
   <span class="hljs-attr">retention:</span> <span class="hljs-string">72h</span> <span class="hljs-comment"># 数据保存时长</span>
   <span class="hljs-attr">externalUrl:</span> <span class="hljs-string">http://prometheus.boer.xyz</span> <span class="hljs-comment"># 对应Ingress地址</span>
   <span class="hljs-attr">additionalScrapeConfigs:</span>
@@ -327,9 +327,9 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
         <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">openebs-hostpath</span>
         <span class="hljs-attr">resources:</span>
           <span class="hljs-attr">requests:</span>
-            <span class="hljs-attr">storage:</span> <span class="hljs-string">5Gi</span></code></pre>
+            <span class="hljs-attr">storage:</span> <span class="hljs-string">5Gi</span></code></pre></div>
 
-<h4 id="Alertmanager自定义配置"><a href="#Alertmanager自定义配置" class="headerlink" title="Alertmanager自定义配置"></a>Alertmanager自定义配置</h4><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/alertmanager-alertmanager.yaml</span>
+<h4 id="Alertmanager自定义配置"><a href="#Alertmanager自定义配置" class="headerlink" title="Alertmanager自定义配置"></a>Alertmanager自定义配置</h4><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim manifests/alertmanager-alertmanager.yaml</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">monitoring.coreos.com/v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Alertmanager</span>
 <span class="hljs-attr">metadata:</span>
@@ -348,9 +348,9 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
     <span class="hljs-attr">runAsUser:</span> <span class="hljs-number">1000</span>
   <span class="hljs-attr">serviceAccountName:</span> <span class="hljs-string">alertmanager-main</span>
   <span class="hljs-attr">version:</span> <span class="hljs-string">v0.20.0</span>
-  <span class="hljs-attr">externalUrl:</span> <span class="hljs-string">http://alertmanager.boer.xyz</span> <span class="hljs-comment"># 对应Ingress地址</span></code></pre>
+  <span class="hljs-attr">externalUrl:</span> <span class="hljs-string">http://alertmanager.boer.xyz</span> <span class="hljs-comment"># 对应Ingress地址</span></code></pre></div>
 
-<h3 id="Alertmanager企业微信告警"><a href="#Alertmanager企业微信告警" class="headerlink" title="Alertmanager企业微信告警"></a>Alertmanager企业微信告警</h3><pre><code class="hljs yaml"><span class="hljs-comment"># vim alertmanager-main-secrets.yaml</span>
+<h3 id="Alertmanager企业微信告警"><a href="#Alertmanager企业微信告警" class="headerlink" title="Alertmanager企业微信告警"></a>Alertmanager企业微信告警</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim alertmanager-main-secrets.yaml</span>
 <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span>
 <span class="hljs-attr">type:</span> <span class="hljs-string">Opaque</span>
@@ -402,12 +402,12 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
         <span class="hljs-attr">"receiver":</span> <span class="hljs-string">"Default"</span>
 <span class="hljs-comment"># 强制应用配置</span>
 <span class="hljs-string">kubectl</span> <span class="hljs-string">delete</span> <span class="hljs-string">-f</span> <span class="hljs-string">alertmanager-main-secrets.yaml</span>
-<span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">alertmanager-main-secrets.yaml</span></code></pre>
+<span class="hljs-string">kubectl</span> <span class="hljs-string">apply</span> <span class="hljs-string">-f</span> <span class="hljs-string">alertmanager-main-secrets.yaml</span></code></pre></div>
 
 <h3 id="自动发现监控配置"><a href="#自动发现监控配置" class="headerlink" title="自动发现监控配置"></a>自动发现监控配置</h3><blockquote>
 <p><a href="https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md" target="_blank" rel="noopener">https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/additional-scrape-config.md</a></p>
 </blockquote>
-<pre><code class="hljs yaml"><span class="hljs-comment"># vim prometheus-additional.yaml</span>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim prometheus-additional.yaml</span>
 <span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">'kubernetes-endpoints'</span>
   <span class="hljs-attr">kubernetes_sd_configs:</span>
   <span class="hljs-bullet">-</span> <span class="hljs-attr">role:</span> <span class="hljs-string">endpoints</span>
@@ -454,7 +454,7 @@ kubectl apply -f manifests/ <span class="hljs-comment"># 再部署Prometheus, Al
 <span class="hljs-comment"># 需要自动发现监控的应用配置示例: (springboot)</span>
 <span class="hljs-attr">prometheus.io/path:</span> <span class="hljs-string">/actuator/prometheus</span>
 <span class="hljs-attr">prometheus.io/port:</span> <span class="hljs-string">'10080'</span>
-<span class="hljs-attr">prometheus.io/scrape:</span> <span class="hljs-string">'true'</span></code></pre>
+<span class="hljs-attr">prometheus.io/scrape:</span> <span class="hljs-string">'true'</span></code></pre></div>
 
 <p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20200821152346.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
 <p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/altermanager_groupby.jpg?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>

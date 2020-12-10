@@ -233,7 +233,7 @@
 </blockquote>
 <a id="more"></a>
 
-<h3 id="1、Springboot配置示例"><a href="#1、Springboot配置示例" class="headerlink" title="1、Springboot配置示例"></a>1、Springboot配置示例</h3><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
+<h3 id="1、Springboot配置示例"><a href="#1、Springboot配置示例" class="headerlink" title="1、Springboot配置示例"></a>1、Springboot配置示例</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
   <span class="hljs-attr">application:</span>
     <span class="hljs-attr">name:</span> <span class="hljs-string">spring-produce</span>
   <span class="hljs-attr">profiles:</span>
@@ -263,18 +263,18 @@
     <span class="hljs-attr">max-size:</span> <span class="hljs-string">200MB</span>
     <span class="hljs-attr">max-history:</span> <span class="hljs-number">7</span>
     <span class="hljs-attr">path:</span> <span class="hljs-string">/opt/logs</span>
-    <span class="hljs-attr">name:</span> <span class="hljs-string">/opt/logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.log</span></code></pre>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">/opt/logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.log</span></code></pre></div>
 <p><strong>注意：actuator开启prometheus需要添加依赖</strong></p>
-<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>io.micrometer<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$&#123;micrometer.version&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
 
 <h3 id="2、Dockerfile"><a href="#2、Dockerfile" class="headerlink" title="2、Dockerfile"></a>2、Dockerfile</h3><blockquote>
 <p>在项目根目录下创建<code>Dockerfile</code></p>
 </blockquote>
-<pre><code class="hljs Dockerfile"><span class="hljs-comment"># base镜像 - JDK发行版</span>
+<div class="hljs"><pre><code class="hljs Dockerfile"><span class="hljs-comment"># base镜像 - JDK发行版</span>
 <span class="hljs-keyword">FROM</span> adoptopenjdk:<span class="hljs-number">8</span>u252-b09-jdk-hotspot
 <span class="hljs-comment"># 署名</span>
 <span class="hljs-keyword">MAINTAINER</span> Boer Zhang &lt;boer0924@gmail.com&gt;
@@ -290,7 +290,7 @@
 <span class="hljs-comment"># 服务启动命令</span>
 <span class="hljs-comment">## 1、$&#123;JVM_OPTS&#125; - JVM配置，如：-Xms768m -Xmx768m -javaagent:/usr/skywalking/agent/skywalking-agent.jar</span>
 <span class="hljs-comment">## 2、$&#123;APP_OPTS&#125; - APP配置，如：--spring.profiles.active=dev --spring.kafka.consumer.group-id=xxx.group</span>
-<span class="hljs-keyword">CMD</span><span class="bash"> [ <span class="hljs-string">"sh"</span>, <span class="hljs-string">"-c"</span>, <span class="hljs-string">"java <span class="hljs-variable">$&#123;JVM_OPTS&#125;</span> -jar produce-1.0.1.jar <span class="hljs-variable">$&#123;APP_OPTS&#125;</span>"</span> ]</span></code></pre>
+<span class="hljs-keyword">CMD</span><span class="bash"> [ <span class="hljs-string">"sh"</span>, <span class="hljs-string">"-c"</span>, <span class="hljs-string">"java <span class="hljs-variable">$&#123;JVM_OPTS&#125;</span> -jar produce-1.0.1.jar <span class="hljs-variable">$&#123;APP_OPTS&#125;</span>"</span> ]</span></code></pre></div>
 
 <h3 id="3、K8S容器云部署文件模板"><a href="#3、K8S容器云部署文件模板" class="headerlink" title="3、K8S容器云部署文件模板"></a>3、K8S容器云部署文件模板</h3><blockquote>
 <p>在项目根目录下创建<code>manifests</code>目录，在目录下创建文件<code>k8s.yaml</code></p>
@@ -302,7 +302,7 @@
 <li><strong>服务域名</strong> - 根据实际情况，选择是否需要对外暴露Ingress</li>
 <li><strong>服务版本</strong> - 根据项目pom文件<code>version</code>字段，同时修改Dockerfile中jar包版本</li>
 </ol>
-<pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
 <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span>
 <span class="hljs-attr">metadata:</span>
   <span class="hljs-attr">name:</span> <span class="hljs-string">&lt;change-me&gt;-deployment</span> <span class="hljs-comment"># deployment名称</span>
@@ -419,7 +419,7 @@
           <span class="hljs-bullet">-</span> <span class="hljs-attr">path:</span> <span class="hljs-string">/</span>
             <span class="hljs-attr">backend:</span>
               <span class="hljs-attr">serviceName:</span> <span class="hljs-string">&lt;change-me&gt;-service</span>
-              <span class="hljs-attr">servicePort:</span> <span class="hljs-number">10080</span></code></pre>
+              <span class="hljs-attr">servicePort:</span> <span class="hljs-number">10080</span></code></pre></div>
 
 <h3 id="4、K8S发布"><a href="#4、K8S发布" class="headerlink" title="4、K8S发布"></a>4、K8S发布</h3><blockquote>
 <p>此过程已通过<a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">Jenkins Pipeline自动化CICD方式实现</a></p>
@@ -430,9 +430,9 @@
 <li><strong>Maven编译打包</strong>：<code>mvn clean package -Dmaven.test.skip=true</code></li>
 <li><strong>Docker打包镜像</strong>：<code>docker build -t ${image}:${imageTag} .</code></li>
 <li><strong>Harbor镜像推送</strong>：<code>docker push ${image}:${imageTag}</code></li>
-<li><strong>Sed渲染模板</strong>：<pre><code class="hljs bash">sed -i <span class="hljs-string">"s|&lt;CHANGE_CAUSE&gt;|<span class="hljs-variable">$&#123;changeCause&#125;</span>|g"</span> manifests/k8s.yaml
+<li><strong>Sed渲染模板</strong>：<div class="hljs"><pre><code class="hljs bash">sed -i <span class="hljs-string">"s|&lt;CHANGE_CAUSE&gt;|<span class="hljs-variable">$&#123;changeCause&#125;</span>|g"</span> manifests/k8s.yaml
 sed -i <span class="hljs-string">"s|&lt;IMAGE&gt;|<span class="hljs-variable">$&#123;image&#125;</span>|g"</span> manifests/k8s.yaml
-sed -i <span class="hljs-string">"s|&lt;IMAGE_TAG&gt;|<span class="hljs-variable">$&#123;imageTag&#125;</span>|g"</span> manifests/k8s.yaml</code></pre></li>
+sed -i <span class="hljs-string">"s|&lt;IMAGE_TAG&gt;|<span class="hljs-variable">$&#123;imageTag&#125;</span>|g"</span> manifests/k8s.yaml</code></pre></div></li>
 <li><strong>Kubectl部署应用</strong>：<code>kubectl --kubeconfig $kubeconfig apply -f manifests/k8s.yaml -n ${NAMESPACE}</code></li>
 <li><strong>Rollout快速回滚</strong>：<code>kubectl --kubeconfig ${kubeconfig} rollout undo deployment consume-deployment -n ${NAMESPACE}</code></li>
 </ol>

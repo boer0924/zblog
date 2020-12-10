@@ -226,7 +226,7 @@
 <a id="more"></a>
 
 <p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/20201023172301.png?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p>
-<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">maps</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">nums</span> []<span class="hljs-title">int</span>) []<span class="hljs-title">int</span></span> &#123;
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">maps</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">nums</span> []<span class="hljs-title">int</span>) []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">var</span> ret = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>, <span class="hljs-built_in">len</span>(nums))
 	<span class="hljs-keyword">for</span> i, n := <span class="hljs-keyword">range</span> nums &#123;
 		ret[i] = f(n)
@@ -240,14 +240,14 @@
 
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
 fmt.Println(maps(f, nums))
-<span class="hljs-comment">// [3 4 5 6 7]</span></code></pre>
+<span class="hljs-comment">// [3 4 5 6 7]</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">map(<span class="hljs-keyword">lambda</span> x: x + <span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])
+<div class="hljs"><pre><code class="hljs python">map(<span class="hljs-keyword">lambda</span> x: x + <span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])
 <span class="hljs-comment"># 注意：在python3中map()函数返回map object，而非python2直接返回list对象</span>
 list(map(<span class="hljs-keyword">lambda</span> x: x + <span class="hljs-number">2</span>, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])) <span class="hljs-comment"># 转为list</span>
-<span class="hljs-comment"># 3, 4, 5, 6, 7</span></code></pre>
+<span class="hljs-comment"># 3, 4, 5, 6, 7</span></code></pre></div>
 
-<h3 id="Reduce"><a href="#Reduce" class="headerlink" title="Reduce"></a>Reduce</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reduces</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(x, y <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">nums</span> []<span class="hljs-title">int</span>) <span class="hljs-title">int</span></span> &#123;
+<h3 id="Reduce"><a href="#Reduce" class="headerlink" title="Reduce"></a>Reduce</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reduces</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(x, y <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span>, <span class="hljs-title">nums</span> []<span class="hljs-title">int</span>) <span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">var</span> sum = <span class="hljs-number">0</span>
 	<span class="hljs-keyword">for</span> _, n := <span class="hljs-keyword">range</span> nums &#123;
 		sum = f(sum, n)
@@ -267,14 +267,14 @@ list(map(<span class="hljs-keyword">lambda</span> x: x + <span class="hljs-numbe
 fmt.Println(reduces(f1, nums))
 <span class="hljs-comment">// 15</span>
 fmt.Println(reduces(f2, nums))
-<span class="hljs-comment">// 12345</span></code></pre>
+<span class="hljs-comment">// 12345</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> reduce
+<div class="hljs"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> reduce
 <span class="hljs-comment"># 注意：在python3中reduce()函数已经不再是内置函数，而是放到了functools包下面</span>
 reduce(<span class="hljs-keyword">lambda</span> x, y: x + y, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])
 <span class="hljs-comment"># 15</span>
 reduce(<span class="hljs-keyword">lambda</span> x, y: x * <span class="hljs-number">10</span> + y, [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>])
-<span class="hljs-comment"># 12345</span></code></pre>
+<span class="hljs-comment"># 12345</span></code></pre></div>
 
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
 <li><a href="https://www.liaoxuefeng.com/wiki/1016959663602400/1017329367486080" target="_blank" rel="noopener">https://www.liaoxuefeng.com/wiki/1016959663602400/1017329367486080</a></li>

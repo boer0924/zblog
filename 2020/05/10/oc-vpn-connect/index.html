@@ -225,11 +225,11 @@
               <p>2020年已注定是不平凡的一年<br>新冠肺炎疫情<br>科比逝世<br>……<br>疫情影响下各个公司启动远程办公，VPN成了必不可少的服务。</p>
 <p><a href="http://www.infradead.org/openconnect/" target="_blank" rel="noopener">http://www.infradead.org/openconnect/</a><br>Openconnect server (ocserv) is an SSL VPN server for administrators who require elaborate user management and control. Openconnect server provides user management interfaces and back-ends necessary in enterprise environments, as well as security features, such as isolation of connected clients, features currently not available to any existing VPN servers.</p>
 <a id="more"></a>
-<h3 id="1-安装ocserv"><a href="#1-安装ocserv" class="headerlink" title="1. 安装ocserv"></a>1. 安装ocserv</h3><pre><code class="hljs bash"><span class="hljs-comment"># ocserv 已经在epel仓库中提供了，所以可以直接通过yum安装</span>
+<h3 id="1-安装ocserv"><a href="#1-安装ocserv" class="headerlink" title="1. 安装ocserv"></a>1. 安装ocserv</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># ocserv 已经在epel仓库中提供了，所以可以直接通过yum安装</span>
 yum install epel-release
-yum install ocserv</code></pre>
+yum install ocserv</code></pre></div>
 
-<h3 id="2-创建-CA"><a href="#2-创建-CA" class="headerlink" title="2. 创建 CA"></a>2. 创建 CA</h3><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/ocserv
+<h3 id="2-创建-CA"><a href="#2-创建-CA" class="headerlink" title="2. 创建 CA"></a>2. 创建 CA</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/ocserv
 mkdir CA
 <span class="hljs-built_in">cd</span> CA
 <span class="hljs-comment">## Root CA</span>
@@ -264,9 +264,9 @@ certtool --generate-certificate --load-privkey server-key.pem --load-ca-certific
 <span class="hljs-comment"># 证书路径（上述步骤创建）：</span>
 /etc/ocserv/CA/ca-cert.pem 
 /etc/ocserv/CA/server-cert.pem
-/etc/ocserv/CA/server-key.pem</code></pre>
+/etc/ocserv/CA/server-key.pem</code></pre></div>
 
-<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3. 配置文件"></a>3. 配置文件</h3><pre><code class="hljs bash"><span class="hljs-comment"># 创建路由分组管理目录</span>
+<h3 id="3-配置文件"><a href="#3-配置文件" class="headerlink" title="3. 配置文件"></a>3. 配置文件</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 创建路由分组管理目录</span>
 mkdir -p /etc/ocserv/group
 vim /etc/ocserv/ocserv.conf
 auth = <span class="hljs-string">"plain[/etc/ocserv/ocpasswd]"</span>
@@ -314,13 +314,13 @@ dtls-legacy = <span class="hljs-literal">true</span>
 user-profile = profile.xml
 
 <span class="hljs-comment"># 创建一个登陆用的用户名与密码</span>
-ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre>
+ocpasswd -c /etc/ocserv/ocpasswd boer</code></pre></div>
 
 <h3 id="4-转发与安全配置"><a href="#4-转发与安全配置" class="headerlink" title="4. 转发与安全配置"></a>4. 转发与安全配置</h3><ul>
 <li>network 192.169.5.0/24 为/etc/ocserv/ocserv.conf中的ipv4-network = 192.168.5.0/24 </li>
 <li>ocserv WAN interface 为eth0</li>
 </ul>
-<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><pre><code class="hljs bash">vim /etc/sysctl.conf
+<h4 id="4-1-修改内核配置"><a href="#4-1-修改内核配置" class="headerlink" title="4.1 修改内核配置"></a>4.1 修改内核配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysctl.conf
 <span class="hljs-comment"># Protect from IP Spoofing</span>
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -366,15 +366,15 @@ net.ipv4.conf.default.secure_redirects = 0
 net.ipv6.conf.all.accept_ra = 2
 net.ipv6.conf.eth0.accept_ra = 2
 
-net.ipv4.ip_forward = 1</code></pre>
+net.ipv4.ip_forward = 1</code></pre></div>
 <p>使之生效： sysctl -p</p>
-<h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><pre><code class="hljs bash">systemctl stop firewalld
+<h4 id="4-2-IPtables"><a href="#4-2-IPtables" class="headerlink" title="4.2 IPtables"></a>4.2 IPtables</h4><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
 systemctl <span class="hljs-built_in">disable</span> firewalld
 yum install iptables 
 systemcctl start iptables
-systemcctl <span class="hljs-built_in">enable</span> iptables</code></pre>
+systemcctl <span class="hljs-built_in">enable</span> iptables</code></pre></div>
 
-<h4 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h4><pre><code class="hljs bash">vim /etc/sysconfig/iptables
+<h4 id="4-3-IPtables配置"><a href="#4-3-IPtables配置" class="headerlink" title="4.3 IPtables配置"></a>4.3 IPtables配置</h4><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/iptables
 <span class="hljs-comment"># sample configuration for iptables service</span>
 <span class="hljs-comment"># you can edit this manually or use system-config-firewall</span>
 <span class="hljs-comment"># please do not ask us to add additional ports/services to this default configuration</span>
@@ -461,9 +461,9 @@ COMMIT
 <span class="hljs-comment"># LAST RULE - ACCEPT all traffic - Should be    changed to DROP once custom rules are created.</span>
 -A OUTPUT -j ACCEPT
 <span class="hljs-comment"># END OUTPUT RULES</span>
-COMMIT</code></pre>
+COMMIT</code></pre></div>
 <p>使之生效【重启机器后需要重新生效一下】<br>iptables-restore &lt; /etc/sysconfig/iptables</p>
-<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5. ocserv Oops"></a>5. ocserv Oops</h3><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
+<h3 id="5-ocserv-Oops"><a href="#5-ocserv-Oops" class="headerlink" title="5. ocserv Oops"></a>5. ocserv Oops</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 添加用户</span>
 ocpasswd -c /etc/ocserv/ocpasswd 【用户名】
 <span class="hljs-comment"># 添加用户至某个分组</span>
 ocpasswd -c /etc/ocserv/ocpasswd -g 【分组名称】 【用户名】
@@ -484,11 +484,11 @@ occtl -n show users
 <span class="hljs-comment">## 通过用户名:</span>
 occtl disconnect user 【用户名】
 <span class="hljs-comment">## 通过id:</span>
-occtl disconnect id 【id号】</code></pre>
+occtl disconnect id 【id号】</code></pre></div>
 
-<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6. 客户端"></a>6. 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
+<h3 id="6-客户端"><a href="#6-客户端" class="headerlink" title="6. 客户端"></a>6. 客户端</h3><h4 id="6-1-Redhat系"><a href="#6-1-Redhat系" class="headerlink" title="6.1 Redhat系"></a>6.1 Redhat系</h4><div class="hljs"><pre><code class="hljs gml">https:<span class="hljs-comment">//copr.fedorainfracloud.org/coprs/dwmw2/openconnect/</span>
 yum install openconnect
-openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre>
+openconnect --user=boer -b <span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>.<span class="hljs-symbol">x</span>:xyz</code></pre></div>
 
 <h4 id="6-2-Windows-amp-MacOS"><a href="#6-2-Windows-amp-MacOS" class="headerlink" title="6.2 Windows &amp; MacOS"></a>6.2 Windows &amp; MacOS</h4><p><a href="https://github.com/openconnect/openconnect-gui" target="_blank" rel="noopener">https://github.com/openconnect/openconnect-gui</a></p>
 <h4 id="6-3-Android"><a href="#6-3-Android" class="headerlink" title="6.3 Android"></a>6.3 Android</h4><p><a href="https://play.google.com/store/apps/details?id=com.github.digitalsoftwaresolutions.openconnect" target="_blank" rel="noopener">https://play.google.com/store/apps/details?id=com.github.digitalsoftwaresolutions.openconnect</a></p>

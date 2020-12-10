@@ -226,10 +226,10 @@
 <a id="more"></a>
 
 <h1 id="中间件运维规范-初稿"><a href="#中间件运维规范-初稿" class="headerlink" title="中间件运维规范(初稿)"></a>中间件运维规范(初稿)</h1><h2 id="os-level"><a href="#os-level" class="headerlink" title="os-level:"></a>os-level:</h2><p>其他内核优化同操作系统内核基线</p>
-<pre><code class="hljs angelscript">vm.max_map_count=<span class="hljs-number">262144</span>
+<div class="hljs"><pre><code class="hljs angelscript">vm.max_map_count=<span class="hljs-number">262144</span>
 
 * soft nofile <span class="hljs-number">102400</span>
-* hard nofile <span class="hljs-number">204800</span></code></pre>
+* hard nofile <span class="hljs-number">204800</span></code></pre></div>
 
 <h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><p>一、集群部署</p>
 <ol>
@@ -302,17 +302,17 @@
 <li>path.logs配置占用磁盘容量情况(考虑logrotate/log4j日志轮转)</li>
 </ol>
 <h2 id="配置示例"><a href="#配置示例" class="headerlink" title="配置示例"></a>配置示例</h2><p>rabbitmq:</p>
-<pre><code class="hljs ini"><span class="hljs-attr">cluster_partition_handling</span> = pause_minority
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-attr">cluster_partition_handling</span> = pause_minority
 <span class="hljs-attr">vm_memory_high_watermark</span> = <span class="hljs-number">0.4</span>
 <span class="hljs-attr">vm_memory_high_watermark_paging_ratio</span> = <span class="hljs-number">0.75</span>
 <span class="hljs-attr">hipe_compile</span> = ture
 <span class="hljs-attr">queue_index_max_journal_entries</span> = <span class="hljs-number">262144</span>
 <span class="hljs-attr">frame_max</span> = <span class="hljs-number">128</span>KB
 <span class="hljs-attr">delegate_count</span> = <span class="hljs-number">16</span>
-<span class="hljs-attr">msg_store_file_size_limit</span> = <span class="hljs-number">16</span>MB</code></pre>
+<span class="hljs-attr">msg_store_file_size_limit</span> = <span class="hljs-number">16</span>MB</code></pre></div>
 
 <p>kafka:</p>
-<pre><code class="hljs ini"><span class="hljs-attr">broker.id</span>=<span class="hljs-number">34</span>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-attr">broker.id</span>=<span class="hljs-number">34</span>
 <span class="hljs-attr">listeners</span>=PLAINTEXT://<span class="hljs-number">10.193</span>.<span class="hljs-number">196.34</span>:<span class="hljs-number">9092</span>
 <span class="hljs-attr">advertised.listeners</span>=PLAINTEXT://<span class="hljs-number">10.193</span>.<span class="hljs-number">196.34</span>:<span class="hljs-number">9092</span>
 <span class="hljs-attr">socket.send.buffer.bytes</span>=<span class="hljs-number">102400</span>
@@ -342,7 +342,7 @@
 <span class="hljs-attr">num.io.threads</span>=<span class="hljs-number">8</span>
 <span class="hljs-attr">num.recovery.threads.per.data.dir</span>=<span class="hljs-number">6</span>
 <span class="hljs-attr">num.replica.fetchers</span>=<span class="hljs-number">3</span>
-<span class="hljs-attr">log.cleaner.threads</span>=<span class="hljs-number">3</span></code></pre>
+<span class="hljs-attr">log.cleaner.threads</span>=<span class="hljs-number">3</span></code></pre></div>
             </div>
             <hr>
             <div>

@@ -246,50 +246,50 @@
 <li><code>contains</code></li>
 <li><code>join</code></li>
 </ul>
-<h3 id="clear-方法"><a href="#clear-方法" class="headerlink" title="clear()方法"></a>clear()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">clear</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="clear-方法"><a href="#clear-方法" class="headerlink" title="clear()方法"></a>clear()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">clear</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> lst[:<span class="hljs-number">0</span>]
 &#125;
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
 nums = clear(nums)
 fmt.Println(nums)
-<span class="hljs-comment">// []</span></code></pre>
+<span class="hljs-comment">// []</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]
+<div class="hljs"><pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]
 L.clear()
 print(L)
-<span class="hljs-comment"># []</span></code></pre>
+<span class="hljs-comment"># []</span></code></pre></div>
 
-<h3 id="copy-方法"><a href="#copy-方法" class="headerlink" title="copy()方法"></a>copy()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myCopy</span><span class="hljs-params">(dst, src []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+<h3 id="copy-方法"><a href="#copy-方法" class="headerlink" title="copy()方法"></a>copy()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myCopy</span><span class="hljs-params">(dst, src []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> <span class="hljs-built_in">copy</span>(dst, src)
 &#125;
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
 <span class="hljs-keyword">var</span> mums = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>, <span class="hljs-built_in">len</span>(nums), <span class="hljs-built_in">cap</span>(nums))
 _ = myCopy(mums, nums)
 fmt.Println(mums)
-<span class="hljs-comment">// [1 2 3 4 5]</span></code></pre>
+<span class="hljs-comment">// [1 2 3 4 5]</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">L1 = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]
+<div class="hljs"><pre><code class="hljs python">L1 = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]
 L2 = L1.copy()
 print(L2)
-<span class="hljs-comment"># [1,2,3,4]</span></code></pre>
+<span class="hljs-comment"># [1,2,3,4]</span></code></pre></div>
 
-<h3 id="append-方法"><a href="#append-方法" class="headerlink" title="append()方法"></a>append()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myAppend</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el ...<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="append-方法"><a href="#append-方法" class="headerlink" title="append()方法"></a>append()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myAppend</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el ...<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> <span class="hljs-built_in">append</span>(lst, el...)
 &#125;
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
 nums = myAppend(nums, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>)
 fmt.Println(nums)
-<span class="hljs-comment">// [1 2 3 4 5 6 7 8]</span></code></pre>
+<span class="hljs-comment">// [1 2 3 4 5 6 7 8]</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
+<div class="hljs"><pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
 L.append(<span class="hljs-number">4</span>)
 print(L)
 <span class="hljs-comment"># [1, 2, 3, 4]</span>
 L.appned([<span class="hljs-number">5</span>, <span class="hljs-number">6</span>])
 print(L)
-<span class="hljs-comment"># [1, 2, 3, 4, [5, 6]]</span></code></pre>
+<span class="hljs-comment"># [1, 2, 3, 4, [5, 6]]</span></code></pre></div>
 
-<h3 id="extend-方法"><a href="#extend-方法" class="headerlink" title="extend()方法"></a>extend()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">extend</span><span class="hljs-params">(dst, src []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="extend-方法"><a href="#extend-方法" class="headerlink" title="extend()方法"></a>extend()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">extend</span><span class="hljs-params">(dst, src []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> <span class="hljs-built_in">append</span>(dst, src...)
 &#125;
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
@@ -303,16 +303,16 @@ fmt.Printf(<span class="hljs-string">"%v, %v, %v, %p\n"</span>, nums, <span clas
 <span class="hljs-comment">// [1 2 3 4 5 6 7 8], 8, 10, 0xc0000a40f0</span>
 <span class="hljs-comment">// !!! 注意两次打印Slice的len, cap, 内存地址的不同。</span>
 <span class="hljs-comment">// 这也说明了Slice与Array的对应关系: </span>
-<span class="hljs-comment">// 当前Array不能满足Slice容量时，会重新分配内存空间并复制数据</span></code></pre>
+<span class="hljs-comment">// 当前Array不能满足Slice容量时，会重新分配内存空间并复制数据</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
+<div class="hljs"><pre><code class="hljs python">L = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
 A = [<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>]
 L.extend(A)
 print(L)
 <span class="hljs-comment"># [1,2,3,4,5,6]</span>
-<span class="hljs-comment"># !!! 该方法返回值为None，修改的是原列表</span></code></pre>
+<span class="hljs-comment"># !!! 该方法返回值为None，修改的是原列表</span></code></pre></div>
 
-<h3 id="pop-方法"><a href="#pop-方法" class="headerlink" title="pop()方法"></a>pop()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">pop</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="pop-方法"><a href="#pop-方法" class="headerlink" title="pop()方法"></a>pop()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">pop</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> lst[:<span class="hljs-built_in">len</span>(lst)<span class="hljs-number">-1</span>]
 &#125;
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
@@ -326,26 +326,26 @@ fmt.Println(nums)
 <span class="hljs-keyword">var</span> nums = []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;
 nums = myPop(nums, <span class="hljs-number">2</span>)
 fmt.Println(nums)
-<span class="hljs-comment">// [1 2 4 5]</span></code></pre>
+<span class="hljs-comment">// [1 2 4 5]</span></code></pre></div>
 <p>VS</p>
-<pre><code class="hljs python">L = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
+<div class="hljs"><pre><code class="hljs python">L = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]
 print(L.pop())
 <span class="hljs-comment"># 5</span>
 print(L)
 <span class="hljs-comment"># [1,2,3,4]</span>
 L.pop(<span class="hljs-number">1</span>)
 print(L)
-<span class="hljs-comment"># [1,3,4]</span></code></pre>
-<h3 id="index-方法"><a href="#index-方法" class="headerlink" title="index()方法"></a>index()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">index</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+<span class="hljs-comment"># [1,3,4]</span></code></pre></div>
+<h3 id="index-方法"><a href="#index-方法" class="headerlink" title="index()方法"></a>index()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">index</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">for</span> i, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v == el &#123;
 			<span class="hljs-keyword">return</span> i
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="count-方法"><a href="#count-方法" class="headerlink" title="count()方法"></a>count()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">count</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+<h3 id="count-方法"><a href="#count-方法" class="headerlink" title="count()方法"></a>count()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">count</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	maps := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">int</span>]<span class="hljs-keyword">int</span>&#123;&#125;
 	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v == el &#123;
@@ -353,15 +353,15 @@ print(L)
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> maps[el]
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="insert-方法"><a href="#insert-方法" class="headerlink" title="insert()方法"></a>insert()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">insert</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el, i <span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="insert-方法"><a href="#insert-方法" class="headerlink" title="insert()方法"></a>insert()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">insert</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el, i <span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	lst = <span class="hljs-built_in">append</span>(lst[:i+<span class="hljs-number">1</span>], lst[i:]...)
 	lst[i] = el
 	<span class="hljs-keyword">return</span> lst
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove()方法"></a>remove()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">remove</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="remove-方法"><a href="#remove-方法" class="headerlink" title="remove()方法"></a>remove()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">remove</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">for</span> i, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v == el &#123;
 			lst = <span class="hljs-built_in">append</span>(lst[:i], lst[i+<span class="hljs-number">1</span>:]...)
@@ -369,30 +369,30 @@ print(L)
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> lst
-&#125;</code></pre>
+&#125;</code></pre></div>
 
 <h3 id="reverse-方法"><a href="#reverse-方法" class="headerlink" title="reverse()方法"></a>reverse()方法</h3><blockquote>
 <p><a href="/2017/08/16/golang-slice-reverse/">更多方法, 请参考…</a></p>
 </blockquote>
-<pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverse</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverse</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	tmp := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>, <span class="hljs-built_in">len</span>(lst), <span class="hljs-built_in">cap</span>(lst))
 	<span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> lst &#123;
 		tmp[i] = lst[<span class="hljs-built_in">len</span>(lst)-i<span class="hljs-number">-1</span>]
 	&#125;
 	<span class="hljs-keyword">return</span> tmp
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="sort-方法"><a href="#sort-方法" class="headerlink" title="sort()方法"></a>sort()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">mySort</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
+<h3 id="sort-方法"><a href="#sort-方法" class="headerlink" title="sort()方法"></a>sort()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">mySort</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> []<span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-comment">// sort.Ints(lst)</span>
 	sort.Sort(sort.Reverse(sort.IntSlice(lst)))
 	<span class="hljs-keyword">return</span> lst
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="len-方法"><a href="#len-方法" class="headerlink" title="len()方法"></a>len()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myLen</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+<h3 id="len-方法"><a href="#len-方法" class="headerlink" title="len()方法"></a>len()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myLen</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	<span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(lst)
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="max-方法"><a href="#max-方法" class="headerlink" title="max()方法"></a>max()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myMax</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+<h3 id="max-方法"><a href="#max-方法" class="headerlink" title="max()方法"></a>max()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myMax</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	t := lst[<span class="hljs-number">0</span>]
 	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v &gt; t &#123;
@@ -400,8 +400,8 @@ print(L)
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> t
-&#125;</code></pre>
-<h3 id="min-方法"><a href="#min-方法" class="headerlink" title="min()方法"></a>min()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myMin</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
+&#125;</code></pre></div>
+<h3 id="min-方法"><a href="#min-方法" class="headerlink" title="min()方法"></a>min()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">myMin</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;
 	t := lst[<span class="hljs-number">0</span>]
 	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v &lt; t &#123;
@@ -409,18 +409,18 @@ print(L)
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> t
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="contains-方法-gt-对比JAVA"><a href="#contains-方法-gt-对比JAVA" class="headerlink" title="contains()方法 -&gt; 对比JAVA"></a>contains()方法 -&gt; 对比JAVA</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">contains</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span> &#123;
+<h3 id="contains-方法-gt-对比JAVA"><a href="#contains-方法-gt-对比JAVA" class="headerlink" title="contains()方法 -&gt; 对比JAVA"></a>contains()方法 -&gt; 对比JAVA</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">contains</span><span class="hljs-params">(lst []<span class="hljs-keyword">int</span>, el <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span> &#123;
 	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> lst &#123;
 		<span class="hljs-keyword">if</span> v == el &#123;
 			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
 		&#125;
 	&#125;
 	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
-&#125;</code></pre>
+&#125;</code></pre></div>
 
-<h3 id="join-方法"><a href="#join-方法" class="headerlink" title="join()方法"></a>join()方法</h3><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">join</span><span class="hljs-params">(nums []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">string</span></span> &#123;	
+<h3 id="join-方法"><a href="#join-方法" class="headerlink" title="join()方法"></a>join()方法</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">join</span><span class="hljs-params">(nums []<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">string</span></span> &#123;	
 	<span class="hljs-keyword">var</span> numsText = []<span class="hljs-keyword">string</span>&#123;&#125;
 	<span class="hljs-keyword">for</span> _, n := <span class="hljs-keyword">range</span> nums &#123;
 		text := strconv.Itoa(n)
@@ -428,7 +428,7 @@ print(L)
 	&#125;
 	res := strings.Join(numsText, <span class="hljs-string">"+"</span>)
 	<span class="hljs-keyword">return</span> res
-&#125;</code></pre>
+&#125;</code></pre></div>
 
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a href="https://blog.golang.org/slices-intro" target="_blank" rel="noopener">Go Slices: usage and internals</a><br><a href="https://www.jianshu.com/p/50da60d54a14" target="_blank" rel="noopener">python list中的方法和函数</a></p>
 

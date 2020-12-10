@@ -79,14 +79,14 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
+    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
     
     <lastmod>2020-12-10</lastmod>
     
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
+    <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
     
     <lastmod>2020-12-10</lastmod>
     
@@ -403,27 +403,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/tags/Skywalking/</loc>
-    <lastmod>2020-12-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Pinpoint/</loc>
-    <lastmod>2020-12-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/APM/</loc>
-    <lastmod>2020-12-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/tags/CICD/</loc>
     <lastmod>2020-12-10</lastmod>
     <changefreq>daily</changefreq>
@@ -453,6 +432,27 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/Harbor/</loc>
+    <lastmod>2020-12-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Skywalking/</loc>
+    <lastmod>2020-12-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Pinpoint/</loc>
+    <lastmod>2020-12-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/APM/</loc>
     <lastmod>2020-12-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

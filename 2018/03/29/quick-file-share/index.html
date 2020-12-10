@@ -229,7 +229,7 @@
 <h3 id="2、Python"><a href="#2、Python" class="headerlink" title="2、Python"></a>2、Python</h3><p>注意python2和python3不同的模块，默认监听在<code>Serving HTTP on 0.0.0.0 port 8000</code></p>
 <h5 id="python2"><a href="#python2" class="headerlink" title="python2"></a>python2</h5><p><code>python -m SimpleHTTPServer</code></p>
 <h5 id="python3"><a href="#python3" class="headerlink" title="python3"></a>python3</h5><p><code>python -m http.server</code></p>
-<h3 id="3、Golang"><a href="#3、Golang" class="headerlink" title="3、Golang"></a>3、Golang</h3><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
+<h3 id="3、Golang"><a href="#3、Golang" class="headerlink" title="3、Golang"></a>3、Golang</h3><div class="hljs"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main
 
 <span class="hljs-keyword">import</span> (
 	<span class="hljs-string">"flag"</span>
@@ -243,7 +243,7 @@
 	h := http.FileServer(http.Dir(*d))
 	fmt.Println(<span class="hljs-string">"Serving HTTP on 0.0.0.0 port 10924 (http://0.0.0.0:10924/) ..."</span>)
 	http.ListenAndServe(<span class="hljs-string">":10924"</span>, h)
-&#125;</code></pre>
+&#125;</code></pre></div>
 <blockquote>
 <p>使用：</p>
 </blockquote>

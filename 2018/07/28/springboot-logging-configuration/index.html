@@ -223,13 +223,13 @@
             
             <div class="markdown-body" id="post-body">
               <p>本文展示两种日志文件命名格式：<br>格式一：</p>
-<pre><code class="hljs css"><span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.log</span>
+<div class="hljs"><pre><code class="hljs css"><span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.log</span>
 <span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.1</span><span class="hljs-selector-class">.log</span>
-<span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.log</span> &lt;<span class="hljs-selector-tag">-</span> 当前<span class="hljs-selector-tag">active</span>日志</code></pre>
+<span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.log</span> &lt;<span class="hljs-selector-tag">-</span> 当前<span class="hljs-selector-tag">active</span>日志</code></pre></div>
 <p>格式二：</p>
-<pre><code class="hljs css"><span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.log</span>
+<div class="hljs"><pre><code class="hljs css"><span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.0</span><span class="hljs-selector-class">.log</span>
 <span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.20180728</span><span class="hljs-selector-class">.1</span><span class="hljs-selector-class">.log</span>
-<span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.log</span> &lt;<span class="hljs-selector-tag">-</span> 当前<span class="hljs-selector-tag">active</span>日志</code></pre>
+<span class="hljs-selector-tag">Boer-Office</span><span class="hljs-selector-class">.springboot-produce</span><span class="hljs-selector-class">.log</span> &lt;<span class="hljs-selector-tag">-</span> 当前<span class="hljs-selector-tag">active</span>日志</code></pre></div>
 <p>一般根据日志文件的备份脚本会这么写：</p>
 <blockquote>
 <p>伪代码如下：$(date -d “-1 day” +%Y%m%d)</p>
@@ -239,7 +239,7 @@
 <p>基于此脚本，格式一不会有问题，格式二在传统虚拟机的部署方式下也不会有问题，但是在K8S的<code>deployment</code>部署方式下就会存在问题：考虑一下，假设当前active日志是<code>Boer-Office.springboot-produce.log</code>，这时由于某种原因服务挂掉，kube-apiserver, kube-controller配合kube-scheduler将应用pod重新调度(有可能会调度到其他node上)，此时当前active日志<code>Boer-Office.springboot-produce.log</code>并不会归档为<code>Boer-Office.springboot-produce.20180728.x.log</code>的格式，所以当备份脚本运行的时候<code>Boer-Office.springboot-produce.log</code>文件的日志就丢失了。<br>运维又背锅啦…</p>
 <a id="more"></a>
 
-<h3 id="1、Springboot配置"><a href="#1、Springboot配置" class="headerlink" title="1、Springboot配置"></a>1、Springboot配置</h3><pre><code class="hljs yaml"><span class="hljs-attr">logging:</span>
+<h3 id="1、Springboot配置"><a href="#1、Springboot配置" class="headerlink" title="1、Springboot配置"></a>1、Springboot配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">logging:</span>
   <span class="hljs-attr">config:</span> <span class="hljs-string">classpath:logback-spring.xml</span>
   <span class="hljs-comment"># config: classpath:logback-$&#123;spring.profiles.active&#125;.xml</span>
   <span class="hljs-comment"># file:</span>
@@ -248,12 +248,12 @@
   <span class="hljs-comment">#   path: logs</span>
   <span class="hljs-comment">#   name: logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.log</span>
   <span class="hljs-comment"># pattern:</span>
-  <span class="hljs-comment">#   rolling-file-name: "logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.%d&#123;yyyyMMdd&#125;.%i.log"</span></code></pre>
+  <span class="hljs-comment">#   rolling-file-name: "logs/$&#123;HOSTNAME&#125;.$&#123;spring.application.name&#125;.%d&#123;yyyyMMdd&#125;.%i.log"</span></code></pre></div>
 
 <h3 id="2、Custom-Log-Configuration"><a href="#2、Custom-Log-Configuration" class="headerlink" title="2、Custom Log Configuration"></a>2、Custom Log Configuration</h3><blockquote>
 <p>src/main/resources/logback-spring.xml  即：classpath目录</p>
 </blockquote>
-<pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">conversionRule</span> <span class="hljs-attr">conversionWord</span>=<span class="hljs-string">"clr"</span> <span class="hljs-attr">converterClass</span>=<span class="hljs-string">"org.springframework.boot.logging.logback.ColorConverter"</span>/&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">conversionRule</span> <span class="hljs-attr">conversionWord</span>=<span class="hljs-string">"wex"</span></span>
@@ -301,7 +301,7 @@
     <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"CONSOLE"</span>/&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">appender-ref</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"FILE"</span>/&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></code></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span></code></pre></div>
 
 <h3 id="3、Ref"><a href="#3、Ref" class="headerlink" title="3、Ref"></a>3、Ref</h3><ul>
 <li><a href="https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback" target="_blank" rel="noopener">https://github.com/spring-projects/spring-boot/tree/master/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback</a></li>
