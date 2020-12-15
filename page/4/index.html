@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>归档 · ~·boer·~ 乌托邦</title>
+  <title>~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -43,7 +43,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -137,7 +137,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg002.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg001.jpeg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -150,6 +150,10 @@
           </div>
 
           
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
         </div>
       </div>
     </div>
@@ -159,27 +163,81 @@
     
       <div class="container nopadding-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 31 篇文章</p>
-  <hr>
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2018</p>
     
-    <a href="/2018/01/18/closewait-timewait/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">CLOSE_WAIT&amp;TIME_WAIT</span>
-      <time style="float: right;">01-18</time>
-    </a>
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2012/05/26/the-university-the-dream/" target="_self">
+          <img src="https://picsum.photos/300/200.webp?university" srcset="/img/loading.gif" alt="大学，梦起航">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2012/05/26/the-university-the-dream/">大学，梦起航</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2012/05/26/the-university-the-dream/">
+          
+          
+            
+          
+          写在最前面开头。这是真正的开头。写什么？怎么写？第一章，第一自然段，第一句话，第一个字，一切都是神圣的，似乎是一个生死存亡的
+问题而令人难以选择，令人战战兢兢。
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2012-05-26 22:18" pubdate>
+              2012-05-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Life/">Life</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/2012/">2012</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/page/3/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    </span>
+  </nav>
   
-</div>
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -305,7 +363,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "归档&nbsp;",
+        "物来顺应，未来不迎，当时不杂，既过不恋&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,

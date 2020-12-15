@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>Kubernetes CICD工具Drone · ~·boer·~ 乌托邦</title>
+  <title>阿里云API监控 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -152,7 +152,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -167,8 +167,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-06-24 11:36" pubdate>
-        2020年6月24日 中午
+      <time datetime="2020-06-24 17:10" pubdate>
+        2020年6月24日 下午
       </time>
     </span>
   
@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      225 字
+      210 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      3
        分钟
     </span>
   
@@ -219,73 +219,61 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">Kubernetes CICD工具Drone</h1>
+            <h1 style="display: none">阿里云API监控</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>Drone是一个Go语言实现的CICD编排工具，超级轻量级。</p>
-<p>Drone by Harness™ is a modern Continuous Integration platform that empowers busy teams to automate their build, test and release workflows using a powerful, cloud native pipeline engine.</p>
+              <p>使用阿里云API-SDK获取阿里云Redis的监控指标</p>
 <a id="more"></a>
 
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-meta">---</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">pipeline</span>
-<span class="hljs-attr">type:</span> <span class="hljs-string">kubernetes</span>
-<span class="hljs-attr">name:</span> <span class="hljs-string">boer</span>
+<div class="hljs"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json
+<span class="hljs-keyword">import</span> datetime
 
-<span class="hljs-attr">steps:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">build</span>
-    <span class="hljs-attr">image:</span> <span class="hljs-string">maven:3.6.3-jdk-8</span>
-    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>
-    <span class="hljs-attr">volumes:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>
-        <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.m2</span>
-    <span class="hljs-attr">commands:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">mvn</span> <span class="hljs-string">clean</span> <span class="hljs-string">package</span> <span class="hljs-string">-DskipTests=true</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">package</span>
-    <span class="hljs-attr">image:</span> <span class="hljs-string">docker:19.03.8</span>
-    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>
-    <span class="hljs-attr">volumes:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>
-        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/run/docker.sock</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>
-        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker</span>
-    <span class="hljs-attr">environment:</span>
-      <span class="hljs-attr">repo:</span> <span class="hljs-string">registry.boer.xyz/public/spring-produce</span>
-      <span class="hljs-attr">registry:</span> <span class="hljs-string">registry.boer.xyz</span>
-      <span class="hljs-attr">username:</span>
-        <span class="hljs-attr">from_secret:</span> <span class="hljs-string">docker_username</span>
-      <span class="hljs-attr">password:</span>
-        <span class="hljs-attr">from_secret:</span> <span class="hljs-string">docker_password</span>
-      <span class="hljs-attr">tags:</span> <span class="hljs-string">"$&#123;DRONE_COMMIT_SHA:0:10&#125;"</span>
-    <span class="hljs-attr">commands:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">login</span> <span class="hljs-string">$&#123;registry&#125;</span> <span class="hljs-string">-u</span> <span class="hljs-string">$&#123;username&#125;</span> <span class="hljs-string">-p</span> <span class="hljs-string">$&#123;password&#125;</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">build</span> <span class="hljs-string">-t</span> <span class="hljs-string">"$&#123;repo&#125;:$&#123;tags&#125;"</span> <span class="hljs-string">.</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">docker</span> <span class="hljs-string">push</span> <span class="hljs-string">"$&#123;repo&#125;:$&#123;tags&#125;"</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">k8s</span>
-    <span class="hljs-attr">image:</span> <span class="hljs-string">boer0924/kubectl:1.18.3</span>
-    <span class="hljs-attr">pull:</span> <span class="hljs-string">if-not-exists</span>
-    <span class="hljs-attr">volumes:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">kube-config</span>
-        <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.kube/config</span>
-    <span class="hljs-attr">commands:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-string">kubectl</span> <span class="hljs-string">get</span> <span class="hljs-string">nodes</span>
-<span class="hljs-attr">trigger:</span>
-  <span class="hljs-attr">branch:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">master</span>
-  <span class="hljs-attr">event:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-string">push</span>
-<span class="hljs-attr">volumes:</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">maven-cache</span>
-    <span class="hljs-attr">host:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/cache/.m2</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">kube-config</span>
-    <span class="hljs-attr">host:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/root/.kube/config</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-cache</span>
-    <span class="hljs-attr">host:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker</span>
-  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">docker-sock</span>
-    <span class="hljs-attr">host:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/var/run/docker.sock</span></code></pre></div>
+<span class="hljs-keyword">from</span> aliyunsdkcore.client <span class="hljs-keyword">import</span> AcsClient
+<span class="hljs-keyword">from</span> aliyunsdkcore.acs_exception.exceptions <span class="hljs-keyword">import</span> ClientException
+<span class="hljs-keyword">from</span> aliyunsdkcore.acs_exception.exceptions <span class="hljs-keyword">import</span> ServerException
+<span class="hljs-keyword">from</span> aliyunsdkr_kvstore.request.v20150101.DescribeHistoryMonitorValuesRequest <span class="hljs-keyword">import</span> DescribeHistoryMonitorValuesRequest
+
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_metric</span><span class="hljs-params">(metric)</span>:</span>
+    client = AcsClient(<span class="hljs-string">'&lt;accessKeyId&gt;'</span>, <span class="hljs-string">'&lt;accessSecret&gt;'</span>, <span class="hljs-string">'cn-beijing'</span>)
+
+    request = DescribeHistoryMonitorValuesRequest()
+    request.set_accept_format(<span class="hljs-string">'json'</span>)
+
+    <span class="hljs-comment"># Alyun utc格式</span>
+    utc_now = datetime.datetime.utcnow()
+    utc_minutes_later = utc_now + datetime.timedelta(minutes=<span class="hljs-number">1</span>)
+    aliyun_utc_format = <span class="hljs-string">'%Y-%m-%dT%H:%M:00Z'</span>
+    start_time = utc_now.strftime(aliyun_utc_format)
+    end_time = utc_minutes_later.strftime(aliyun_utc_format)
+
+    request.set_StartTime(start_time)
+    request.set_EndTime(end_time)
+    request.set_IntervalForHistory(<span class="hljs-string">'01m'</span>)
+    request.set_InstanceId(<span class="hljs-string">'r-2zef7cf6dadbd110'</span>)
+    request.set_MonitorKeys(metric)
+
+    response = client.do_action_with_exception(request)
+
+    resp_json = json.loads(response.decode())
+    <span class="hljs-comment"># print(resp_json)</span>
+    monitor_history = resp_json.get(<span class="hljs-string">'MonitorHistory'</span>)
+    print(json.loads(monitor_history).get(start_time).get(metric)) <span class="hljs-comment"># start_time</span>
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+    get_metric(<span class="hljs-string">'Keys'</span>)  <span class="hljs-comment"># Key总数量，即实例存储的一级Key总数。Counts</span>
+    get_metric(<span class="hljs-string">'CpuUsage'</span>)  <span class="hljs-comment"># CPU使用率。%</span>
+    get_metric(<span class="hljs-string">'InFlow'</span>)  <span class="hljs-comment"># 入流量速率。KBps</span>
+    get_metric(<span class="hljs-string">'OutFlow'</span>)  <span class="hljs-comment"># 出流量速率。KBps</span>
+    get_metric(<span class="hljs-string">'UsedMemory'</span>)  <span class="hljs-comment"># 数据占用的内存。Bytes</span>
+    get_metric(<span class="hljs-string">'memoryUsage'</span>)  <span class="hljs-comment"># 内存使用率。%</span></code></pre></div>
+
+<h3 id="引用参考"><a href="#引用参考" class="headerlink" title="引用参考"></a>引用参考</h3><ul>
+<li><a href="https://api.aliyun.com/#/?product=R-kvstore" target="_blank" rel="noopener">https://api.aliyun.com/#/?product=R-kvstore</a></li>
+<li><a href="https://help.aliyun.com/document_detail/189831.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/189831.html</a></li>
+</ul>
+
             </div>
             <hr>
             <div>
@@ -294,7 +282,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Kubernetes/">Kubernetes</a>
+                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
                     
                   </div>
                 
@@ -302,17 +290,13 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Kubernetes/">Kubernetes</a>
+                      <a class="hover-with-bg" href="/tags/Aliyun/">Aliyun</a>
                     
-                      <a class="hover-with-bg" href="/tags/CICD/">CICD</a>
+                      <a class="hover-with-bg" href="/tags/Redis/">Redis</a>
                     
-                      <a class="hover-with-bg" href="/tags/Jenkins/">Jenkins</a>
+                      <a class="hover-with-bg" href="/tags/API/">API</a>
                     
-                      <a class="hover-with-bg" href="/tags/Pipeline/">Pipeline</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Drone/">Drone</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Harbor/">Harbor</a>
+                      <a class="hover-with-bg" href="/tags/SDK/">SDK</a>
                     
                   </div>
                 
@@ -325,9 +309,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/24/aliyun-api-sdk-monitor/">
+                      <a href="/2020/07/22/k8s-springcloud-fly/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">阿里云API监控</span>
+                        <span class="hidden-mobile">Kubernetes SpringCloud微服务容器云之路</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -335,8 +319,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">
-                        <span class="hidden-mobile">Kubernetes CICD工具Jenkins Pipeline</span>
+                      <a href="/2020/06/24/k8s-cicd-drone/">
+                        <span class="hidden-mobile">Kubernetes CICD工具Drone</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -540,7 +524,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Kubernetes CICD工具Drone&nbsp;",
+        "阿里云API监控&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
