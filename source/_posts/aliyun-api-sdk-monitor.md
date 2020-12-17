@@ -63,3 +63,4 @@ if __name__ == "__main__":
 ### 引用参考
 - https://api.aliyun.com/#/?product=R-kvstore
 - https://help.aliyun.com/document_detail/189831.html
+- https://github.com/aliyun/aliyun-openapi-python-sdk
