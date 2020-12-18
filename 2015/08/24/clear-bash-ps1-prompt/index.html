@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      165 字
+      214 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      3
        分钟
     </span>
   
@@ -232,7 +232,7 @@
 <p>本着对生产环境的敬畏心，你也应该使终端提示符更清晰。</p>
 <a id="more"></a>
 
-<div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://ezprompt.net/</span>
+<h3 id="终端提示符"><a href="#终端提示符" class="headerlink" title="终端提示符"></a>终端提示符</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://ezprompt.net/</span>
 vim /etc/profile.d/ps1.sh
 
 PS1=<span class="hljs-string">"[\u@\[\e[31m\][生产]\[\e[m\]\h \w]\\$ "</span>
@@ -243,8 +243,18 @@ PS1=<span class="hljs-string">"[\u@\[\e[35m\][开发]\[\e[m\]\h \w]\\$ "</span>
 
 <span class="hljs-built_in">source</span> /etc/profile.d/ps1.sh</code></pre></div>
 
+<h3 id="登陆提示信息"><a href="#登陆提示信息" class="headerlink" title="登陆提示信息"></a>登陆提示信息</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://www.asciiart.eu/</span>
+vim /etc/motd
+
+  _   _   _   _   _   _   _  
+ / \ / \ / \ / \ / \ / \ / \ 
+( W | e | l | c | o | m | e )
+ \_/ \_/ \_/ \_/ \_/ \_/ \_/</code></pre></div>
+
 <h3 id="引用参考"><a href="#引用参考" class="headerlink" title="引用参考"></a>引用参考</h3><ul>
 <li><a href="https://ezprompt.net/" target="_blank" rel="noopener">https://ezprompt.net/</a></li>
+<li><a href="https://www.asciiart.eu/" target="_blank" rel="noopener">https://www.asciiart.eu/</a></li>
+<li><a href="http://www.network-science.de/ascii/" target="_blank" rel="noopener">http://www.network-science.de/ascii/</a></li>
 </ul>
 
             </div>
@@ -268,6 +278,8 @@ PS1=<span class="hljs-string">"[\u@\[\e[35m\][开发]\[\e[m\]\h \w]\\$ "</span>
                       <a class="hover-with-bg" href="/tags/Shell/">Shell</a>
                     
                       <a class="hover-with-bg" href="/tags/Bash/">Bash</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Motd/">Motd</a>
                     
                   </div>
                 
