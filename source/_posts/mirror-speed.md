@@ -42,6 +42,9 @@ trusted-host=mirrors.aliyun.com
 ## Go 1.13 及以上（推荐）
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
+# https://goproxy.io/zh/
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.io,direct
 # go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct/
 ```
 
@@ -56,4 +59,11 @@ npm config list [--json]
 npm config edit
 npm set <key> <value>
 npm get [<key>]
+
+
+### yarn
+npm install yarn -g
+yarn config set registry https://registry.npm.taobao.org/
+yarn config get registry
+yarn install
 ```
