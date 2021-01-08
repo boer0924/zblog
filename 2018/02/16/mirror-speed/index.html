@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      183 字
+      220 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      4
        分钟
     </span>
   
@@ -248,6 +248,9 @@ trusted-host=mirrors.aliyun.com</code></pre></div>
 <h3 id="Go-proxy"><a href="#Go-proxy" class="headerlink" title="Go proxy"></a>Go proxy</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## Go 1.13 及以上（推荐）</span>
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
+<span class="hljs-comment"># https://goproxy.io/zh/</span>
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.io,direct
 <span class="hljs-comment"># go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct/</span></code></pre></div>
 
 <h3 id="NodeJS-npm源"><a href="#NodeJS-npm源" class="headerlink" title="NodeJS npm源"></a>NodeJS npm源</h3><div class="hljs"><pre><code class="hljs bash">npm config <span class="hljs-built_in">set</span> registry https://registry.npm.taobao.org
@@ -258,7 +261,14 @@ npm config delete &lt;key&gt;
 npm config list [--json]
 npm config edit
 npm <span class="hljs-built_in">set</span> &lt;key&gt; &lt;value&gt;
-npm get [&lt;key&gt;]</code></pre></div>
+npm get [&lt;key&gt;]
+
+
+<span class="hljs-comment">### yarn</span>
+npm install yarn -g
+yarn config <span class="hljs-built_in">set</span> registry https://registry.npm.taobao.org/
+yarn config get registry
+yarn install</code></pre></div>
             </div>
             <hr>
             <div>
