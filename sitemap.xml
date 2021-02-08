@@ -2,48 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2016/09/24/windows-terminal-msys2/</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/googleae03e72bc0dc0b3b.html</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/about/index.html</loc>
-    
-    <lastmod>2021-02-08</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
     
     <lastmod>2021-02-08</lastmod>
@@ -241,6 +199,48 @@
   
   <url>
     <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2016/09/24/windows-terminal-msys2/</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/googleae03e72bc0dc0b3b.html</loc>
+    
+    <lastmod>2021-02-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/about/index.html</loc>
     
     <lastmod>2021-02-08</lastmod>
     

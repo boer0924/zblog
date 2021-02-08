@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      313 字
+      339 字
     </span>
   
 
@@ -236,7 +236,11 @@ ctrl + x -&gt; y/n
 pacman -Sy
 <span class="hljs-comment"># 安装必备软件包</span>
 pacman -S vim
-pacman -S gcc</code></pre></div>
+pacman -S gcc
+<span class="hljs-comment"># 变更Home目录</span>
+vim /etc/nsswitch.conf
+<span class="hljs-comment"># https://stackoverflow.com/questions/33942924/how-to-change-home-directory-and-start-directory-on-msys2</span>
+db_home: windows</code></pre></div>
 
 <h3 id="3、安装oh-my-zsh"><a href="#3、安装oh-my-zsh" class="headerlink" title="3、安装oh-my-zsh"></a>3、安装oh-my-zsh</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://ohmyz.sh/#install</span>
 <span class="hljs-comment"># 注意科学上网</span>
