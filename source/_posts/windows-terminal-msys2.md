@@ -71,11 +71,10 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 }
 ```
 > 参数解析
-D:/msys64/msys2_shell.cmd -full-path -defterm -here -no-start -mingw64 -shell zsh
+`D:/msys64/msys2_shell.cmd -full-path -defterm -here -no-start -mingw64 -shell zsh`
 - -full-path: Windows环境变量
 - -shell: 指定启动shell
 > 具体可以参考msys2安装目录下msys2_shell.cmd、msys2.ini两个文件
-```
 
 ### 5、VSCode集成
 ```json
