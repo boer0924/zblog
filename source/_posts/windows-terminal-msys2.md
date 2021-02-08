@@ -29,6 +29,10 @@ pacman -Sy
 # 安装必备软件包
 pacman -S vim
 pacman -S gcc
+# 变更Home目录
+vim /etc/nsswitch.conf
+# https://stackoverflow.com/questions/33942924/how-to-change-home-directory-and-start-directory-on-msys2
+db_home: windows
 ```
 
 ### 3、安装oh-my-zsh
