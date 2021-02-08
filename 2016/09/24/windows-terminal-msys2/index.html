@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>RPM包制作工具FPM介绍 · ~·boer·~ 乌托邦</title>
+  <title>我的Windows终端 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -152,7 +152,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -167,8 +167,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2016-07-07 16:16" pubdate>
-        2016年7月7日 下午
+      <time datetime="2016-09-24 16:56" pubdate>
+        2016年9月24日 下午
       </time>
     </span>
   
@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      610 字
+      313 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      5
        分钟
     </span>
   
@@ -219,81 +219,82 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">RPM包制作工具FPM介绍</h1>
+            <h1 style="display: none">我的Windows终端</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>本文记录rpm包制作工具<a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">fpm</a>的使用笔记，分别记录了制作<code>filebeat</code>, <code>osquery</code>, <code>fastdfs</code>包的过程。</p>
+              <p>Terminal - 工欲善其事，必先利其器</p>
 <a id="more"></a>
 
-<h3 id="filebeat7"><a href="#filebeat7" class="headerlink" title="filebeat7"></a>filebeat7</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># cd tmp_install;rpm2cpio ../filebeat-5.5.2-x86_64.rpm | cpio -div  # 解压rpm包</span>
-<span class="hljs-comment"># -p NAME-VERSION-ARCH.rpm \</span>
+<h3 id="1、安装Windows-Terminal"><a href="#1、安装Windows-Terminal" class="headerlink" title="1、安装Windows Terminal"></a>1、安装Windows Terminal</h3><p><a href="https://aka.ms/terminal" target="_blank" rel="noopener">https://aka.ms/terminal</a></p>
+<h3 id="2、安装配置MSYS2"><a href="#2、安装配置MSYS2" class="headerlink" title="2、安装配置MSYS2"></a>2、安装配置MSYS2</h3><div class="hljs"><pre><code class="hljs bash">MSYS2是什么
+https://www.msys2.org/wiki/How-does-MSYS2-differ-from-Cygwin/
+<span class="hljs-comment"># pacman 源配置</span>
+https://mirrors.tuna.tsinghua.edu.cn/<span class="hljs-built_in">help</span>/msys2/
+nano /etc/pacman.d/mirrorlist.mingw64
+ctrl + x -&gt; y/n
+<span class="hljs-comment"># 刷新软件包数据</span>
+pacman -Sy
+<span class="hljs-comment"># 安装必备软件包</span>
+pacman -S vim
+pacman -S gcc</code></pre></div>
 
-hostname Boer-RPM
+<h3 id="3、安装oh-my-zsh"><a href="#3、安装oh-my-zsh" class="headerlink" title="3、安装oh-my-zsh"></a>3、安装oh-my-zsh</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://ohmyz.sh/#install</span>
+<span class="hljs-comment"># 注意科学上网</span>
+sh -c <span class="hljs-string">"<span class="hljs-variable">$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)</span>"</span></code></pre></div>
 
-fpm -s dir -t rpm -n boer-filebeat -v 7.1.1 \
---verbose --iteration 1 \
--m boer@boer.xyz \
---vendor <span class="hljs-string">"Boer RPM"</span> \
---after-install after_install.sh \
--C tmp_install .
+<h3 id="4、Windows-Terminal集成MSYS2"><a href="#4、Windows-Terminal集成MSYS2" class="headerlink" title="4、Windows Terminal集成MSYS2"></a>4、Windows Terminal集成MSYS2</h3><div class="hljs"><pre><code class="hljs json">&#123;
+    <span class="hljs-attr">"defaultProfile"</span>: <span class="hljs-string">"&#123;2c4de342-38b7-51cf-b940-2309a0970924&#125;"</span>,
+    <span class="hljs-attr">"copyOnSelect"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"profiles"</span>:
+    &#123;
+        <span class="hljs-attr">"defaults"</span>:
+        &#123;
+            <span class="hljs-comment">// Put settings here that you want to apply to all profiles.</span>
+        &#125;,
+        <span class="hljs-attr">"list"</span>:
+        [
+            &#123;
+                <span class="hljs-attr">"guid"</span>: <span class="hljs-string">"&#123;2c4de342-38b7-51cf-b940-2309a0970924&#125;"</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"MSYS2"</span>,
+                <span class="hljs-attr">"padding"</span>: <span class="hljs-string">"0, 0, 0, 0"</span>,
+                <span class="hljs-attr">"snapOnInput"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"closeOnExit"</span>: <span class="hljs-string">"graceful"</span>,
+                <span class="hljs-attr">"cursorShape"</span>: <span class="hljs-string">"filledBox"</span>,
+                <span class="hljs-attr">"commandline"</span>: <span class="hljs-string">"D:/msys64/msys2_shell.cmd -full-path -defterm -here -no-start -mingw64 -shell zsh"</span>,
+                <span class="hljs-attr">"icon"</span>: <span class="hljs-string">"D:/msys64/msys2.ico"</span>,
+                <span class="hljs-attr">"hidden"</span>: <span class="hljs-literal">false</span>
+            &#125;
+        ]
+    &#125;
+&#125;</code></pre></div>
+<blockquote>
+<p>参数解析<br>D:/msys64/msys2_shell.cmd -full-path -defterm -here -no-start -mingw64 -shell zsh</p>
+</blockquote>
+<ul>
+<li>-full-path: Windows环境变量</li>
+<li>-shell: 指定启动shell<blockquote>
+<p>具体可以参考msys2安装目录下msys2_shell.cmd、msys2.ini两个文件</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs clean">
+### <span class="hljs-number">5</span>、VSCode集成
+```json
+&#123;
+    <span class="hljs-string">"terminal.integrated.shell.windows"</span>: <span class="hljs-string">"D:/msys64/usr/bin/zsh.exe"</span>,
+    <span class="hljs-string">"terminal.integrated.env.windows"</span>: &#123;
+        <span class="hljs-string">"MSYSTEM"</span>: <span class="hljs-string">"MINGW64"</span>,
+        <span class="hljs-string">"CHERE_INVOKING"</span>: <span class="hljs-string">"1"</span>,
+        <span class="hljs-string">"MSYS2_PATH_TYPE"</span>: <span class="hljs-string">"inherit"</span>
+    &#125;,
+    <span class="hljs-string">"terminal.integrated.shellArgs.windows"</span>: [
+        <span class="hljs-string">"-l"</span>,
+        <span class="hljs-string">"-i"</span>
+    ],
+&#125;
+# python虚拟环境在zsh环境下不能自动激活 @TODO</code></pre></div>
 
-hostnamectl <span class="hljs-built_in">set</span>-hostname VM_140_39
-
-after_install.sh
-IP=`ip -4 route get 8.8.8.8 | awk <span class="hljs-string">'&#123;print $7&#125;'</span> | tr -d <span class="hljs-string">'\n'</span>`
-<span class="hljs-comment"># IP=$(grep IPADDR /etc/sysconfig/network-scripts/ifcfg-bond?|cut -d '=' -f 2)</span>
-sed -i <span class="hljs-string">"s/ipv4address/<span class="hljs-variable">$IP</span>/"</span> /etc/filebeat7/filebeat.yml
-ver=`cat /etc/redhat-release`
-<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$ver</span> =~ <span class="hljs-string">"release 7"</span> ]];<span class="hljs-keyword">then</span>
-  /usr/bin/systemctl daemon-reload
-  /usr/bin/systemctl start filebeat7
-  /usr/bin/systemctl <span class="hljs-built_in">enable</span> filebeat7
-<span class="hljs-keyword">else</span>
-  /sbin/chkconfig filebeat7 on
-  service filebeat7 start
-<span class="hljs-keyword">fi</span></code></pre></div>
-
-<h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><div class="hljs"><pre><code class="hljs bash">fpm -s dir -t rpm -n osquery -v 3.3.2 -m boer@boer.xyz \
--p NAME-VERSION-ARCH.rpm \
---after-install after_install.sh \
---after-remove after_remove.sh \
--C tmp_install \
-.
-
-after_install.sh
-<span class="hljs-built_in">echo</span> <span class="hljs-string">'export PATH=$PATH:/opt/osquery/usr/bin #deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5'</span> &gt;&gt; /etc/profile
-<span class="hljs-built_in">source</span> /etc/profile
-
-after_remove.sh
-rm -rf /opt/osquery
-sed -i <span class="hljs-string">'/^export.*\#deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5/d'</span> /etc/profile
-<span class="hljs-built_in">source</span> /etc/profile</code></pre></div>
-
-<h3 id="fastdfs"><a href="#fastdfs" class="headerlink" title="fastdfs"></a>fastdfs</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># libfastcommon</span>
-./make.sh
-./make.sh install DESTDIR=../tmp_install
-fpm -s dir -t rpm -n libfastcommon -v 1.0.7 -C tmp_install usr
-<span class="hljs-comment"># FastDFS</span>
-vim make.sh
-DESTDIR=/srv/boer/fpm_rpm/fastdfs/FastDFS/tmp_install
-./make.sh
-./make.sh install
-fpm -s dir -t rpm -n fastdfs -v 5.0.8 -d <span class="hljs-string">'libfastcommon'</span> -C tmp_install .
-<span class="hljs-comment"># nginx</span>
-./configure --prefix=/opt/nginx --sbin-path=/opt/nginx/sbin/nginx --conf-path=/opt/nginx/conf/nginx.conf --error-log-path=/home/finance/Logs/nginx/error.log --http-log-path=/home/finance/Logs/nginx/access.log --pid-path=/opt/nginx/var/nginx.pid --lock-path=/opt/nginx/var/nginx.lock --http-client-body-temp-path=/dev/shm/nginx_temp/client_body --http-proxy-temp-path=/dev/shm/nginx_temp/proxy --http-fastcgi-temp-path=/dev/shm/nginx_temp/fastcgi --user=finance --group=finance --with-cpu-opt=pentium4F --without-select_module --without-poll_module --with-http_realip_module --with-http_sub_module --with-http_gzip_static_module --with-http_stub_status_module --without-http_ssi_module --without-http_userid_module --without-http_ssi_module --without-http_userid_module --without-http_geo_module --without-http_map_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --with-http_ssl_module --add-module=../fastdfs-nginx-module/src
-make
-make install DESTDIR=/srv/boer/fpm_rpm/fastdfs/nginx-1.12.0/tmp_install
-fpm -s dir -t rpm -n nginx-with-fastdfs -v 1.12.0 -C tmp_install .</code></pre></div>
-
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><h5 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h5><div class="hljs"><pre><code class="hljs bash">./configure --prefix=***
-make install --prefix=***
-make install DESTDIR=***</code></pre></div>
-<h5 id="A"><a href="#A" class="headerlink" title="A"></a>A</h5><p>Number 2 is simply an error as far as I know.</p>
-<p>Number 1 determines where the package will go when it is installed, and where it will look for its associated files when it is run. It’s what you should use if you’re just compiling something for use on a single host.</p>
-<p>Number 3 is for installing to a temporary directory which is not where the package will be run from. For example this is used when building deb packages. The person building the package doesn’t actually install everything into its final place on his own system. He may have a different version installed already and not want to disturb it, or he may not even be root. So he uses configure –prefix=/usr so the program will expect to be installed in /usr when it runs, then make install DESTDIR=debian/tmp to actually create the directory structure.</p>
-<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
-<li><a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">https://github.com/jordansissel/fpm</a></li>
+</li>
 </ul>
+<h3 id="6、附录-参考"><a href="#6、附录-参考" class="headerlink" title="6、附录|参考"></a>6、附录|参考</h3><p><a href="https://stackoverflow.com/questions/45404631/msys2-not-finding-windows-programs-despite-msys2-path-type-inherit" target="_blank" rel="noopener">https://stackoverflow.com/questions/45404631/msys2-not-finding-windows-programs-despite-msys2-path-type-inherit</a></p>
 
             </div>
             <hr>
@@ -311,9 +312,11 @@ make install DESTDIR=***</code></pre></div>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/RPM/">RPM</a>
+                      <a class="hover-with-bg" href="/tags/Terminal/">Terminal</a>
                     
-                      <a class="hover-with-bg" href="/tags/FPM/">FPM</a>
+                      <a class="hover-with-bg" href="/tags/MSYS2/">MSYS2</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Oh-My-ZSH/">Oh-My-ZSH</a>
                     
                   </div>
                 
@@ -326,9 +329,9 @@ make install DESTDIR=***</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2016/09/24/windows-terminal-msys2/">
+                      <a href="/2017/08/16/golang-slice-reverse/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">我的Windows终端</span>
+                        <span class="hidden-mobile">Golang - 切片逆序遍历的几种方法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -336,8 +339,8 @@ make install DESTDIR=***</code></pre></div>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2015/08/24/clear-bash-ps1-prompt/">
-                        <span class="hidden-mobile">使终端提示符更清晰</span>
+                      <a href="/2016/07/07/fpm-rpm-build/">
+                        <span class="hidden-mobile">RPM包制作工具FPM介绍</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -541,7 +544,7 @@ make install DESTDIR=***</code></pre></div>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "RPM包制作工具FPM介绍&nbsp;",
+        "我的Windows终端&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
