@@ -382,6 +382,7 @@ xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12</co
 <span class="hljs-attr">kibanaConfig:</span> <span class="hljs-comment"># exec进pod发现默认配置文件错误</span>
   <span class="hljs-attr">kibana.yml:</span> <span class="hljs-string">|</span>
     <span class="hljs-attr">elasticsearch:</span>
+      <span class="hljs-attr">i18n.locale:</span> <span class="hljs-string">"zh-CN"</span>
       <span class="hljs-attr">hosts:</span> <span class="hljs-string">[</span> <span class="hljs-string">"http://elasticsearch-logging:9200"</span> <span class="hljs-string">]</span>
       <span class="hljs-attr">username:</span> <span class="hljs-string">"elastic"</span>
       <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span>
