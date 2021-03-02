@@ -68,7 +68,9 @@ profiler.sampling.rate=<your-want> # agent采样频率
 
 ### 删除AgentID/APP
 ```bash
-https://naver.github.io/pinpoint/faq.html#how-do-i-delete-application-name-andor-agent-id-from-hbase
+https://pinpoint-apm.github.io/pinpoint/faq.html#how-do-i-delete-application-name-andor-agent-id-from-hbase
+
+http://pinpoint.boer.xyz/admin/removeAgentId.pinpoint?applicationName=OrderService&agentId=cdc15ef982f5a09f&password=admin
 ```
 
 ### 修改HBase数据保存时间
