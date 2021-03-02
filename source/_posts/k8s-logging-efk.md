@@ -189,6 +189,7 @@ healthCheckPath: "/app/kibana"
 kibanaConfig: # exec进pod发现默认配置文件错误
   kibana.yml: |
     elasticsearch:
+      i18n.locale: "zh-CN"
       hosts: [ "http://elasticsearch-logging:9200" ]
       username: "elastic"
       password: "123456"
