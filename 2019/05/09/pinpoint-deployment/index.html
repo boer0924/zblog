@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      355 字
+      371 字
     </span>
   
 
@@ -280,7 +280,9 @@ profiler.sampling.rate=&lt;your-want&gt; <span class="hljs-comment"># agent采�
 <li>服务名 &amp; AgentID长度不能超过24 <code>https://github.com/naver/pinpoint/issues/3504</code></li>
 <li>AgentID全局唯一</li>
 </ul>
-<h3 id="删除AgentID-APP"><a href="#删除AgentID-APP" class="headerlink" title="删除AgentID/APP"></a>删除AgentID/APP</h3><div class="hljs"><pre><code class="hljs bash">https://naver.github.io/pinpoint/faq.html<span class="hljs-comment">#how-do-i-delete-application-name-andor-agent-id-from-hbase</span></code></pre></div>
+<h3 id="删除AgentID-APP"><a href="#删除AgentID-APP" class="headerlink" title="删除AgentID/APP"></a>删除AgentID/APP</h3><div class="hljs"><pre><code class="hljs bash">https://pinpoint-apm.github.io/pinpoint/faq.html<span class="hljs-comment">#how-do-i-delete-application-name-andor-agent-id-from-hbase</span>
+
+http://pinpoint.boer.xyz/admin/removeAgentId.pinpoint?applicationName=OrderService&amp;agentId=cdc15ef982f5a09f&amp;password=admin</code></pre></div>
 
 <h3 id="修改HBase数据保存时间"><a href="#修改HBase数据保存时间" class="headerlink" title="修改HBase数据保存时间"></a>修改HBase数据保存时间</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># Shortening the TTL values, especially for `AgentStatV2` and `TraceV2`</span>
 describe <span class="hljs-string">'TraceV2'</span>
