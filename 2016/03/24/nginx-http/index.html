@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>RPM包制作工具FPM介绍 · ~·boer·~ 乌托邦</title>
+  <title>Nginx配置与HTTP缓存 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -152,7 +152,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -167,8 +167,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2016-07-07 16:16" pubdate>
-        2016年7月7日 下午
+      <time datetime="2016-03-24 16:30" pubdate>
+        2016年3月24日 下午
       </time>
     </span>
   
@@ -179,7 +179,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      610 字
+      190 字
     </span>
   
 
@@ -189,7 +189,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      3
        分钟
     </span>
   
@@ -219,80 +219,53 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">RPM包制作工具FPM介绍</h1>
+            <h1 style="display: none">Nginx配置与HTTP缓存</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>本文记录rpm包制作工具<a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">fpm</a>的使用笔记，分别记录了制作<code>filebeat</code>, <code>osquery</code>, <code>fastdfs</code>包的过程。</p>
+              <p>Nginx $uri $request_uri $request_filename 与 location(root/alias)</p>
 <a id="more"></a>
 
-<h3 id="filebeat7"><a href="#filebeat7" class="headerlink" title="filebeat7"></a>filebeat7</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># cd tmp_install;rpm2cpio ../filebeat-5.5.2-x86_64.rpm | cpio -div  # 解压rpm包</span>
-<span class="hljs-comment"># -p NAME-VERSION-ARCH.rpm \</span>
+<div class="hljs"><pre><code class="hljs jboss-cli">浏览器请求 <span class="hljs-string">/scanQRCodePayPark/</span>
+$uri $request_uri $request_filename
+<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/</span> <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span>
 
-hostname Boer-RPM
+浏览器请求 <span class="hljs-string">/scanQRCodePayPark/index.html</span>
+$uri $request_uri $request_filename
+<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span>
 
-fpm -s dir -t rpm -n boer-filebeat -v 7.1.1 \
---verbose --iteration 1 \
--m boer@boer.xyz \
---vendor <span class="hljs-string">"Boer RPM"</span> \
---after-install after_install.sh \
--C tmp_install .
+浏览器请求 <span class="hljs-string">/scanQRCodePayPark/</span>?qs=123<span class="hljs-comment">#/ # querystring 与 锚点Anchor</span>
+$uri $request_uri $request_filename
+<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/</span>?qs=123 <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span></code></pre></div>
 
-hostnamectl <span class="hljs-built_in">set</span>-hostname VM_140_39
+<div class="hljs"><pre><code class="hljs conf">http &#123;
+  server &#123;
+    listen       80;
+    server_name  www.boer.xyz;
+    root &#x2F;home&#x2F;www&#x2F;html;
+    location &#x2F; &#123;
+      ssi  on;
+      ssi_silent_errors on;
+      index  index.html index.htm;
+      if ($uri ~ .*\.(html|htm)$) &#123;
+        add_header Cache-Control no-cache;
+        add_header X-Boer-Define love-boer;
+      &#125;
+    &#125;
+    location ~ .*\.(html|htm)$ &#123;
+      add_header Cache-Control no-cache;
+      add_header X-Boer-Define love-boer;
+    &#125;
+    error_page   500 502 503 504  &#x2F;50x.html;
+    location &#x3D; &#x2F;50x.html &#123;
+      root   html;
+    &#125;
+  &#125;
+  include &#x2F;etc&#x2F;nginx&#x2F;conf.d&#x2F;*.conf;
+&#125;</code></pre></div>
 
-after_install.sh
-IP=`ip -4 route get 8.8.8.8 | awk <span class="hljs-string">'&#123;print $7&#125;'</span> | tr -d <span class="hljs-string">'\n'</span>`
-<span class="hljs-comment"># IP=$(grep IPADDR /etc/sysconfig/network-scripts/ifcfg-bond?|cut -d '=' -f 2)</span>
-sed -i <span class="hljs-string">"s/ipv4address/<span class="hljs-variable">$IP</span>/"</span> /etc/filebeat7/filebeat.yml
-ver=`cat /etc/redhat-release`
-<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$ver</span> =~ <span class="hljs-string">"release 7"</span> ]];<span class="hljs-keyword">then</span>
-  /usr/bin/systemctl daemon-reload
-  /usr/bin/systemctl start filebeat7
-  /usr/bin/systemctl <span class="hljs-built_in">enable</span> filebeat7
-<span class="hljs-keyword">else</span>
-  /sbin/chkconfig filebeat7 on
-  service filebeat7 start
-<span class="hljs-keyword">fi</span></code></pre></div>
-
-<h3 id="osquery"><a href="#osquery" class="headerlink" title="osquery"></a>osquery</h3><div class="hljs"><pre><code class="hljs bash">fpm -s dir -t rpm -n osquery -v 3.3.2 -m boer@boer.xyz \
--p NAME-VERSION-ARCH.rpm \
---after-install after_install.sh \
---after-remove after_remove.sh \
--C tmp_install \
-.
-
-after_install.sh
-<span class="hljs-built_in">echo</span> <span class="hljs-string">'export PATH=$PATH:/opt/osquery/usr/bin #deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5'</span> &gt;&gt; /etc/profile
-<span class="hljs-built_in">source</span> /etc/profile
-
-after_remove.sh
-rm -rf /opt/osquery
-sed -i <span class="hljs-string">'/^export.*\#deltag:uuid:c99326b5-2b9d-401f-87fb-b3b7cedcf3d5/d'</span> /etc/profile
-<span class="hljs-built_in">source</span> /etc/profile</code></pre></div>
-
-<h3 id="fastdfs"><a href="#fastdfs" class="headerlink" title="fastdfs"></a>fastdfs</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># libfastcommon</span>
-./make.sh
-./make.sh install DESTDIR=../tmp_install
-fpm -s dir -t rpm -n libfastcommon -v 1.0.7 -C tmp_install usr
-<span class="hljs-comment"># FastDFS</span>
-vim make.sh
-DESTDIR=/srv/boer/fpm_rpm/fastdfs/FastDFS/tmp_install
-./make.sh
-./make.sh install
-fpm -s dir -t rpm -n fastdfs -v 5.0.8 -d <span class="hljs-string">'libfastcommon'</span> -C tmp_install .
-<span class="hljs-comment"># nginx</span>
-./configure --prefix=/opt/nginx --sbin-path=/opt/nginx/sbin/nginx --conf-path=/opt/nginx/conf/nginx.conf --error-log-path=/home/finance/Logs/nginx/error.log --http-log-path=/home/finance/Logs/nginx/access.log --pid-path=/opt/nginx/var/nginx.pid --lock-path=/opt/nginx/var/nginx.lock --http-client-body-temp-path=/dev/shm/nginx_temp/client_body --http-proxy-temp-path=/dev/shm/nginx_temp/proxy --http-fastcgi-temp-path=/dev/shm/nginx_temp/fastcgi --user=finance --group=finance --with-cpu-opt=pentium4F --without-select_module --without-poll_module --with-http_realip_module --with-http_sub_module --with-http_gzip_static_module --with-http_stub_status_module --without-http_ssi_module --without-http_userid_module --without-http_ssi_module --without-http_userid_module --without-http_geo_module --without-http_map_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --with-http_ssl_module --add-module=../fastdfs-nginx-module/src
-make
-make install DESTDIR=/srv/boer/fpm_rpm/fastdfs/nginx-1.12.0/tmp_install
-fpm -s dir -t rpm -n nginx-with-fastdfs -v 1.12.0 -C tmp_install .</code></pre></div>
-
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><h5 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h5><div class="hljs"><pre><code class="hljs bash">./configure --prefix=***
-make install --prefix=***
-make install DESTDIR=***</code></pre></div>
-<h5 id="A"><a href="#A" class="headerlink" title="A"></a>A</h5><p>Number 2 is simply an error as far as I know.</p>
-<p>Number 1 determines where the package will go when it is installed, and where it will look for its associated files when it is run. It’s what you should use if you’re just compiling something for use on a single host.</p>
-<p>Number 3 is for installing to a temporary directory which is not where the package will be run from. For example this is used when building deb packages. The person building the package doesn’t actually install everything into its final place on his own system. He may have a different version installed already and not want to disturb it, or he may not even be root. So he uses configure –prefix=/usr so the program will expect to be installed in /usr when it runs, then make install DESTDIR=debian/tmp to actually create the directory structure.</p>
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
-<li><a href="https://github.com/jordansissel/fpm" target="_blank" rel="noopener">https://github.com/jordansissel/fpm</a></li>
+<li><a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_core_module.html#location</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching</a></li>
 </ul>
 
             </div>
@@ -311,9 +284,7 @@ make install DESTDIR=***</code></pre></div>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/RPM/">RPM</a>
-                    
-                      <a class="hover-with-bg" href="/tags/FPM/">FPM</a>
+                      <a class="hover-with-bg" href="/tags/Nginx/">Nginx</a>
                     
                   </div>
                 
@@ -326,9 +297,9 @@ make install DESTDIR=***</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2016/09/24/windows-terminal-msys2/">
+                      <a href="/2016/07/07/fpm-rpm-build/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">我的Windows终端</span>
+                        <span class="hidden-mobile">RPM包制作工具FPM介绍</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -336,8 +307,8 @@ make install DESTDIR=***</code></pre></div>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2016/03/24/nginx-http/">
-                        <span class="hidden-mobile">Nginx配置与HTTP缓存</span>
+                      <a href="/2015/08/24/clear-bash-ps1-prompt/">
+                        <span class="hidden-mobile">使终端提示符更清晰</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -541,7 +512,7 @@ make install DESTDIR=***</code></pre></div>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "RPM包制作工具FPM介绍&nbsp;",
+        "Nginx配置与HTTP缓存&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,

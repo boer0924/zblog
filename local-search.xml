@@ -869,6 +869,31 @@
   
   
   <entry>
+    <title>Nginx配置与HTTP缓存</title>
+    <link href="/2016/03/24/nginx-http/"/>
+    <url>/2016/03/24/nginx-http/</url>
+    
+    <content type="html"><![CDATA[<p>Nginx $uri $request_uri $request_filename 与 location(root/alias)</p><a id="more"></a><div class="hljs"><pre><code class="hljs jboss-cli">浏览器请求 <span class="hljs-string">/scanQRCodePayPark/</span>$uri $request_uri $request_filename<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/</span> <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span>浏览器请求 <span class="hljs-string">/scanQRCodePayPark/index.html</span>$uri $request_uri $request_filename<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span>浏览器请求 <span class="hljs-string">/scanQRCodePayPark/</span>?qs=123<span class="hljs-comment">#/ # querystring 与 锚点Anchor</span>$uri $request_uri $request_filename<span class="hljs-string">/scanQRCodePayPark/index.html</span> <span class="hljs-string">/scanQRCodePayPark/</span>?qs=123 <span class="hljs-string">/home/www/html/scanQRCodePayPark/index.html</span></code></pre></div><div class="hljs"><pre><code class="hljs conf">http &#123;  server &#123;    listen       80;    server_name  www.boer.xyz;    root &#x2F;home&#x2F;www&#x2F;html;    location &#x2F; &#123;      ssi  on;      ssi_silent_errors on;      index  index.html index.htm;      if ($uri ~ .*\.(html|htm)$) &#123;        add_header Cache-Control no-cache;        add_header X-Boer-Define love-boer;      &#125;    &#125;    location ~ .*\.(html|htm)$ &#123;      add_header Cache-Control no-cache;      add_header X-Boer-Define love-boer;    &#125;    error_page   500 502 503 504  &#x2F;50x.html;    location &#x3D; &#x2F;50x.html &#123;      root   html;    &#125;  &#125;  include &#x2F;etc&#x2F;nginx&#x2F;conf.d&#x2F;*.conf;&#125;</code></pre></div><h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul><li><a href="http://nginx.org/en/docs/http/ngx_http_core_module.html#location" target="_blank" rel="noopener">http://nginx.org/en/docs/http/ngx_http_core_module.html#location</a></li><li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>使终端提示符更清晰</title>
     <link href="/2015/08/24/clear-bash-ps1-prompt/"/>
     <url>/2015/08/24/clear-bash-ps1-prompt/</url>
