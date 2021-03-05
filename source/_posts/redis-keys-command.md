@@ -59,9 +59,7 @@ categories: DevOps
 至此，虽然原因找到了，还是不能解释 
 > 2、spring-session前缀的keys以前就存在，上线后为什么会持续增多？
 
-最后经周一研发分析，SpringBoot版本从1.5.13版本使用RedisOperationsSessionRepository，升
-级后，在高版本过期，使用的则是RedisIndexedSessionRepository，二者对于配置的参数读取发生了
-改变，。导致session会话保存时间不同，在springboot1.x取默认值1800s，而springboot2.x取配置值86400s，因为高位视频等硬件设备没有cookie不会保存session, 每次硬件设备心跳都会经全局拦截器产生不同session，之前过期时间为1800s，现在为24hour(86400s), 导致keys数量激增，之前在keys少的时候KEYS TempLock_*慢日志不足为患，然而在keys激增后，KEYS命令会每次扫描所有的keys，导致redis在执行KEYS时，应用连接redis connection timeout, 进而使业务响应速度下降。
+最后经周一研发分析，SpringBoot版本从1.5.13版本使用RedisOperationsSessionRepository，升级后，在高版本过期，使用的则是RedisIndexedSessionRepository，二者对于配置的参数读取发生了改变。导致session会话保存时间不同，在springboot1.x取默认值1800s，而springboot2.x取配置值86400s，因为高位视频等硬件设备没有cookie不会保存session, 每次硬件设备心跳都会经全局拦截器产生不同session，之前过期时间为1800s，现在为24hour(86400s), 导致keys数量激增，之前在keys少的时候KEYS TempLock_*慢日志不足为患，然而在keys激增后，KEYS命令会每次扫描所有的keys，导致redis在执行KEYS时，应用连接redis connection timeout, 进而使业务响应速度下降。
 
 ### 六、应急处理措施
 1. 因内存使用量持续增长，已接近内存最大值2G，根据内存增长速度以及故障排查进度，在25日17.00时对Redis服务进行扩容到16G，事实证明扩容的决策是及时的、正确的。
