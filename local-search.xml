@@ -656,6 +656,33 @@
   
   
   <entry>
+    <title>MySQL获取Largest表TopN</title>
+    <link href="/2018/03/08/mysql-record-topN-tables/"/>
+    <url>/2018/03/08/mysql-record-topN-tables/</url>
+    
+    <content type="html"><![CDATA[<p>获取数据库记录数/数据大小/索引大小排名前N的表</p><a id="more"></a><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>TABLE_SCHEMA <span class="hljs-keyword">AS</span> <span class="hljs-string">'数据库'</span>,TABLE_NAME <span class="hljs-keyword">AS</span> <span class="hljs-string">'表名'</span>,TABLE_ROWS <span class="hljs-keyword">AS</span> <span class="hljs-string">'记录数'</span>,TABLE_COMMENT <span class="hljs-keyword">AS</span> <span class="hljs-string">'建表说明'</span>,<span class="hljs-keyword">TRUNCATE</span> ( DATA_LENGTH / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">'数据容量(MB)'</span>,<span class="hljs-keyword">TRUNCATE</span> ( INDEX_LENGTH / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">'索引容量(MB)'</span> <span class="hljs-keyword">FROM</span>information_schema.TABLES <span class="hljs-keyword">WHERE</span>TABLE_SCHEMA = <span class="hljs-string">'meisoodev'</span> <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span>TABLE_ROWS <span class="hljs-keyword">DESC</span> <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">10</span>;</code></pre></div><ul><li><a href="https://dataedo.com/kb/query/mysql/list-10-largest-tables" target="_blank" rel="noopener">https://dataedo.com/kb/query/mysql/list-10-largest-tables</a></li><li><a href="https://developer.aliyun.com/ask/283493" target="_blank" rel="noopener">https://developer.aliyun.com/ask/283493</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MySQL</tag>
+      
+      <tag>information_schema</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>各种镜像源加速</title>
     <link href="/2018/02/16/mirror-speed/"/>
     <url>/2018/02/16/mirror-speed/</url>
