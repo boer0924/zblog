@@ -31,17 +31,19 @@ http {
   server {
     listen       80;
     server_name  www.boer.xyz;
-    root /home/www/html;
     location / {
       ssi  on;
       ssi_silent_errors on;
+      root /home/www/html;
       index  index.html index.htm;
+      try_files $uri $uri/ /index.html;
       if ($uri ~ .*\.(html|htm)$) {
         add_header Cache-Control no-cache;
         add_header X-Boer-Define love-boer;
       }
     }
     location ~ .*\.(html|htm)$ {
+      root /home/www/html;
       add_header Cache-Control no-cache;
       add_header X-Boer-Define love-boer;
     }
