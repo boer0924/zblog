@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      190 字
+      204 字
     </span>
   
 
@@ -242,17 +242,19 @@ $uri $request_uri $request_filename
   server &#123;
     listen       80;
     server_name  www.boer.xyz;
-    root &#x2F;home&#x2F;www&#x2F;html;
     location &#x2F; &#123;
       ssi  on;
       ssi_silent_errors on;
+      root &#x2F;home&#x2F;www&#x2F;html;
       index  index.html index.htm;
+      try_files $uri $uri&#x2F; &#x2F;index.html;
       if ($uri ~ .*\.(html|htm)$) &#123;
         add_header Cache-Control no-cache;
         add_header X-Boer-Define love-boer;
       &#125;
     &#125;
     location ~ .*\.(html|htm)$ &#123;
+      root &#x2F;home&#x2F;www&#x2F;html;
       add_header Cache-Control no-cache;
       add_header X-Boer-Define love-boer;
     &#125;
