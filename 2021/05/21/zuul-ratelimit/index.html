@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>主机初始化的那些事儿 · ~·boer·~ 乌托邦</title>
+  <title>ZUUL网关API接口防刷限流 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -153,7 +153,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -168,8 +168,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-03-24 16:30" pubdate>
-        2018年3月24日 下午
+      <time datetime="2021-05-21 16:30" pubdate>
+        2021年5月21日 下午
       </time>
     </span>
   
@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      273 字
+      234 字
     </span>
   
 
@@ -220,56 +220,73 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">主机初始化的那些事儿</h1>
+            <h1 style="display: none">ZUUL网关API接口防刷限流</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>集群中加入一个主机后，需要做的那些事儿</p>
+              <p>Spring Cloud Zuul RateLimit对Zuul APIGateway进行限流</p>
 <a id="more"></a>
 
-<h3 id="磁盘挂载"><a href="#磁盘挂载" class="headerlink" title="磁盘挂载"></a>磁盘挂载</h3><div class="hljs"><pre><code class="hljs bash">parted /dev/vdb mklabel gpt mkpart 1 xfs 1 100%
-mkfs.xfs /dev/vdb1
-mkdir /new_disk
-<span class="hljs-built_in">echo</span> <span class="hljs-string">"UUID=`blkid /dev/vdb1 | awk -F'"</span><span class="hljs-string">' '</span>&#123;<span class="hljs-built_in">print</span> <span class="hljs-variable">$2</span>&#125;<span class="hljs-string">'` /new_disk xfs defaults 1 1" &gt;&gt; /etc/fstab</span>
-<span class="hljs-string">mount -a</span>
-<span class="hljs-string">df -h</span></code></pre></div>
+<h3 id="1、POM依赖"><a href="#1、POM依赖" class="headerlink" title="1、POM依赖"></a>1、POM依赖</h3><div class="hljs"><pre><code class="hljs xml"># Spring Cloud Zuul RateLimit
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.marcosbarbero.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-zuul-ratelimit<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
 
-<h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 内核参数优化</span>
-vim /etc/sysctl.conf
-net.ipv4.tcp_timestamps = 1
-net.ipv4.tcp_fin_timeout = 10
-net.ipv4.tcp_tw_recycle = 1
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_max_tw_buckets = 8000
-<span class="hljs-comment"># fs.file-max = 102400000</span>
-vm.max_map_count = 262144
-vm.swappiness = 10
-sysctl –p  <span class="hljs-comment"># 配置生效</span>
+# Redis
+<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
 
-<span class="hljs-comment"># 文件描述符限制</span>
-vim /etc/security/limits.conf
-* soft nofile 102400
-* hard nofile 204800
-<span class="hljs-built_in">ulimit</span> -Sn
-<span class="hljs-built_in">ulimit</span> -Hn
+<h3 id="2、YAML配置"><a href="#2、YAML配置" class="headerlink" title="2、YAML配置"></a>2、YAML配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
+  <span class="hljs-attr">application:</span>
+    <span class="hljs-attr">name:</span> <span class="hljs-string">springcloud-zuul</span>
+  <span class="hljs-attr">profiles:</span>
+    <span class="hljs-attr">active:</span> <span class="hljs-string">$&#123;ENVIRONMENT:pro&#125;</span>
+  <span class="hljs-attr">redis:</span>
+    <span class="hljs-attr">host:</span> <span class="hljs-number">10.10</span><span class="hljs-number">.253</span><span class="hljs-number">.16</span>
+    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span>
+<span class="hljs-attr">server:</span>
+  <span class="hljs-attr">port:</span> <span class="hljs-number">8125</span>
+<span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">routes:</span>
+    <span class="hljs-attr">springboot-produce:</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/api/produce/**</span>
+    <span class="hljs-attr">springboot-consume:</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/api/consume/**</span>
+  <span class="hljs-attr">ratelimit:</span>
+    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">repository:</span> <span class="hljs-string">REDIS</span>
+    <span class="hljs-attr">key-prefix:</span> <span class="hljs-string">zrl-</span>
+    <span class="hljs-attr">behind-proxy:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">add-response-headers:</span> <span class="hljs-literal">false</span>
+    <span class="hljs-attr">deny-request:</span>
+      <span class="hljs-attr">response-status-code:</span> <span class="hljs-number">404</span>
+      <span class="hljs-attr">origins:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">boer.xyz</span>
+    <span class="hljs-attr">default-policy-list:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">limit:</span> <span class="hljs-number">20</span>
+        <span class="hljs-attr">refresh-interval:</span> <span class="hljs-number">30</span>
+        <span class="hljs-attr">type:</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">origin</span>
+          <span class="hljs-bullet">-</span> <span class="hljs-string">url</span>
+    <span class="hljs-attr">policy-list:</span>
+      <span class="hljs-attr">springboot-produce:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">limit:</span> <span class="hljs-number">5</span>
+          <span class="hljs-attr">refresh-interval:</span> <span class="hljs-number">60</span>
+          <span class="hljs-attr">type:</span>
+            <span class="hljs-bullet">-</span> <span class="hljs-string">url=/hello</span></code></pre></div>
 
-<span class="hljs-comment"># nproc</span>
-<span class="hljs-comment">## nproc是操作系统级别对每个用户创建的进程数的限制, 在Linux下运行多线程时, 每个线程的实现其实是一个轻量级的进程, 对应的术语是light weight process(LWP)。</span>
-<span class="hljs-comment"># 查看所有用户创建的进程数,使用命令：</span>
-ps h -Led -o user | sort | uniq -c | sort -n
-<span class="hljs-comment"># 查看boer用户创建的进程数，使用命令:</span>
-ps -o nlwp,pid,lwp,args -u boer | sort -n
+<h3 id="3、Test验证"><a href="#3、Test验证" class="headerlink" title="3、Test验证"></a>3、Test验证</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 对/hello接口每分钟限制5次访问</span>
+curl -is http://10.10.10.56:8125/api/produce/hello
+<span class="hljs-comment"># 对其他接口无限制</span>
+curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
 
-vim /etc/security/limits.d/20-nproc.conf <span class="hljs-comment"># CentOS7</span>
-*          soft    nproc     65536
-root       soft    nproc     unlimited
-
-<span class="hljs-comment">##</span></code></pre></div>
-
-<h3 id="监控、日志Agent"><a href="#监控、日志Agent" class="headerlink" title="监控、日志Agent"></a>监控、日志Agent</h3><ul>
-<li>filebeat</li>
-<li>zabbix/node_exporter</li>
-</ul>
+<h3 id="4、Ref参考"><a href="#4、Ref参考" class="headerlink" title="4、Ref参考"></a>4、Ref参考</h3><ol>
+<li><a href="https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit/tree/2.2.x" target="_blank" rel="noopener">https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit/tree/2.2.x</a></li>
+<li><a href="https://www.baeldung.com/spring-cloud-zuul-rate-limit" target="_blank" rel="noopener">https://www.baeldung.com/spring-cloud-zuul-rate-limit</a></li>
+</ol>
 
             </div>
             <hr>
@@ -279,7 +296,7 @@ root       soft    nproc     unlimited
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
+                      <a class="hover-with-bg" href="/categories/SRE/">SRE</a>
                     
                   </div>
                 
@@ -287,9 +304,11 @@ root       soft    nproc     unlimited
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/parted/">parted</a>
+                      <a class="hover-with-bg" href="/tags/zuul/">zuul</a>
                     
-                      <a class="hover-with-bg" href="/tags/kernel/">kernel</a>
+                      <a class="hover-with-bg" href="/tags/api/">api</a>
+                    
+                      <a class="hover-with-bg" href="/tags/ratelimit/">ratelimit</a>
                     
                   </div>
                 
@@ -302,18 +321,12 @@ root       soft    nproc     unlimited
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2018/03/29/quick-file-share/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">快速文件共享分发的几个方式</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/03/08/mysql-record-topN-tables/">
-                        <span class="hidden-mobile">MySQL获取Largest表TopN</span>
+                      <a href="/2021/03/03/redis-keys-command/">
+                        <span class="hidden-mobile">Redis KEYS命令引发的一次生产故障</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -517,7 +530,7 @@ root       soft    nproc     unlimited
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "主机初始化的那些事儿&nbsp;",
+        "ZUUL网关API接口防刷限流&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
