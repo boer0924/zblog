@@ -26,11 +26,11 @@ df -h
 ```bash
 # 内核参数优化
 vim /etc/sysctl.conf
-net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_timestamps = 1
 net.ipv4.tcp_fin_timeout = 10
-net.ipv4.tcp_tw_recycle = 0
+net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_tw_buckets = 8000
 # fs.file-max = 102400000
 vm.max_map_count = 262144
