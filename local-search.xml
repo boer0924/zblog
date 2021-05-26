@@ -33,6 +33,31 @@
   
   
   <entry>
+    <title>MySQL运维笔记</title>
+    <link href="/2021/05/20/mysql-note/"/>
+    <url>/2021/05/20/mysql-note/</url>
+    
+    <content type="html"><![CDATA[<p>我的MySQL运维笔记</p><a id="more"></a><h3 id="MySQL备份恢复"><a href="#MySQL备份恢复" class="headerlink" title="MySQL备份恢复"></a>MySQL备份恢复</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## MySQL客户端必须软件包</span><span class="hljs-comment"># https://downloads.mysql.com/archives/community/</span>mysql-community-clientmysql-community-commonmysql-community-libsmysql-community-libs-compat<span class="hljs-comment"># mysql login-path登录信息</span>mysql_config_editor <span class="hljs-built_in">set</span> --host=mysql.boer.xyz --login-path=dev-mysql --password --user=boer --port=3306mysql_config_editor <span class="hljs-built_in">print</span> --allmysql_config_editor <span class="hljs-built_in">print</span> --login-path=dev-mysqlmysql_config_editor remove --login-path=dev-mysqlcat ~/.mylogin.cnf<span class="hljs-comment"># dump</span>mysqldump --login-path=dev-mysql --default-character-set=utf8 --<span class="hljs-built_in">set</span>-gtid-purged=OFF --single-transaction bwi_task &gt; /backup/bwi_task.$(date +%Y-%m-%d).sql<span class="hljs-comment"># set mysql var. speed up recovery</span>mysql --login-path=dev-mysql &lt;&lt; EOF<span class="hljs-built_in">set</span> global innodb_flush_log_at_trx_commit = 0;<span class="hljs-built_in">set</span> global sync_binlog = 2000;EOF<span class="hljs-comment"># restore</span>mysql --login-path=dev-mysql bwi_task_sub &lt; /backup/bwi_task.$(date +%Y-%m-%d).sql<span class="hljs-comment"># reset mysql var.</span>mysql --login-path=dev-mysql &lt;&lt; EOF<span class="hljs-built_in">set</span> global innodb_flush_log_at_trx_commit = 1;<span class="hljs-built_in">set</span> global sync_binlog = 1;EOF<span class="hljs-built_in">echo</span> <span class="hljs-string">"finish time at: <span class="hljs-variable">$(date +%Y-%m-%d_%H:%M:%S)</span>"</span></code></pre></div><h3 id="获取MySQL-TOP10"><a href="#获取MySQL-TOP10" class="headerlink" title="获取MySQL TOP10"></a>获取MySQL TOP10</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>TABLE_SCHEMA <span class="hljs-keyword">AS</span> <span class="hljs-string">'数据库'</span>,TABLE_NAME <span class="hljs-keyword">AS</span> <span class="hljs-string">'表名'</span>,TABLE_ROWS <span class="hljs-keyword">AS</span> <span class="hljs-string">'记录数'</span>,TABLE_COMMENT <span class="hljs-keyword">AS</span> <span class="hljs-string">'建表说明'</span>,<span class="hljs-keyword">TRUNCATE</span> ( DATA_LENGTH / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">'数据容量(MB)'</span>,<span class="hljs-keyword">TRUNCATE</span> ( INDEX_LENGTH / <span class="hljs-number">1024</span> / <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">'索引容量(MB)'</span> <span class="hljs-keyword">FROM</span>information_schema.TABLES <span class="hljs-keyword">WHERE</span>TABLE_SCHEMA = <span class="hljs-string">'meisoodev'</span> <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span>TABLE_ROWS <span class="hljs-keyword">DESC</span> <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">10</span>;</code></pre></div><h3 id="useradd-with-passwd"><a href="#useradd-with-passwd" class="headerlink" title="useradd with passwd"></a>useradd with passwd</h3><div class="hljs"><pre><code class="hljs bash">openssl passwd -1 &lt;password&gt;useradd -c <span class="hljs-string">'DBA Account'</span> -p <span class="hljs-string">'$1$MZKAIaY6$rqR264o5joCNsxp987NZD.'</span> dbaops<span class="hljs-comment"># 卸载rpm不执行脚本</span>rpm -e --nopostun --nopreun x.rpm</code></pre></div>]]></content>
+    
+    
+    <categories>
+      
+      <category>SRE</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MySQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Redis KEYS命令引发的一次生产故障</title>
     <link href="/2021/03/03/redis-keys-command/"/>
     <url>/2021/03/03/redis-keys-command/</url>
@@ -78,11 +103,11 @@
       
       <tag>Kubernetes</tag>
       
+      <tag>APM</tag>
+      
       <tag>Skywalking</tag>
       
       <tag>Pinpoint</tag>
-      
-      <tag>APM</tag>
       
     </tags>
     
@@ -850,9 +875,9 @@
       
       <tag>Golang</tag>
       
-      <tag>Python</tag>
-      
       <tag>Slice</tag>
+      
+      <tag>Python</tag>
       
       <tag>List</tag>
       
