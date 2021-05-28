@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      234 字
+      275 字
     </span>
   
 
@@ -250,11 +250,14 @@
 <span class="hljs-attr">server:</span>
   <span class="hljs-attr">port:</span> <span class="hljs-number">8125</span>
 <span class="hljs-attr">zuul:</span>
+  <span class="hljs-attr">prefix:</span> <span class="hljs-string">/api</span> <span class="hljs-comment"># 给网关路由添加前缀</span>
+  <span class="hljs-attr">ignored-services:</span> <span class="hljs-string">springboot-produce,</span> <span class="hljs-string">springboot-consume</span> <span class="hljs-comment"># 关闭默认路由配置</span>
+  <span class="hljs-attr">add-host-header:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 设置为true重定向是会添加host请求头</span>
   <span class="hljs-attr">routes:</span>
     <span class="hljs-attr">springboot-produce:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/api/produce/**</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/produce/**</span>
     <span class="hljs-attr">springboot-consume:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/api/consume/**</span>
+      <span class="hljs-attr">path:</span> <span class="hljs-string">/consume/**</span>
   <span class="hljs-attr">ratelimit:</span>
     <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
     <span class="hljs-attr">repository:</span> <span class="hljs-string">REDIS</span>
