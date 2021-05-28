@@ -41,11 +41,14 @@ spring:
 server:
   port: 8125
 zuul:
+  prefix: /api # 给网关路由添加前缀
+  ignored-services: springboot-produce, springboot-consume # 关闭默认路由配置
+  add-host-header: true # 设置为true重定向是会添加host请求头
   routes:
     springboot-produce:
-      path: /api/produce/**
+      path: /produce/**
     springboot-consume:
-      path: /api/consume/**
+      path: /consume/**
   ratelimit:
     enabled: true
     repository: REDIS
