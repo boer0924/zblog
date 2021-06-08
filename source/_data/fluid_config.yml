@@ -194,6 +194,9 @@ index:
     date: true
     category: true
     tag: true
+  post_sticky:
+    enable: true
+    icon: 'iconfont icon-top'
 
 # 通过 hexo new page 命令创建的页面
 # Custom Page

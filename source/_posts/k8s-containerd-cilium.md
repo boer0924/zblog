@@ -1,13 +1,12 @@
 ---
-title: 大数据Hadoop-HBase集群环境构建
-date: 2021-06-06 16:16:16
-index_img: https://picsum.photos/300/200.webp?bd
+title: Kubernetes新技术研究
+date: 2021-05-20 16:16:16
+index_img: https://picsum.photos/300/200.webp?cilium
+sticky: 100
 tags:
-  - Hadoop
-  - HDFS
-  - Yarn
-  - HBase
-categories: BigData
+  - Cilium
+  - Containerd
+categories: Kubernetes
 ---
 
 eBPF 是我见过的 Linux 中最神奇的技术，没有之一，已成为 Linux 内核中顶级子模块，从 tcpdump 中用作网络包过滤的经典 cbpf，到成为通用 Linux 内核技术的 eBPF，已经完成华丽蜕变，为应用与神奇的内核打造了一座桥梁，在系统跟踪、观测、性能调优、安全和网络等领域发挥重要的角色。为 Service Mesh 打造了具备 API 感知和安全高效的容器网络方案 Cilium，其底层正是基于 eBPF 技术

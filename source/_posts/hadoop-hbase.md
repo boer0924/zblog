@@ -34,11 +34,13 @@ hhase/conf/regionservers
 <!-- more -->
 
 ## 1. 环境信息
-Hostname | IPAdress | Zookeeper | NameNode[zkfc] | JournalNode | DataNode | RM | NM | HMaster | HRegionServer |
-| - | - | - | - | - | - | - | - | - | - |
-vm-node001 | 10.10.253.16 | yes | yes | yes | no  | no  | no  | yes | yes |
-vm-node002 | 10.10.253.17 | yes | yes | yes | yes | yes | yes | no  | yes |
-vm-node003 | 10.10.253.18 | yes | no  | yes | yes | yes | yes | yes | yes |
+
+| Hostname | IPAdress | Zookeeper | NameNode[ZKFC] | JournalNode | DataNode | ResourceManager | NodeManager | HMaster | HRegionServer |
+| -------- | -------- | --------- | -------------- | ----------- | -------- | ---- | ---- | ------- | ------------- |
+| vm-node001 | 10.10.253.16 | yes  | yes  | yes  | no   | no   | no   | yes  | yes  |
+| vm-node002 | 10.10.253.17 | yes  | yes  | yes  | yes  | yes  | yes  | no   | yes  |
+| vm-node003 | 10.10.253.18 | yes  | no   | yes  | yes  | yes  | yes  | yes  | yes  |
+
 **注意配置hosts/dns**
 
 ## 2. 版本选择
@@ -54,13 +56,13 @@ https://hadoop.apache.org/docs/r2.10.1/
 - curl -LO https://archive.apache.org/dist/pulsar/pulsar-2.6.4/apache-pulsar-2.6.4-bin.tar.gz
 - curl -LO https://mirrors.bfsu.edu.cn/apache/flink/flink-1.12.4/flink-1.12.4-bin-scala_2.11.tgz
 
-组件 | 版本
-| - | - 
-Hadoop | 2.10.1
-HBase | 2.3.5
-Zookeeper | 3.6.3
-Pulsar | 2.6.4
-Flink | 1.12.4
+| 组件      | 版本   |
+| --------- | ------ |
+| Hadoop    | 2.10.1 |
+| HBase     | 2.3.5  |
+| Zookeeper | 3.6.3  |
+| Pulsar    | 2.6.4  |
+| Flink     | 1.12.4 |
 
 ## 3. Hadoop安装配置
 ### 配置集群
@@ -372,6 +374,7 @@ export HBASE_BACKUP_MASTERS=${HBASE_HOME}/conf/backup-masters
 export HBASE_LOG_DIR=/srv/hbase/logs
 export HBASE_PID_DIR=/srv/hbase/pids
 
+## 使用外部的zk组件
 # Tell HBase whether it should manage it's own instance of ZooKeeper or not.
 # export HBASE_MANAGES_ZK=true
 export HBASE_MANAGES_ZK=false
