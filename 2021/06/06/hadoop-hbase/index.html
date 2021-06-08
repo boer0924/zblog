@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      36
+      37
        分钟
     </span>
   
@@ -229,7 +229,59 @@
 <p>服务管理方式基本类似<br>hadoop/etc/hadoop/slaves<br>hbase/conf/backup-masters<br>hhase/conf/regionservers<br>通过定义target文件，使用ssh免密实现统一管理远程服务</p>
 <a id="more"></a>
 
-<h2 id="1-环境信息"><a href="#1-环境信息" class="headerlink" title="1. 环境信息"></a>1. 环境信息</h2><p>Hostname | IPAdress | Zookeeper | NameNode[zkfc] | JournalNode | DataNode | RM | NM | HMaster | HRegionServer |<br>| - | - | - | - | - | - | - | - | - | - |<br>vm-node001 | 10.10.253.16 | yes | yes | yes | no  | no  | no  | yes | yes |<br>vm-node002 | 10.10.253.17 | yes | yes | yes | yes | yes | yes | no  | yes |<br>vm-node003 | 10.10.253.18 | yes | no  | yes | yes | yes | yes | yes | yes |<br><strong>注意配置hosts/dns</strong></p>
+<h2 id="1-环境信息"><a href="#1-环境信息" class="headerlink" title="1. 环境信息"></a>1. 环境信息</h2><table>
+<thead>
+<tr>
+<th>Hostname</th>
+<th>IPAdress</th>
+<th>Zookeeper</th>
+<th>NameNode[ZKFC]</th>
+<th>JournalNode</th>
+<th>DataNode</th>
+<th>ResourceManager</th>
+<th>NodeManager</th>
+<th>HMaster</th>
+<th>HRegionServer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vm-node001</td>
+<td>10.10.253.16</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+<td>no</td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>vm-node002</td>
+<td>10.10.253.17</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>vm-node003</td>
+<td>10.10.253.18</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+</tr>
+</tbody></table>
+<p><strong>注意配置hosts/dns</strong></p>
 <h2 id="2-版本选择"><a href="#2-版本选择" class="headerlink" title="2. 版本选择"></a>2. 版本选择</h2><p><a href="https://hbase.apache.org/book.html#hadoop" target="_blank" rel="noopener">https://hbase.apache.org/book.html#hadoop</a><br><strong>Hadoop 2.x is recommended.</strong></p>
 <p><a href="https://hadoop.apache.org/docs/r2.10.1/" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.1/</a></p>
 <p><strong>Binary download</strong></p>
@@ -240,7 +292,34 @@
 <li>curl -LO <a href="https://archive.apache.org/dist/pulsar/pulsar-2.6.4/apache-pulsar-2.6.4-bin.tar.gz" target="_blank" rel="noopener">https://archive.apache.org/dist/pulsar/pulsar-2.6.4/apache-pulsar-2.6.4-bin.tar.gz</a></li>
 <li>curl -LO <a href="https://mirrors.bfsu.edu.cn/apache/flink/flink-1.12.4/flink-1.12.4-bin-scala_2.11.tgz" target="_blank" rel="noopener">https://mirrors.bfsu.edu.cn/apache/flink/flink-1.12.4/flink-1.12.4-bin-scala_2.11.tgz</a></li>
 </ul>
-<p>组件 | 版本<br>| - | -<br>Hadoop | 2.10.1<br>HBase | 2.3.5<br>Zookeeper | 3.6.3<br>Pulsar | 2.6.4<br>Flink | 1.12.4</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hadoop</td>
+<td>2.10.1</td>
+</tr>
+<tr>
+<td>HBase</td>
+<td>2.3.5</td>
+</tr>
+<tr>
+<td>Zookeeper</td>
+<td>3.6.3</td>
+</tr>
+<tr>
+<td>Pulsar</td>
+<td>2.6.4</td>
+</tr>
+<tr>
+<td>Flink</td>
+<td>1.12.4</td>
+</tr>
+</tbody></table>
 <h2 id="3-Hadoop安装配置"><a href="#3-Hadoop安装配置" class="headerlink" title="3. Hadoop安装配置"></a>3. Hadoop安装配置</h2><h3 id="配置集群"><a href="#配置集群" class="headerlink" title="配置集群"></a>配置集群</h3><p>core配置</p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">property</span>&gt;</span>
@@ -512,6 +591,7 @@ export HBASE_BACKUP_MASTERS=$&#123;HBASE_HOME&#125;/conf/backup-masters
 export HBASE_LOG_DIR=/srv/hbase/logs
 export HBASE_PID_DIR=/srv/hbase/pids
 
+<span class="hljs-meta">#</span><span class="bash"><span class="hljs-comment"># 使用外部的zk组件</span></span>
 <span class="hljs-meta">#</span><span class="bash"> Tell HBase whether it should manage it<span class="hljs-string">'s own instance of ZooKeeper or not.</span></span>
 <span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">export</span> HBASE_MANAGES_ZK=<span class="hljs-literal">true</span></span>
 export HBASE_MANAGES_ZK=false</code></pre></div>
@@ -585,8 +665,8 @@ bin/stop-hbase.sh</code></pre></div>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/06/06/k8s-containerd-cilium/">
-                        <span class="hidden-mobile">大数据Hadoop-HBase集群环境构建</span>
+                      <a href="/2021/05/21/zuul-ratelimit/">
+                        <span class="hidden-mobile">ZUUL网关API接口防刷限流</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
