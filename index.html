@@ -176,6 +176,125 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/06/06/hadoop-hbase/" target="_self">
+          <img src="https://picsum.photos/300/200.webp?bd" srcset="/img/loading.gif" alt="大数据Hadoop-HBase集群环境构建">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2021/06/06/hadoop-hbase/">大数据Hadoop-HBase集群环境构建</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/06/06/hadoop-hbase/">
+          
+          
+            
+          
+          HDFS NameNode DataNodeYarn ResourceManager NodeManagerHBase HMaster HRegionServer
+三个组件均采用Active-Standby主备模式，但Active选主方法不尽相同。HDFS HA通过JournalNode选举active NameNode，通过ZKFC(DFSZKFailoverController)实现自动故障转
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-06 16:16" pubdate>
+              2021-06-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/BigData/">BigData</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Hadoop/">Hadoop</a>
+            
+              <a href="/tags/HDFS/">HDFS</a>
+            
+              <a href="/tags/Yarn/">Yarn</a>
+            
+              <a href="/tags/HBase/">HBase</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2021/06/06/k8s-containerd-cilium/" target="_self">
+          <img src="https://picsum.photos/300/200.webp?bd" srcset="/img/loading.gif" alt="大数据Hadoop-HBase集群环境构建">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        <a href="/2021/06/06/k8s-containerd-cilium/">大数据Hadoop-HBase集群环境构建</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/06/06/k8s-containerd-cilium/">
+          
+          
+            
+          
+          eBPF 是我见过的 Linux 中最神奇的技术，没有之一，已成为 Linux 内核中顶级子模块，从 tcpdump 中用作网络包过滤的经典 cbpf，到成为通用 Linux 内核技术的 eBPF，已经完成华丽蜕变，为应用与神奇的内核打造了一座桥梁，在系统跟踪、观测、性能调优、安全和网络等领域发挥重要的角色。为 Service Mesh 打造了具备 API 感知和安全高效的容器网络方案 Ciliu
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-06 16:16" pubdate>
+              2021-06-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/BigData/">BigData</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Hadoop/">Hadoop</a>
+            
+              <a href="/tags/HDFS/">HDFS</a>
+            
+              <a href="/tags/Yarn/">Yarn</a>
+            
+              <a href="/tags/HBase/">HBase</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2021/05/21/zuul-ratelimit/" target="_self">
           <img src="https://picsum.photos/300/200.webp?zuul" srcset="/img/loading.gif" alt="ZUUL网关API接口防刷限流">
         </a>
@@ -644,125 +763,6 @@ Drone by Harness™ is a modern Continuous Integration platform that empowers bu
               <a href="/tags/Drone/">Drone</a>
             
               <a href="/tags/Harbor/">Harbor</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/" target="_self">
-          <img src="https://picsum.photos/300/200.webp?jenkins" srcset="/img/loading.gif" alt="Kubernetes CICD工具Jenkins Pipeline">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">Kubernetes CICD工具Jenkins Pipeline</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/06/23/k8s-cicd-jenkins-pipeline/">
-          
-          
-            
-          
-          持续构建与发布是我们日常工作中必不可少的一个步骤，目前大多公司都采用 Jenkins 集群来搭建符合需求的 CI/CD 流程，然而传统的 Jenkins Slave 一主多从方式会存在一些痛点，比如：
-
-主 Master 发生单点故障时，整个流程都不可用了
-每个 Slave 的配置环境不一样，来完成不同语言的编译打包等操作，但是这些差异化的配置导致管理起来非常不方便，维护起来也是比较费劲
-资源分配
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-06-23 11:36" pubdate>
-              2020-06-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Kubernetes/">Kubernetes</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Kubernetes/">Kubernetes</a>
-            
-              <a href="/tags/CICD/">CICD</a>
-            
-              <a href="/tags/Jenkins/">Jenkins</a>
-            
-              <a href="/tags/Pipeline/">Pipeline</a>
-            
-              <a href="/tags/Harbor/">Harbor</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/06/18/theai-train/" target="_self">
-          <img src="https://picsum.photos/300/200.webp?ai" srcset="/img/loading.gif" alt="打破认知边界·融入未来世界">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        <a href="/2020/06/18/theai-train/">打破认知边界·融入未来世界</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/06/18/theai-train/">
-          
-          
-            
-          
-          《打破认知边界·融入未来世界》培训心得
-不管你接受不接受,人工智能都来了不管是从国家战略「新基建」主要包含5G基建、特高压、城际高速铁路和城际轨道交通、新能源汽车充电桩、大数据中心、人工智能、工业互联网等七大领域。人工智能屹立其中。还是从你能”触摸”的人工智能：苹果公司的语音助手Siri；微软公司的人工智能助理Cortana(小娜)；小米科技打造的智能化语音助手小爱同学及其后续产品小爱音箱等一大批
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-06-18 10:16" pubdate>
-              2020-06-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Life/">Life</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/AI/">AI</a>
             
           </div>
         

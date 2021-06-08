@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>ZUUL网关API接口防刷限流 · ~·boer·~ 乌托邦</title>
+  <title>大数据Hadoop-HBase集群环境构建 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -168,8 +168,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-21 16:30" pubdate>
-        2021年5月21日 下午
+      <time datetime="2021-06-06 16:16" pubdate>
+        2021年6月6日 下午
       </time>
     </span>
   
@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      275 字
+      453 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      7
        分钟
     </span>
   
@@ -220,76 +220,27 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">ZUUL网关API接口防刷限流</h1>
+            <h1 style="display: none">大数据Hadoop-HBase集群环境构建</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>Spring Cloud Zuul RateLimit对Zuul APIGateway进行限流</p>
+              <p>eBPF 是我见过的 Linux 中最神奇的技术，没有之一，已成为 Linux 内核中顶级子模块，从 tcpdump 中用作网络包过滤的经典 cbpf，到成为通用 Linux 内核技术的 eBPF，已经完成华丽蜕变，为应用与神奇的内核打造了一座桥梁，在系统跟踪、观测、性能调优、安全和网络等领域发挥重要的角色。为 Service Mesh 打造了具备 API 感知和安全高效的容器网络方案 Cilium，其底层正是基于 eBPF 技术</p>
+<p>-<a href="https://cloudnative.to/blog/bpf-intro/" target="_blank" rel="noopener">https://cloudnative.to/blog/bpf-intro/</a></p>
 <a id="more"></a>
 
-<h3 id="1、POM依赖"><a href="#1、POM依赖" class="headerlink" title="1、POM依赖"></a>1、POM依赖</h3><div class="hljs"><pre><code class="hljs xml"># Spring Cloud Zuul RateLimit
-<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.marcosbarbero.cloud<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-cloud-zuul-ratelimit<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.2.7.RELEASE<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
-
-# Redis
-<span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
-
-<h3 id="2、YAML配置"><a href="#2、YAML配置" class="headerlink" title="2、YAML配置"></a>2、YAML配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-attr">spring:</span>
-  <span class="hljs-attr">application:</span>
-    <span class="hljs-attr">name:</span> <span class="hljs-string">springcloud-zuul</span>
-  <span class="hljs-attr">profiles:</span>
-    <span class="hljs-attr">active:</span> <span class="hljs-string">$&#123;ENVIRONMENT:pro&#125;</span>
-  <span class="hljs-attr">redis:</span>
-    <span class="hljs-attr">host:</span> <span class="hljs-number">10.10</span><span class="hljs-number">.253</span><span class="hljs-number">.16</span>
-    <span class="hljs-attr">port:</span> <span class="hljs-number">6379</span>
-<span class="hljs-attr">server:</span>
-  <span class="hljs-attr">port:</span> <span class="hljs-number">8125</span>
-<span class="hljs-attr">zuul:</span>
-  <span class="hljs-attr">prefix:</span> <span class="hljs-string">/api</span> <span class="hljs-comment"># 给网关路由添加前缀</span>
-  <span class="hljs-attr">ignored-services:</span> <span class="hljs-string">springboot-produce,</span> <span class="hljs-string">springboot-consume</span> <span class="hljs-comment"># 关闭默认路由配置</span>
-  <span class="hljs-attr">add-host-header:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 设置为true重定向是会添加host请求头</span>
-  <span class="hljs-attr">routes:</span>
-    <span class="hljs-attr">springboot-produce:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/produce/**</span>
-    <span class="hljs-attr">springboot-consume:</span>
-      <span class="hljs-attr">path:</span> <span class="hljs-string">/consume/**</span>
-  <span class="hljs-attr">ratelimit:</span>
-    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
-    <span class="hljs-attr">repository:</span> <span class="hljs-string">REDIS</span>
-    <span class="hljs-attr">key-prefix:</span> <span class="hljs-string">zrl-</span>
-    <span class="hljs-attr">behind-proxy:</span> <span class="hljs-literal">true</span>
-    <span class="hljs-attr">add-response-headers:</span> <span class="hljs-literal">false</span>
-    <span class="hljs-attr">deny-request:</span>
-      <span class="hljs-attr">response-status-code:</span> <span class="hljs-number">404</span>
-      <span class="hljs-attr">origins:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-string">boer.xyz</span>
-    <span class="hljs-attr">default-policy-list:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">limit:</span> <span class="hljs-number">20</span>
-        <span class="hljs-attr">refresh-interval:</span> <span class="hljs-number">30</span>
-        <span class="hljs-attr">type:</span>
-          <span class="hljs-bullet">-</span> <span class="hljs-string">origin</span>
-          <span class="hljs-bullet">-</span> <span class="hljs-string">url</span>
-    <span class="hljs-attr">policy-list:</span>
-      <span class="hljs-attr">springboot-produce:</span>
-        <span class="hljs-bullet">-</span> <span class="hljs-attr">limit:</span> <span class="hljs-number">5</span>
-          <span class="hljs-attr">refresh-interval:</span> <span class="hljs-number">60</span>
-          <span class="hljs-attr">type:</span>
-            <span class="hljs-bullet">-</span> <span class="hljs-string">url=/hello</span></code></pre></div>
-
-<h3 id="3、Test验证"><a href="#3、Test验证" class="headerlink" title="3、Test验证"></a>3、Test验证</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 对/hello接口每分钟限制5次访问</span>
-curl -is http://10.10.10.56:8125/api/produce/hello
-<span class="hljs-comment"># 对其他接口无限制</span>
-curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
-
-<h3 id="4、Ref参考"><a href="#4、Ref参考" class="headerlink" title="4、Ref参考"></a>4、Ref参考</h3><ol>
-<li><a href="https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit/tree/2.2.x" target="_blank" rel="noopener">https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit/tree/2.2.x</a></li>
-<li><a href="https://www.baeldung.com/spring-cloud-zuul-rate-limit" target="_blank" rel="noopener">https://www.baeldung.com/spring-cloud-zuul-rate-limit</a></li>
-</ol>
+<h1 id="Containerd"><a href="#Containerd" class="headerlink" title="Containerd"></a>Containerd</h1><p>cat &lt;&lt;EOF | tee /etc/modules-load.d/containerd.conf<br>overlay<br>br_netfilter<br>EOF</p>
+<p>modprobe overlay<br>modprobe br_netfilter</p>
+<p>yum install -y yum-utils<br>yum-config-manager –add-repo <a href="https://download.docker.com/linux/centos/docker-ce.repo" target="_blank" rel="noopener">https://download.docker.com/linux/centos/docker-ce.repo</a><br>yum install containerd.io</p>
+<p>mkdir -p /etc/containerd<br>containerd config default | sudo tee /etc/containerd/config.toml</p>
+<p>[plugins.”io.containerd.grpc.v1.cri”.containerd.runtimes.runc]<br>  …<br>  [plugins.”io.containerd.grpc.v1.cri”.containerd.runtimes.runc.options]<br>    SystemdCgroup = true</p>
+<p>sed -i ‘s#k8s.gcr.io#registry.aliyuncs.com/google_containers#g’ /etc/containerd/config.toml<br>sed -i ‘s#registry-1.docker.io#890une7x.mirror.aliyuncs.com#g’ /etc/containerd/config.toml</p>
+<p>systemctl restart containerd</p>
+<h1 id="crictl"><a href="#crictl" class="headerlink" title="crictl"></a>crictl</h1><p><a href="https://kubernetes.io/zh/docs/tasks/debug-application-cluster/crictl/" target="_blank" rel="noopener">https://kubernetes.io/zh/docs/tasks/debug-application-cluster/crictl/</a><br><a href="https://github.com/kubernetes-sigs/cri-tools/tags" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/cri-tools/tags</a><br>curl -L <a href="https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz</a> -o crictl-v1.21.0-linux-amd64.tar.gz</p>
+<p>cat &lt;&lt; EOF | tee /etc/crictl.yaml<br>runtime-endpoint: unix:///run/containerd/containerd.sock<br>image-endpoint: unix:///run/containerd/containerd.sock<br>timeout: 10<br>debug: false<br>EOF</p>
+<h1 id="Cilium"><a href="#Cilium" class="headerlink" title="Cilium"></a>Cilium</h1><p><a href="https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements" target="_blank" rel="noopener">https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements</a></p>
+<h2 id="内核升级"><a href="#内核升级" class="headerlink" title="内核升级"></a>内核升级</h2><h1 id="https-elrepo-org-tiki-HomePage"><a href="#https-elrepo-org-tiki-HomePage" class="headerlink" title="https://elrepo.org/tiki/HomePage"></a><a href="https://elrepo.org/tiki/HomePage" target="_blank" rel="noopener">https://elrepo.org/tiki/HomePage</a></h1><p>rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="noopener">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a><br>yum install <a href="https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm" target="_blank" rel="noopener">https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm</a><br>yum –enablerepo=elrepo-kernel install kernel-lt<br>kernel-lt is based on a “long term support” branch<br>kernel-ml is based on the “mainline stable” branch</p>
+<p>#centos8不用更改内核启动顺序<br>#centos7的bios启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/grub2/grub.cfg;<br>#centos7的efi启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;</p>
+<h2 id="K8S初始化"><a href="#K8S初始化" class="headerlink" title="K8S初始化"></a>K8S初始化</h2><p>kubeadm config print init-defaults</p>
+<p>–skip-phases=addon/kube-proxy;</p>
 
             </div>
             <hr>
@@ -299,7 +250,7 @@ curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/SRE/">SRE</a>
+                      <a class="hover-with-bg" href="/categories/BigData/">BigData</a>
                     
                   </div>
                 
@@ -307,11 +258,13 @@ curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/zuul/">zuul</a>
+                      <a class="hover-with-bg" href="/tags/Hadoop/">Hadoop</a>
                     
-                      <a class="hover-with-bg" href="/tags/api/">api</a>
+                      <a class="hover-with-bg" href="/tags/HDFS/">HDFS</a>
                     
-                      <a class="hover-with-bg" href="/tags/ratelimit/">ratelimit</a>
+                      <a class="hover-with-bg" href="/tags/Yarn/">Yarn</a>
+                    
+                      <a class="hover-with-bg" href="/tags/HBase/">HBase</a>
                     
                   </div>
                 
@@ -324,7 +277,7 @@ curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/06/06/k8s-containerd-cilium/">
+                      <a href="/2021/06/06/hadoop-hbase/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">大数据Hadoop-HBase集群环境构建</span>
                         <span class="visible-mobile">上一篇</span>
@@ -334,8 +287,8 @@ curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/05/20/mysql-note/">
-                        <span class="hidden-mobile">MySQL运维笔记</span>
+                      <a href="/2021/05/21/zuul-ratelimit/">
+                        <span class="hidden-mobile">ZUUL网关API接口防刷限流</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -539,7 +492,7 @@ curl -is http://10.10.10.56:8125/api/produce/</code></pre></div>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "ZUUL网关API接口防刷限流&nbsp;",
+        "大数据Hadoop-HBase集群环境构建&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,

@@ -2,289 +2,303 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
+    
+    <lastmod>2021-06-08</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2016/09/24/windows-terminal-msys2/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2021/05/21/zuul-ratelimit/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/googleae03e72bc0dc0b3b.html</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/about/index.html</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2015/08/24/clear-bash-ps1-prompt/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2016/07/07/fpm-rpm-build/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2017/08/30/golang-func-mapreduce/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/08/15/golang-gin-gorm-paginate/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2017/08/24/golang-map-methods/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2017/08/18/golang-slice-methods/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2017/08/16/golang-slice-reverse/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/06/06/hadoop-hbase/</loc>
+    
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/06/24/jdk-analyze-tools/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/04/24/k8s-codeing-gitea/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/06/06/k8s-containerd-cilium/</loc>
+    
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/09/24/k8s-ha-deployment/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/10/24/k8s-logging-efk/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/10/10/k8s-monitoring-prometheus/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/06/13/middleware-devops-guide/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/02/16/mirror-speed/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2021/05/20/mysql-note/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/03/08/mysql-record-topN-tables/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2016/03/24/nginx-http/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2020/05/10/oc-vpn-connect/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2019/05/09/pinpoint-deployment/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/09/15/pull-docker-images/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/03/29/quick-file-share/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2021/03/03/redis-keys-command/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
     
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
   <url>
     <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
     
-    <lastmod>2021-05-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
-    
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     
   </url>
   
 
   <url>
     <loc>https://www.boer.xyz/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -292,581 +306,609 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/Aliyun/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Redis/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/API/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/SDK/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/PS1/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Shell/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Bash/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Motd/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/TCP-IP/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/CLOSE-WAIT/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/TIME-WAIT/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Elasticsearch/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Logstash/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/reindex/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/2012/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/RPM/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/FPM/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Golang/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Go/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/MapReduce/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Gin/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Gorm/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/%E5%88%86%E9%A1%B5/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/map/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/hash/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Python/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Slice/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/List/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/reverse/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Hadoop/</loc>
+    <lastmod>2021-06-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/HDFS/</loc>
+    <lastmod>2021-06-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Yarn/</loc>
+    <lastmod>2021-06-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/HBase/</loc>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/JDK/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Kubernetes/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Skywalking/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Pinpoint/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/APM/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/CICD/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Jenkins/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Pipeline/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Drone/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Harbor/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Devops/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Gogs/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Gitea/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Gitlab/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Calico/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/IPVS/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/logging/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Filebeat/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Kibana/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Fluentd/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Prometheus/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Monitoring/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Operator/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/CRD/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Docker/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Registry/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/SpringCloud/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/SpringBoot/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/RabbitMQ/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Kafka/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/pip/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/goproxy/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/npm/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/MySQL/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/information-schema/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Nginx/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/boer/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/DevOps/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/DockerHub/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/FileZilla/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/SimpleHTTPServer/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Log4J2/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Logback/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/parted/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/kernel/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/AI/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Terminal/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/MSYS2/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/Oh-My-ZSH/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/zuul/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/api/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/tags/ratelimit/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -875,42 +917,49 @@
   
   <url>
     <loc>https://www.boer.xyz/categories/DevOps/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/categories/Elastic/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/categories/Life/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/categories/Golang/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/categories/BigData/</loc>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/categories/Kubernetes/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://www.boer.xyz/categories/SRE/</loc>
-    <lastmod>2021-05-28</lastmod>
+    <lastmod>2021-06-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
