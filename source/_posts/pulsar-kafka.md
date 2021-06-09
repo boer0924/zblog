@@ -10,3 +10,7 @@ categories: BigData
 ---
 
 ![](https://for-boer-blog.oss-cn-beijing.aliyuncs.com/pulsar-featrue.jpg?x-oss-process=style/blog-img-watermark)
+
+
+
+https://www.confluent.io/kafka-vs-pulsar/
