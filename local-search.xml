@@ -35,6 +35,33 @@
   
   
   <entry>
+    <title>Kafka老矣？Pulsar真香...</title>
+    <link href="/2021/06/01/pulsar-kafka/"/>
+    <url>/2021/06/01/pulsar-kafka/</url>
+    
+    <content type="html"><![CDATA[<p><img src="https://for-boer-blog.oss-cn-beijing.aliyuncs.com/pulsar-featrue.jpg?x-oss-process=style/blog-img-watermark" srcset="/img/loading.gif" alt=""></p><p><a href="https://www.confluent.io/kafka-vs-pulsar/" target="_blank" rel="noopener">https://www.confluent.io/kafka-vs-pulsar/</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>BigData</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Kafka</tag>
+      
+      <tag>Pulsar</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>ZUUL网关API接口防刷限流</title>
     <link href="/2021/05/21/zuul-ratelimit/"/>
     <url>/2021/05/21/zuul-ratelimit/</url>
