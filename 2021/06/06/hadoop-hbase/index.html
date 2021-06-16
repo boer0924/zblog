@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2k 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      37
+      38
        分钟
     </span>
   
@@ -617,13 +617,39 @@ ssh-copy-id $(whoami)@vm-node003 <span class="hljs-comment"># conf/backup-master
 <h3 id="启动与停止"><a href="#启动与停止" class="headerlink" title="启动与停止"></a>启动与停止</h3><div class="hljs"><pre><code class="hljs bash">bin/start-hbase.sh
 bin/stop-hbase.sh</code></pre></div>
 
-<h2 id="5-Reference"><a href="#5-Reference" class="headerlink" title="5. Reference"></a>5. Reference</h2><ul>
+<h2 id="5-WebUI"><a href="#5-WebUI" class="headerlink" title="5. WebUI"></a>5. WebUI</h2><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NameNode</td>
+<td><a href="http://10.10.253.16:50070" target="_blank" rel="noopener">http://10.10.253.16:50070</a></td>
+</tr>
+<tr>
+<td>ResourceManager</td>
+<td><a href="http://10.10.253.18:8088" target="_blank" rel="noopener">http://10.10.253.18:8088</a></td>
+</tr>
+<tr>
+<td>HMaster</td>
+<td><a href="http://10.10.253.16:16010" target="_blank" rel="noopener">http://10.10.253.16:16010</a></td>
+</tr>
+<tr>
+<td>RegionServer</td>
+<td><a href="http://10.10.253.16:16030" target="_blank" rel="noopener">http://10.10.253.16:16030</a></td>
+</tr>
+</tbody></table>
+<h2 id="6-Reference"><a href="#6-Reference" class="headerlink" title="6. Reference"></a>6. Reference</h2><ul>
 <li><a href="https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/ClusterSetup.html" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/ClusterSetup.html</a></li>
 <li><a href="https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html</a></li>
 <li><a href="https://hadoop.apache.org/docs/r2.10.1/hadoop-yarn/hadoop-yarn-site/ResourceManagerHA.html" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.1/hadoop-yarn/hadoop-yarn-site/ResourceManagerHA.html</a></li>
 <li><a href="https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/FileSystemShell.html" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/FileSystemShell.html</a></li>
 <li><a href="https://hbase.apache.org/book.html#getting_started" target="_blank" rel="noopener">https://hbase.apache.org/book.html#getting_started</a></li>
 <li><a href="https://ken.io/note/hadoop-cluster-deploy-guide" target="_blank" rel="noopener">https://ken.io/note/hadoop-cluster-deploy-guide</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/222937515" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/222937515</a></li>
+<li><a href="https://blog.csdn.net/nazeniwaresakini/article/details/108770855" target="_blank" rel="noopener">https://blog.csdn.net/nazeniwaresakini/article/details/108770855</a></li>
 </ul>
 
             </div>
