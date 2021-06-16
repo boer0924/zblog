@@ -419,10 +419,21 @@ bin/start-hbase.sh
 bin/stop-hbase.sh
 ```
 
-## 5. Reference
+## 5. WebUI
+
+| 组件 | URL |
+| --- | --- |
+| NameNode | http://10.10.253.16:50070 |
+| ResourceManager | http://10.10.253.18:8088 |
+| HMaster | http://10.10.253.16:16010 |
+| RegionServer | http://10.10.253.16:16030 |
+
+## 6. Reference
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/ClusterSetup.html
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-hdfs/HDFSHighAvailabilityWithQJM.html
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-yarn/hadoop-yarn-site/ResourceManagerHA.html
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/FileSystemShell.html
 - https://hbase.apache.org/book.html#getting_started
 - https://ken.io/note/hadoop-cluster-deploy-guide
+- https://zhuanlan.zhihu.com/p/222937515
+- https://blog.csdn.net/nazeniwaresakini/article/details/108770855
