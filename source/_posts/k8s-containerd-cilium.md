@@ -71,6 +71,67 @@ grub2-set-default 0;grub2-mkconfig -o /boot/grub2/grub.cfg;
 grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;
 
 ## K8S初始化
-kubeadm config print init-defaults
+yum install kubelet kubeadm kubectl containerd.io
 
---skip-phases=addon/kube-proxy;
+kubeadm config print init-defaults
+```yaml
+# https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/control-plane-flags/
+# kubeadm init --config init-defaults.yaml --upload-certs --skip-phases=addon/coredns
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: /var/run/containerd/containerd.sock
+  name: node
+  taints: null
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+imageRepository: registry.aliyuncs.com/google_containers
+# imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers
+kubernetesVersion: 1.21.2
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+scheduler: {}
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: ipvs
+```
+
+--skip-phases=addon/coredns
+--skip-phases=addon/kube-proxy
+--skip-phases=addon/kube-proxy,addon/coredns
+
+### CA
+```shell
+openssl x509 -in ca.pem -out ca.crt
+openssl rsa -in ca-key.pem -out ca.key
+
+只在主节点上生成CA
+bin/elasticsearch-certutil ca --days 36500
+签发证书
+bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12 --days 36500
+转换证书、验证有效期
+openssl pkcs12 -in elastic-certificates.p12 -out elastic-certificates.pem -nodes
+openssl x509 -in elastic-certificates.pem -noout -dates
+
+mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubeadm join 10.10.253.16:6443 --token 8gntrw.collopy8yolzmxzu \
+	--discovery-token-ca-cert-hash sha256:3b6ceec33bc3d99ce5f2dd157eed51c7cd010e48948a71068e4a63fece02a1b4
+
+
+yum install bash-completion
+kubectl completion bash >/etc/bash_completion.d/kubectl
+```

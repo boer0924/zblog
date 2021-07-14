@@ -14,6 +14,11 @@ categories: SRE
 ```bash
 ## MySQL客户端必须软件包
 # https://downloads.mysql.com/archives/community/
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-client-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-common-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-libs-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-libs-compat-5.7.26-1.el7.x86_64.rpm
+
 mysql-community-client
 mysql-community-common
 mysql-community-libs
@@ -71,4 +76,36 @@ openssl passwd -1 <password>
 useradd -c 'DBA Account' -p '$1$MZKAIaY6$rqR264o5joCNsxp987NZD.' dbaops
 # 卸载rpm不执行脚本
 rpm -e --nopostun --nopreun x.rpm
+```
+
+### MySQL增量备份/同步 my2sql
+```shell
+outputs=$(MYSQL_PWD=Root_123 mysql -h 10.10.253.16 -s -u root << EOF
+show master status;
+EOF
+)
+
+# read history postion and binlog file.
+history=$(cat .history.db)
+his_binlog=$(echo $history | cut -d' ' -f1)
+his_binpos=$(echo $history | cut -d' ' -f2)
+
+# write current postion and binlog file.
+echo $outputs > .history.db
+binlog=$(echo $outputs | cut -d' ' -f1)
+binpos=$(echo $outputs | cut -d' ' -f2)
+
+# MYSQL_PWD=Root_123 mysqlbinlog -h 10.10.253.16 -d $db_name -R -u root --base64-output=decode-rows -v --start-position=$his_binpos --stop-position=$binpos $his_binlog $binlog > $db_name$his_binpos$binpos.sql
+
+# my2sql tool parse binlog to sql
+db_name=test
+db_tables=all
+# db_tables=order,common,payment
+my2sql -user root -password Root_123 -host 10.10.253.16 -port 3306 -databases $db_name -work-type 2sql -start-file $his_binlog -stop-file $binlog -start-pos $his_binpos -stop-pos $binpos -output-dir sql -do-not-add-prifixDb
+# >/dev/null 2>&1
+echo "binlog parse ok..."
+
+# import target database.
+MYSQL_PWD=Root_123 mysql -h 10.10.253.16 -s -u root testbus < sql/forward.3.sql
+echo "increment restore ok..."
 ```

@@ -36,7 +36,41 @@ jhat heapDump.hprof
 
 
 -XX:+HeapDumpOnOutOfMemoryError
+
+-XX:HeapDumpPath=./
+
+# CMS
+-Xms200M
+-Xmx200M
+-XX:+UseConcMarkSweepGC
+-XX:CMSInitiatingOccupancyFraction=92
+-XX:+UseCMSInitiatingOccupancyOnly
+-XX:CMSBootstrapOccupancy=92
+-xx:CMSWaitDuration=2000
+# -verbose:gc
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-Xloggc:./gc.log
+-XX:+UseGCLogFileRotation
+-XX:NumberOfGCLogFiles=1
+-XX:GCLogFileSize=512M
+
+# G1
+-Xms200M
+-Xmx200M
+-XX:+UseG1GC
+-XX:SurvivorRatio=8
+-XX:MaxTenuringThreshold=1
+-XX:+UnlockExperimentalVMOptions
+-XX:G1MaxNewSizePercent=50
+-XX:G1HeapRegionSize=4M
+-XX:+PrintGC
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-Xloggc:./gc.log
+
 ```
 
 ### Reference
 https://www.hollischuang.com/archives/308
+https://www.cnblogs.com/chiangchou/p/jvm-4.html
