@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      453 字
+      705 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      12
        分钟
     </span>
   
@@ -239,9 +239,61 @@
 <h1 id="Cilium"><a href="#Cilium" class="headerlink" title="Cilium"></a>Cilium</h1><p><a href="https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements" target="_blank" rel="noopener">https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements</a></p>
 <h2 id="内核升级"><a href="#内核升级" class="headerlink" title="内核升级"></a>内核升级</h2><h1 id="https-elrepo-org-tiki-HomePage"><a href="#https-elrepo-org-tiki-HomePage" class="headerlink" title="https://elrepo.org/tiki/HomePage"></a><a href="https://elrepo.org/tiki/HomePage" target="_blank" rel="noopener">https://elrepo.org/tiki/HomePage</a></h1><p>rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="noopener">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a><br>yum install <a href="https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm" target="_blank" rel="noopener">https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm</a><br>yum –enablerepo=elrepo-kernel install kernel-lt<br>kernel-lt is based on a “long term support” branch<br>kernel-ml is based on the “mainline stable” branch</p>
 <p>#centos8不用更改内核启动顺序<br>#centos7的bios启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/grub2/grub.cfg;<br>#centos7的efi启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;</p>
-<h2 id="K8S初始化"><a href="#K8S初始化" class="headerlink" title="K8S初始化"></a>K8S初始化</h2><p>kubeadm config print init-defaults</p>
-<p>–skip-phases=addon/kube-proxy;</p>
+<h2 id="K8S初始化"><a href="#K8S初始化" class="headerlink" title="K8S初始化"></a>K8S初始化</h2><p>yum install kubelet kubeadm kubectl containerd.io</p>
+<p>kubeadm config print init-defaults</p>
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/control-plane-flags/</span>
+<span class="hljs-comment"># kubeadm init --config init-defaults.yaml --upload-certs --skip-phases=addon/coredns</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">InitConfiguration</span>
+<span class="hljs-attr">nodeRegistration:</span>
+  <span class="hljs-attr">criSocket:</span> <span class="hljs-string">/var/run/containerd/containerd.sock</span>
+  <span class="hljs-attr">name:</span> <span class="hljs-string">node</span>
+  <span class="hljs-attr">taints:</span> <span class="hljs-literal">null</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
+<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
+<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
+<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-attr">dns:</span>
+  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
+<span class="hljs-attr">etcd:</span>
+  <span class="hljs-attr">local:</span>
+    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
+<span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
+<span class="hljs-comment"># imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers</span>
+<span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-number">1.21</span><span class="hljs-number">.2</span>
+<span class="hljs-attr">networking:</span>
+  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
+  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
+<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
+<span class="hljs-meta">---</span>
+<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
+<span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
+<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span></code></pre></div>
 
+<p>–skip-phases=addon/coredns<br>–skip-phases=addon/kube-proxy<br>–skip-phases=addon/kube-proxy,addon/coredns</p>
+<h3 id="CA"><a href="#CA" class="headerlink" title="CA"></a>CA</h3><div class="hljs"><pre><code class="hljs shell">openssl x509 -in ca.pem -out ca.crt
+openssl rsa -in ca-key.pem -out ca.key
+
+只在主节点上生成CA
+bin/elasticsearch-certutil ca --days 36500
+签发证书
+bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12 --days 36500
+转换证书、验证有效期
+openssl pkcs12 -in elastic-certificates.p12 -out elastic-certificates.pem -nodes
+openssl x509 -in elastic-certificates.pem -noout -dates
+
+mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubeadm join 10.10.253.16:6443 --token 8gntrw.collopy8yolzmxzu \
+	--discovery-token-ca-cert-hash sha256:3b6ceec33bc3d99ce5f2dd157eed51c7cd010e48948a71068e4a63fece02a1b4
+
+
+yum install bash-completion
+kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
             </div>
             <hr>
             <div>

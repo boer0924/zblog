@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      115 字
+      186 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      3
        分钟
     </span>
   
@@ -252,9 +252,41 @@ jmap -dump:format=b,file=heapDump.hprof 14583
 jhat heapDump.hprof
 
 
--XX:+HeapDumpOnOutOfMemoryError</code></pre></div>
+-XX:+HeapDumpOnOutOfMemoryError
 
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://www.hollischuang.com/archives/308" target="_blank" rel="noopener">https://www.hollischuang.com/archives/308</a></p>
+-XX:HeapDumpPath=./
+
+<span class="hljs-comment"># CMS</span>
+-Xms200M
+-Xmx200M
+-XX:+UseConcMarkSweepGC
+-XX:CMSInitiatingOccupancyFraction=92
+-XX:+UseCMSInitiatingOccupancyOnly
+-XX:CMSBootstrapOccupancy=92
+-xx:CMSWaitDuration=2000
+<span class="hljs-comment"># -verbose:gc</span>
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-Xloggc:./gc.log
+-XX:+UseGCLogFileRotation
+-XX:NumberOfGCLogFiles=1
+-XX:GCLogFileSize=512M
+
+<span class="hljs-comment"># G1</span>
+-Xms200M
+-Xmx200M
+-XX:+UseG1GC
+-XX:SurvivorRatio=8
+-XX:MaxTenuringThreshold=1
+-XX:+UnlockExperimentalVMOptions
+-XX:G1MaxNewSizePercent=50
+-XX:G1HeapRegionSize=4M
+-XX:+PrintGC
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-Xloggc:./gc.log</code></pre></div>
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://www.hollischuang.com/archives/308" target="_blank" rel="noopener">https://www.hollischuang.com/archives/308</a><br><a href="https://www.cnblogs.com/chiangchou/p/jvm-4.html" target="_blank" rel="noopener">https://www.cnblogs.com/chiangchou/p/jvm-4.html</a></p>
 
             </div>
             <hr>

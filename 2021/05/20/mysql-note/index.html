@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      263 字
+      531 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      10
        分钟
     </span>
   
@@ -228,6 +228,11 @@
 
 <h3 id="MySQL备份恢复"><a href="#MySQL备份恢复" class="headerlink" title="MySQL备份恢复"></a>MySQL备份恢复</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## MySQL客户端必须软件包</span>
 <span class="hljs-comment"># https://downloads.mysql.com/archives/community/</span>
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-client-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-common-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-libs-5.7.26-1.el7.x86_64.rpm
+curl -LO https://cdn.mysql.com/archives/mysql-5.7/mysql-community-libs-compat-5.7.26-1.el7.x86_64.rpm
+
 mysql-community-client
 mysql-community-common
 mysql-community-libs
@@ -280,6 +285,34 @@ useradd -c <span class="hljs-string">'DBA Account'</span> -p <span class="hljs-s
 <span class="hljs-comment"># 卸载rpm不执行脚本</span>
 rpm -e --nopostun --nopreun x.rpm</code></pre></div>
 
+<h3 id="MySQL增量备份-同步-my2sql"><a href="#MySQL增量备份-同步-my2sql" class="headerlink" title="MySQL增量备份/同步 my2sql"></a>MySQL增量备份/同步 my2sql</h3><div class="hljs"><pre><code class="hljs shell">outputs=$(MYSQL_PWD=Root_123 mysql -h 10.10.253.16 -s -u root &lt;&lt; EOF
+show master status;
+EOF
+)
+
+<span class="hljs-meta">#</span><span class="bash"> <span class="hljs-built_in">read</span> <span class="hljs-built_in">history</span> postion and binlog file.</span>
+history=$(cat .history.db)
+his_binlog=$(echo $history | cut -d' ' -f1)
+his_binpos=$(echo $history | cut -d' ' -f2)
+
+<span class="hljs-meta">#</span><span class="bash"> write current postion and binlog file.</span>
+echo $outputs &gt; .history.db
+binlog=$(echo $outputs | cut -d' ' -f1)
+binpos=$(echo $outputs | cut -d' ' -f2)
+
+<span class="hljs-meta">#</span><span class="bash"> MYSQL_PWD=Root_123 mysqlbinlog -h 10.10.253.16 -d <span class="hljs-variable">$db_name</span> -R -u root --base64-output=decode-rows -v --start-position=<span class="hljs-variable">$his_binpos</span> --stop-position=<span class="hljs-variable">$binpos</span> <span class="hljs-variable">$his_binlog</span> <span class="hljs-variable">$binlog</span> &gt; <span class="hljs-variable">$db_name</span><span class="hljs-variable">$his_binpos</span><span class="hljs-variable">$binpos</span>.sql</span>
+
+<span class="hljs-meta">#</span><span class="bash"> my2sql tool parse binlog to sql</span>
+db_name=test
+db_tables=all
+<span class="hljs-meta">#</span><span class="bash"> db_tables=order,common,payment</span>
+my2sql -user root -password Root_123 -host 10.10.253.16 -port 3306 -databases $db_name -work-type 2sql -start-file $his_binlog -stop-file $binlog -start-pos $his_binpos -stop-pos $binpos -output-dir sql -do-not-add-prifixDb
+<span class="hljs-meta">#</span><span class="bash"> &gt;/dev/null 2&gt;&amp;1</span>
+echo "binlog parse ok..."
+
+<span class="hljs-meta">#</span><span class="bash"> import target database.</span>
+MYSQL_PWD=Root_123 mysql -h 10.10.253.16 -s -u root testbus &lt; sql/forward.3.sql
+echo "increment restore ok..."</code></pre></div>
             </div>
             <hr>
             <div>
