@@ -434,6 +434,9 @@ bin/stop-hbase.sh
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-yarn/hadoop-yarn-site/ResourceManagerHA.html
 - https://hadoop.apache.org/docs/r2.10.1/hadoop-project-dist/hadoop-common/FileSystemShell.html
 - https://hbase.apache.org/book.html#getting_started
-- https://ken.io/note/hadoop-cluster-deploy-guide
-- https://zhuanlan.zhihu.com/p/222937515
-- https://blog.csdn.net/nazeniwaresakini/article/details/108770855
+- [Hadoop高可用集群部署指南](https://ken.io/note/hadoop-cluster-deploy-guide)
+- [Flink集群搭建一篇就够了](https://zhuanlan.zhihu.com/p/222937515)
+- [Flink on YARN的第三种部署模式：Application Mode](https://blog.csdn.net/nazeniwaresakini/article/details/108770855)
+- [深入浅出 Hadoop YARN](https://zhuanlan.zhihu.com/p/54192454)
+
+- [raft一致性算法详解](https://i6448038.github.io/2018/12/12/raft/)

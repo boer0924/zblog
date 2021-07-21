@@ -495,6 +495,45 @@ SELECT
 FROM system.clusters
 ```
 
+### 用户权限
+```xml
+<yandex>
+  <users>
+    <!-- If user name was not specified, 'default' user is used. -->
+    <user_name>
+      <password></password>
+      <!-- Or -->
+      <!-- PASSWORD=$(base64 < /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-' -->
+      <password_sha256_hex></password_sha256_hex>
+      <access_management>1</access_management>
+
+      <networks incl="networks" replace="replace">
+      </networks>
+
+      <profile>profile_name</profile>
+
+      <quota>default</quota>
+
+      <databases>
+          <database_name>
+              <table_name>
+                  <filter>expression</filter>
+              <table_name>
+          </database_name>
+      </databases>
+    </user_name>
+    <!-- Other users settings -->
+  </users>
+</yandex>
+```
+
+```bash
+PASSWORD=$(base64 < /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-'
+```
+
+- https://clickhouse.tech/docs/zh/operations/access-rights/
+
+
 # 理想配置
 > - https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse
 > - https://github.com/ClickHouse/ClickHouse/issues/1287
