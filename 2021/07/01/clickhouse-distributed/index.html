@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2k 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      36
+      39
        分钟
     </span>
   
@@ -686,6 +686,40 @@ clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits
     default_database
 <span class="hljs-keyword">FROM</span> system.clusters</code></pre></div>
 
+<h3 id="用户权限"><a href="#用户权限" class="headerlink" title="用户权限"></a>用户权限</h3><div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">users</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- If user name was not specified, 'default' user is used. --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">user_name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span>
+      <span class="hljs-comment">&lt;!-- Or --&gt;</span>
+      <span class="hljs-comment">&lt;!-- PASSWORD=$(base64 &lt; /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-' --&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">password_sha256_hex</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password_sha256_hex</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">access_management</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">access_management</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">networks</span> <span class="hljs-attr">incl</span>=<span class="hljs-string">"networks"</span> <span class="hljs-attr">replace</span>=<span class="hljs-string">"replace"</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">networks</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">profile</span>&gt;</span>profile_name<span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">quota</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">quota</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">databases</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">database_name</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span>
+                  <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>expression<span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">database_name</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">databases</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">user_name</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Other users settings --&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">users</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span></code></pre></div>
+
+<div class="hljs"><pre><code class="hljs bash">PASSWORD=$(base64 &lt; /dev/urandom | head -c8); <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$PASSWORD</span>"</span>; <span class="hljs-built_in">echo</span> -n <span class="hljs-string">"<span class="hljs-variable">$PASSWORD</span>"</span> | sha256sum | tr -d <span class="hljs-string">'-'</span></code></pre></div>
+
+<ul>
+<li><a href="https://clickhouse.tech/docs/zh/operations/access-rights/" target="_blank" rel="noopener">https://clickhouse.tech/docs/zh/operations/access-rights/</a></li>
+</ul>
 <h1 id="理想配置"><a href="#理想配置" class="headerlink" title="理想配置"></a>理想配置</h1><blockquote>
 <ul>
 <li><a href="https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse" target="_blank" rel="noopener">https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse</a></li>
