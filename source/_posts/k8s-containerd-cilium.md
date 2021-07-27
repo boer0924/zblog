@@ -73,10 +73,14 @@ grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;
 ## K8S初始化
 yum install kubelet kubeadm kubectl containerd.io
 
+### contained retag images
+crictl pull docker.io/coredns/coredns:1.8.0
+ctr -n k8s.io i tag docker.io/coredns/coredns:1.8.0 registry.aliyuncs.com/google_containers/coredns:v1.8.0
+
 kubeadm config print init-defaults
 ```yaml
 # https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/control-plane-flags/
-# kubeadm init --config init-defaults.yaml --upload-certs --skip-phases=addon/coredns
+# kubeadm init --config init-defaults.yaml --upload-certs
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 nodeRegistration:
@@ -95,7 +99,6 @@ etcd:
   local:
     dataDir: /var/lib/etcd
 imageRepository: registry.aliyuncs.com/google_containers
-# imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers
 kubernetesVersion: 1.21.2
 networking:
   dnsDomain: cluster.local
@@ -107,6 +110,7 @@ kind: KubeProxyConfiguration
 mode: ipvs
 ```
 
+kubeadm init --config init-defaults.yaml --upload-certs --skip-phases=addon/coredns
 --skip-phases=addon/coredns
 --skip-phases=addon/kube-proxy
 --skip-phases=addon/kube-proxy,addon/coredns
@@ -131,6 +135,11 @@ mkdir -p $HOME/.kube
 kubeadm join 10.10.253.16:6443 --token 8gntrw.collopy8yolzmxzu \
 	--discovery-token-ca-cert-hash sha256:3b6ceec33bc3d99ce5f2dd157eed51c7cd010e48948a71068e4a63fece02a1b4
 
+# ComponentStatus
+kubectl get cs
+/etc/kubernetes/manifests/kube-scheduler.yaml
+/etc/kubernetes/manifests/kube-controller-manager.yaml
+# 删除这两个文件中命令选项中的- --port=0这行，重启kubelet
 
 yum install bash-completion
 kubectl completion bash >/etc/bash_completion.d/kubectl
