@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>Kubernetes新技术研究 · ~·boer·~ 乌托邦</title>
+  <title>N-Way Multi-Provider OpenLDAP实践 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -168,8 +168,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-20 16:16" pubdate>
-        2021年5月20日 下午
+      <time datetime="2021-07-25 16:50" pubdate>
+        2021年7月25日 下午
       </time>
     </span>
   
@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      775 字
+      610 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      11
        分钟
     </span>
   
@@ -220,85 +220,181 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">Kubernetes新技术研究</h1>
+            <h1 style="display: none">N-Way Multi-Provider OpenLDAP实践</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>eBPF 是我见过的 Linux 中最神奇的技术，没有之一，已成为 Linux 内核中顶级子模块，从 tcpdump 中用作网络包过滤的经典 cbpf，到成为通用 Linux 内核技术的 eBPF，已经完成华丽蜕变，为应用与神奇的内核打造了一座桥梁，在系统跟踪、观测、性能调优、安全和网络等领域发挥重要的角色。为 Service Mesh 打造了具备 API 感知和安全高效的容器网络方案 Cilium，其底层正是基于 eBPF 技术</p>
-<p>-<a href="https://cloudnative.to/blog/bpf-intro/" target="_blank" rel="noopener">https://cloudnative.to/blog/bpf-intro/</a></p>
+              <p>Replicated directories are a fundamental requirement for delivering a resilient enterprise deployment.</p>
 <a id="more"></a>
 
-<h1 id="Containerd"><a href="#Containerd" class="headerlink" title="Containerd"></a>Containerd</h1><p>cat &lt;&lt;EOF | tee /etc/modules-load.d/containerd.conf<br>overlay<br>br_netfilter<br>EOF</p>
-<p>modprobe overlay<br>modprobe br_netfilter</p>
-<p>yum install -y yum-utils<br>yum-config-manager –add-repo <a href="https://download.docker.com/linux/centos/docker-ce.repo" target="_blank" rel="noopener">https://download.docker.com/linux/centos/docker-ce.repo</a><br>yum install containerd.io</p>
-<p>mkdir -p /etc/containerd<br>containerd config default | sudo tee /etc/containerd/config.toml</p>
-<p>[plugins.”io.containerd.grpc.v1.cri”.containerd.runtimes.runc]<br>  …<br>  [plugins.”io.containerd.grpc.v1.cri”.containerd.runtimes.runc.options]<br>    SystemdCgroup = true</p>
-<p>sed -i ‘s#k8s.gcr.io#registry.aliyuncs.com/google_containers#g’ /etc/containerd/config.toml<br>sed -i ‘s#registry-1.docker.io#890une7x.mirror.aliyuncs.com#g’ /etc/containerd/config.toml</p>
-<p>systemctl restart containerd</p>
-<h1 id="crictl"><a href="#crictl" class="headerlink" title="crictl"></a>crictl</h1><p><a href="https://kubernetes.io/zh/docs/tasks/debug-application-cluster/crictl/" target="_blank" rel="noopener">https://kubernetes.io/zh/docs/tasks/debug-application-cluster/crictl/</a><br><a href="https://github.com/kubernetes-sigs/cri-tools/tags" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/cri-tools/tags</a><br>curl -L <a href="https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz" target="_blank" rel="noopener">https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz</a> -o crictl-v1.21.0-linux-amd64.tar.gz</p>
-<p>cat &lt;&lt; EOF | tee /etc/crictl.yaml<br>runtime-endpoint: unix:///run/containerd/containerd.sock<br>image-endpoint: unix:///run/containerd/containerd.sock<br>timeout: 10<br>debug: false<br>EOF</p>
-<h1 id="Cilium"><a href="#Cilium" class="headerlink" title="Cilium"></a>Cilium</h1><p><a href="https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements" target="_blank" rel="noopener">https://docs.cilium.io/en/v1.10/concepts/kubernetes/requirements/#k8s-requirements</a></p>
-<h2 id="内核升级"><a href="#内核升级" class="headerlink" title="内核升级"></a>内核升级</h2><h1 id="https-elrepo-org-tiki-HomePage"><a href="#https-elrepo-org-tiki-HomePage" class="headerlink" title="https://elrepo.org/tiki/HomePage"></a><a href="https://elrepo.org/tiki/HomePage" target="_blank" rel="noopener">https://elrepo.org/tiki/HomePage</a></h1><p>rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="noopener">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a><br>yum install <a href="https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm" target="_blank" rel="noopener">https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm</a><br>yum –enablerepo=elrepo-kernel install kernel-lt<br>kernel-lt is based on a “long term support” branch<br>kernel-ml is based on the “mainline stable” branch</p>
-<p>#centos8不用更改内核启动顺序<br>#centos7的bios启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/grub2/grub.cfg;<br>#centos7的efi启动，选择第一个启动<br>grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;</p>
-<h2 id="K8S初始化"><a href="#K8S初始化" class="headerlink" title="K8S初始化"></a>K8S初始化</h2><p>yum install kubelet kubeadm kubectl containerd.io</p>
-<h3 id="contained-retag-images"><a href="#contained-retag-images" class="headerlink" title="contained retag images"></a>contained retag images</h3><p>crictl pull docker.io/coredns/coredns:1.8.0<br>ctr -n k8s.io i tag docker.io/coredns/coredns:1.8.0 registry.aliyuncs.com/google_containers/coredns:v1.8.0</p>
-<p>kubeadm config print init-defaults</p>
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/control-plane-flags/</span>
-<span class="hljs-comment"># kubeadm init --config init-defaults.yaml --upload-certs</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">InitConfiguration</span>
-<span class="hljs-attr">nodeRegistration:</span>
-  <span class="hljs-attr">criSocket:</span> <span class="hljs-string">/var/run/containerd/containerd.sock</span>
-  <span class="hljs-attr">name:</span> <span class="hljs-string">node</span>
-  <span class="hljs-attr">taints:</span> <span class="hljs-literal">null</span>
-<span class="hljs-meta">---</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
-<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
-<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
-<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-attr">dns:</span>
-  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
-<span class="hljs-attr">etcd:</span>
-  <span class="hljs-attr">local:</span>
-    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
-<span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
-<span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-number">1.21</span><span class="hljs-number">.2</span>
-<span class="hljs-attr">networking:</span>
-  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
-  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
-<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-meta">---</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
-<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Server ID</th>
+<th>IP Address</th>
+<th>Port</th>
+<th>RootDomain</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>10.10.253.16</td>
+<td>10389</td>
+<td>dc=boer,dc=xyz</td>
+</tr>
+<tr>
+<td>2</td>
+<td>10.10.253.17</td>
+<td>10389</td>
+<td>dc=boer,dc=xyz</td>
+</tr>
+</tbody></table>
+<h3 id="基础安装"><a href="#基础安装" class="headerlink" title="基础安装"></a>基础安装</h3><p>yum install openldap openldap-servers openldap-clients</p>
+<ul>
+<li>openldap-2.4.44-23.el7_9.x86_64</li>
+<li>openldap-clients-2.4.44-23.el7_9.x86_64</li>
+<li>openldap-servers-2.4.44-23.el7_9.x86_64<div class="hljs"><pre><code class="hljs bash">cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+chown ldap:ldap /var/lib/ldap/DB_CONFIG</code></pre></div>
 
-<p>kubeadm init –config init-defaults.yaml –upload-certs –skip-phases=addon/coredns<br>–skip-phases=addon/coredns<br>–skip-phases=addon/kube-proxy<br>–skip-phases=addon/kube-proxy,addon/coredns</p>
-<h3 id="CA"><a href="#CA" class="headerlink" title="CA"></a>CA</h3><div class="hljs"><pre><code class="hljs shell">openssl x509 -in ca.pem -out ca.crt
-openssl rsa -in ca-key.pem -out ca.key
+</li>
+</ul>
+<h3 id="更改默认端口"><a href="#更改默认端口" class="headerlink" title="更改默认端口"></a>更改默认端口</h3><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/slapd
+SLAPD_URLS=<span class="hljs-string">"ldapi:/// ldap://127.0.0.1 ldap://10.10.253.17:10389"</span>
 
-只在主节点上生成CA
-bin/elasticsearch-certutil ca --days 36500
-签发证书
-bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12 --days 36500
-转换证书、验证有效期
-openssl pkcs12 -in elastic-certificates.p12 -out elastic-certificates.pem -nodes
-openssl x509 -in elastic-certificates.pem -noout -dates
+<span class="hljs-comment"># 最后面不能加/</span>
+<span class="hljs-comment"># https://www.openldap.com/lists/openldap-technical/201908/msg00064.html</span></code></pre></div>
 
-mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+<h3 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h3><p><code>slappasswd -s &lt;your plain password&gt;</code></p>
+<h3 id="根域"><a href="#根域" class="headerlink" title="根域"></a>根域</h3><p>rootdomain.ldif<br>ldapmodify -H ldapi:/// -f rootdomain.ldif</p>
+<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-attribute">dn</span>: olcDatabase=&#123;2&#125;hdb,cn=config
+<span class="hljs-attribute">changetype</span>: modify
+<span class="hljs-attribute">replace</span>: olcRootDN
+<span class="hljs-attribute">olcRootDN</span>: cn=admin,dc=boer,dc=xyz
+<span class="hljs-literal">-</span>
+<span class="hljs-attribute">replace</span>: olcSuffix
+<span class="hljs-attribute">olcSuffix</span>: dc=boer,dc=xyz
+<span class="hljs-literal">-</span>
+<span class="hljs-attribute">replace</span>: olcRootPW
+<span class="hljs-attribute">olcRootPW</span>: &#123;SSHA&#125;TB15thSmhidpmyPOl2wXe0j0R5AU2kph
 
-kubeadm join 10.10.253.16:6443 --token 8gntrw.collopy8yolzmxzu \
-	--discovery-token-ca-cert-hash sha256:3b6ceec33bc3d99ce5f2dd157eed51c7cd010e48948a71068e4a63fece02a1b4
+<span class="hljs-attribute">dn</span>: olcDatabase=&#123;1&#125;monitor,cn=config
+<span class="hljs-attribute">changetype</span>: modify
+<span class="hljs-attribute">replace</span>: olcAccess
+<span class="hljs-attribute">olcAccess</span>: &#123;0&#125;to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=extern
+ al,cn=auth" read by dn.base="cn=admin,dc=boer,dc=xyz" read by * none</code></pre></div>
 
-<span class="hljs-meta">#</span><span class="bash"> ComponentStatus</span>
-kubectl get cs
-/etc/kubernetes/manifests/kube-scheduler.yaml
-/etc/kubernetes/manifests/kube-controller-manager.yaml
-<span class="hljs-meta">#</span><span class="bash"> 删除这两个文件中命令选项中的- --port=0这行，重启kubelet</span>
+<h3 id="导入schema"><a href="#导入schema" class="headerlink" title="导入schema"></a>导入schema</h3><p>ls /etc/openldap/schema/*.ldif | while read f; do ldapadd -Y EXTERNAL -H ldapi:/// -f $f; done</p>
+<h3 id="默认域"><a href="#默认域" class="headerlink" title="默认域"></a>默认域</h3><p>basedomain.ldif<br>ldapadd -H ldapi:/// -f basedomain.ldif<br>ldapadd -x -H ldapi:/// -D cn=admin,dc=boer,dc=xyz -W -f basedomain.ldif</p>
+<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-comment"># vim basedomain.ldif</span>
+<span class="hljs-attribute">dn</span>: dc=boer,dc=xyz
+<span class="hljs-attribute">objectClass</span>: top
+<span class="hljs-attribute">objectClass</span>: dcObject
+<span class="hljs-attribute">objectclass</span>: organization
+<span class="hljs-attribute">o</span>: Boer Inc
+<span class="hljs-attribute">dc</span>: boer
 
-yum install bash-completion
-kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
+<span class="hljs-attribute">dn</span>: ou=users,dc=boer,dc=xyz
+<span class="hljs-attribute">objectClass</span>: organizationalUnit
+<span class="hljs-attribute">ou</span>: users
+
+<span class="hljs-attribute">dn</span>: ou=groups,dc=boer,dc=xyz
+<span class="hljs-attribute">objectClass</span>: organizationalUnit
+<span class="hljs-attribute">ou</span>: groups</code></pre></div>
+
+<h3 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h3><p>syncprov_mod.ldif<br>ldapadd -H ldapi:/// -f syncprov_mod.ldif</p>
+<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-attribute">dn</span>: cn=module,cn=config
+<span class="hljs-attribute">objectClass</span>: olcModuleList
+<span class="hljs-attribute">cn</span>: module
+<span class="hljs-attribute">olcModulePath</span>: /usr/local/libexec/openldap
+<span class="hljs-attribute">olcModuleLoad</span>: syncprov.la</code></pre></div>
+
+<p>config_repl.ldif<br>ldapmodify -H ldapi:/// -f config_repl.ldif</p>
+<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-comment">### Update Server ID with LDAP URL ###</span>
+<span class="hljs-attribute">dn</span>: cn=config
+<span class="hljs-attribute">changetype</span>: modify
+<span class="hljs-attribute">replace</span>: olcServerID
+<span class="hljs-attribute">olcServerID</span>: 1 ldap://10.10.253.16:10389
+<span class="hljs-attribute">olcServerID</span>: 2 ldap://10.10.253.17:10389
+
+<span class="hljs-comment">### Enable replication ###</span>
+<span class="hljs-comment">### config repl</span>
+<span class="hljs-attribute">dn</span>: olcOverlay=syncprov,olcDatabase=&#123;0&#125;config,cn=config
+<span class="hljs-attribute">changetype</span>: add
+<span class="hljs-attribute">objectClass</span>: olcOverlayConfig
+<span class="hljs-attribute">objectClass</span>: olcSyncProvConfig
+<span class="hljs-attribute">olcOverlay</span>: syncprov
+
+<span class="hljs-comment">### config repl details</span>
+<span class="hljs-attribute">dn</span>: olcDatabase=&#123;0&#125;config,cn=config
+<span class="hljs-attribute">changetype</span>: modify
+<span class="hljs-attribute">add</span>: olcSyncRepl
+<span class="hljs-attribute">olcSyncRepl:</span>
+<span class="hljs-attribute">  rid=001</span>
+<span class="hljs-attribute">  provider=ldap://10.10.253.16:10389</span>
+<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  bindmethod=simple</span>
+<span class="hljs-attribute">  credentials=Root_123</span>
+<span class="hljs-attribute">  searchbase="cn=config"</span>
+<span class="hljs-attribute">  type=refreshAndPersist</span>
+<span class="hljs-attribute">  retry="5 5 300 5"</span>
+<span class="hljs-attribute">  timeout=1</span>
+<span class="hljs-attribute">olcSyncRepl:</span>
+<span class="hljs-attribute">  rid=002</span>
+<span class="hljs-attribute">  provider=ldap://10.10.253.17:10389</span>
+<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  bindmethod=simple</span>
+<span class="hljs-attribute">  credentials=Root_123</span>
+<span class="hljs-attribute">  searchbase="cn=config"</span>
+<span class="hljs-attribute">  type=refreshAndPersist</span>
+<span class="hljs-attribute">  retry="5 5 300 5"</span>
+<span class="hljs-attribute">  timeout=1</span>
+<span class="hljs-attribute">-</span>
+<span class="hljs-attribute">add</span>: olcMirrorMode
+<span class="hljs-attribute">olcMirrorMode</span>: TRUE
+
+<span class="hljs-comment">###</span>
+<span class="hljs-comment">### hdb data repl</span>
+<span class="hljs-attribute">dn</span>: olcOverlay=syncprov,olcDatabase=&#123;2&#125;hdb,cn=config
+<span class="hljs-attribute">changetype</span>: add
+<span class="hljs-attribute">objectClass</span>: olcOverlayConfig
+<span class="hljs-attribute">objectClass</span>: olcSyncProvConfig
+<span class="hljs-attribute">olcOverlay</span>: syncprov
+
+<span class="hljs-comment">### Adding details for replication ###</span>
+<span class="hljs-attribute">dn</span>: olcDatabase=&#123;2&#125;hdb,cn=config
+<span class="hljs-attribute">changetype</span>: modify
+<span class="hljs-attribute">add</span>: olcSyncRepl
+<span class="hljs-attribute">olcSyncRepl:</span>
+<span class="hljs-attribute">  rid=001</span>
+<span class="hljs-attribute">  provider=ldap://10.10.253.16:10389</span>
+<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  bindmethod=simple</span>
+<span class="hljs-attribute">  credentials=Root_123</span>
+<span class="hljs-attribute">  searchbase="dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  type=refreshAndPersist</span>
+<span class="hljs-attribute">  retry="5 5 300 5"</span>
+<span class="hljs-attribute">  timeout=1</span>
+<span class="hljs-attribute">olcSyncRepl:</span>
+<span class="hljs-attribute">  rid=002</span>
+<span class="hljs-attribute">  provider=ldap://10.10.253.17:10389</span>
+<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  bindmethod=simple</span>
+<span class="hljs-attribute">  credentials=Root_123</span>
+<span class="hljs-attribute">  searchbase="dc=boer,dc=xyz"</span>
+<span class="hljs-attribute">  type=refreshAndPersist</span>
+<span class="hljs-attribute">  retry="5 5 300 5"</span>
+<span class="hljs-attribute">  timeout=1</span>
+<span class="hljs-attribute">-</span>
+<span class="hljs-attribute">add</span>: olcMirrorMode
+<span class="hljs-attribute">olcMirrorMode</span>: TRUE</code></pre></div>
+
+
+<h3 id="管理端LDAP-Admin"><a href="#管理端LDAP-Admin" class="headerlink" title="管理端LDAP Admin"></a>管理端LDAP Admin</h3><p>LDAP Admin</p>
+<p>ldapmodify<br>ldapadd<br>ldapdelete<br>ldapsearch<br>slaptest -u</p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
+<li><a href="https://www.openldap.org/doc/admin24/replication.html" target="_blank" rel="noopener">https://www.openldap.org/doc/admin24/replication.html</a></li>
+<li><a href="https://www.jianshu.com/p/d7fbeb12d138" target="_blank" rel="noopener">https://www.jianshu.com/p/d7fbeb12d138</a></li>
+</ul>
+
             </div>
             <hr>
             <div>
@@ -307,7 +403,7 @@ kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Kubernetes/">Kubernetes</a>
+                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
                     
                   </div>
                 
@@ -315,9 +411,7 @@ kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Cilium/">Cilium</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Containerd/">Containerd</a>
+                      <a class="hover-with-bg" href="/tags/OpenLDAP/">OpenLDAP</a>
                     
                   </div>
                 
@@ -330,18 +424,12 @@ kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/21/zuul-ratelimit/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ZUUL网关API接口防刷限流</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/05/20/mysql-note/">
-                        <span class="hidden-mobile">MySQL运维笔记</span>
+                      <a href="/2021/07/01/clickhouse-distributed/">
+                        <span class="hidden-mobile">ClickHouse分布式实践</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -545,7 +633,7 @@ kubectl completion bash &gt;/etc/bash_completion.d/kubectl</code></pre></div>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "Kubernetes新技术研究&nbsp;",
+        "N-Way Multi-Provider OpenLDAP实践&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
