@@ -21,6 +21,7 @@ yum install openldap openldap-servers openldap-clients
 - openldap-2.4.44-23.el7_9.x86_64
 - openldap-clients-2.4.44-23.el7_9.x86_64
 - openldap-servers-2.4.44-23.el7_9.x86_64
+
 ```bash
 cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
 chown ldap:ldap /var/lib/ldap/DB_CONFIG
@@ -178,7 +179,6 @@ olcSyncRepl:
 add: olcMirrorMode
 olcMirrorMode: TRUE
 ```
-
 
 ### 管理端LDAP Admin
 LDAP Admin

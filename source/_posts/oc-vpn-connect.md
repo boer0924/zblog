@@ -3,8 +3,8 @@ title: Openconnect VPN
 date: 2020-05-10 10:20:06
 index_img: https://picsum.photos/300/200.webp?ocvpn
 tags:
-  - boer
-  - DevOps
+  - ocserv
+  - VPN
 categories: DevOps
 ---
 2020年已注定是不平凡的一年
