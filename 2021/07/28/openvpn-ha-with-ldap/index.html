@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>N-Way Multi-Provider OpenLDAP实践 · ~·boer·~ 乌托邦</title>
+  <title>OpenVPN with ldap认证实践 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -168,8 +168,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-07-25 16:50" pubdate>
-        2021年7月25日 下午
+      <time datetime="2021-07-28 10:50" pubdate>
+        2021年7月28日 上午
       </time>
     </span>
   
@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      611 字
+      921 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      15
        分钟
     </span>
   
@@ -220,178 +220,170 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">N-Way Multi-Provider OpenLDAP实践</h1>
+            <h1 style="display: none">OpenVPN with ldap认证实践</h1>
             
             <div class="markdown-body" id="post-body">
-              <p>Replicated directories are a fundamental requirement for delivering a resilient enterprise deployment.</p>
+              <p>个人VPN青睐排行：<br>OpenConnect VPN Server(OCServ)<br>WireGuard<br>OpenVPN</p>
+<p>OpenVPN社区版实践笔记<a href="https://openvpn.net/community/" target="_blank" rel="noopener">https://openvpn.net/community/</a><br>高可用的思考：<br>保证多个实例证书相同(easy-rsa工具生成证书拷贝到多个实例)<br>1、在客户端配置多个remote，且随机选择remote-random<br>2、HAProxy负载均衡代理</p>
 <a id="more"></a>
 
-<table>
-<thead>
-<tr>
-<th>Server ID</th>
-<th>IP Address</th>
-<th>Port</th>
-<th>RootDomain</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>10.10.253.16</td>
-<td>10389</td>
-<td>dc=boer,dc=xyz</td>
-</tr>
-<tr>
-<td>2</td>
-<td>10.10.253.17</td>
-<td>10389</td>
-<td>dc=boer,dc=xyz</td>
-</tr>
-</tbody></table>
-<h3 id="基础安装"><a href="#基础安装" class="headerlink" title="基础安装"></a>基础安装</h3><p>yum install openldap openldap-servers openldap-clients</p>
-<ul>
-<li>openldap-2.4.44-23.el7_9.x86_64</li>
-<li>openldap-clients-2.4.44-23.el7_9.x86_64</li>
-<li>openldap-servers-2.4.44-23.el7_9.x86_64</li>
-</ul>
-<div class="hljs"><pre><code class="hljs bash">cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
-chown ldap:ldap /var/lib/ldap/DB_CONFIG</code></pre></div>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">### 版本</span>
+<span class="hljs-comment"># easy-rsa 3.0.8</span>
+<span class="hljs-comment"># openvpn-auth-ldap 2.0.3</span>
+<span class="hljs-comment"># openvpn 2.4.11</span>
+yum install openvpn easy-rsa iptables-services</code></pre></div>
 
-<h3 id="更改默认端口"><a href="#更改默认端口" class="headerlink" title="更改默认端口"></a>更改默认端口</h3><div class="hljs"><pre><code class="hljs bash">vim /etc/sysconfig/slapd
-SLAPD_URLS=<span class="hljs-string">"ldapi:/// ldap://127.0.0.1 ldap://10.10.253.17:10389"</span>
-
-<span class="hljs-comment"># 最后面不能加/</span>
-<span class="hljs-comment"># https://www.openldap.com/lists/openldap-technical/201908/msg00064.html</span></code></pre></div>
-
-<h3 id="设置密码"><a href="#设置密码" class="headerlink" title="设置密码"></a>设置密码</h3><p><code>slappasswd -s &lt;your plain password&gt;</code></p>
-<h3 id="根域"><a href="#根域" class="headerlink" title="根域"></a>根域</h3><p>rootdomain.ldif<br>ldapmodify -H ldapi:/// -f rootdomain.ldif</p>
-<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-attribute">dn</span>: olcDatabase=&#123;2&#125;hdb,cn=config
-<span class="hljs-attribute">changetype</span>: modify
-<span class="hljs-attribute">replace</span>: olcRootDN
-<span class="hljs-attribute">olcRootDN</span>: cn=admin,dc=boer,dc=xyz
-<span class="hljs-literal">-</span>
-<span class="hljs-attribute">replace</span>: olcSuffix
-<span class="hljs-attribute">olcSuffix</span>: dc=boer,dc=xyz
-<span class="hljs-literal">-</span>
-<span class="hljs-attribute">replace</span>: olcRootPW
-<span class="hljs-attribute">olcRootPW</span>: &#123;SSHA&#125;TB15thSmhidpmyPOl2wXe0j0R5AU2kph
-
-<span class="hljs-attribute">dn</span>: olcDatabase=&#123;1&#125;monitor,cn=config
-<span class="hljs-attribute">changetype</span>: modify
-<span class="hljs-attribute">replace</span>: olcAccess
-<span class="hljs-attribute">olcAccess</span>: &#123;0&#125;to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=extern
- al,cn=auth" read by dn.base="cn=admin,dc=boer,dc=xyz" read by * none</code></pre></div>
-
-<h3 id="导入schema"><a href="#导入schema" class="headerlink" title="导入schema"></a>导入schema</h3><p>ls /etc/openldap/schema/*.ldif | while read f; do ldapadd -Y EXTERNAL -H ldapi:/// -f $f; done</p>
-<h3 id="默认域"><a href="#默认域" class="headerlink" title="默认域"></a>默认域</h3><p>basedomain.ldif<br>ldapadd -H ldapi:/// -f basedomain.ldif<br>ldapadd -x -H ldapi:/// -D cn=admin,dc=boer,dc=xyz -W -f basedomain.ldif</p>
-<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-comment"># vim basedomain.ldif</span>
-<span class="hljs-attribute">dn</span>: dc=boer,dc=xyz
-<span class="hljs-attribute">objectClass</span>: top
-<span class="hljs-attribute">objectClass</span>: dcObject
-<span class="hljs-attribute">objectclass</span>: organization
-<span class="hljs-attribute">o</span>: Boer Inc
-<span class="hljs-attribute">dc</span>: boer
-
-<span class="hljs-attribute">dn</span>: ou=users,dc=boer,dc=xyz
-<span class="hljs-attribute">objectClass</span>: organizationalUnit
-<span class="hljs-attribute">ou</span>: users
-
-<span class="hljs-attribute">dn</span>: ou=groups,dc=boer,dc=xyz
-<span class="hljs-attribute">objectClass</span>: organizationalUnit
-<span class="hljs-attribute">ou</span>: groups</code></pre></div>
-
-<h3 id="HA"><a href="#HA" class="headerlink" title="HA"></a>HA</h3><p>syncprov_mod.ldif<br>ldapadd -H ldapi:/// -f syncprov_mod.ldif</p>
-<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-attribute">dn</span>: cn=module,cn=config
-<span class="hljs-attribute">objectClass</span>: olcModuleList
-<span class="hljs-attribute">cn</span>: module
-<span class="hljs-attribute">olcModulePath</span>: /usr/local/libexec/openldap
-<span class="hljs-attribute">olcModuleLoad</span>: syncprov.la</code></pre></div>
-
-<p>config_repl.ldif<br>ldapmodify -H ldapi:/// -f config_repl.ldif</p>
-<div class="hljs"><pre><code class="hljs ldif"><span class="hljs-comment">### Update Server ID with LDAP URL ###</span>
-<span class="hljs-attribute">dn</span>: cn=config
-<span class="hljs-attribute">changetype</span>: modify
-<span class="hljs-attribute">replace</span>: olcServerID
-<span class="hljs-attribute">olcServerID</span>: 1 ldap://10.10.253.16:10389
-<span class="hljs-attribute">olcServerID</span>: 2 ldap://10.10.253.17:10389
-
-<span class="hljs-comment">### Enable replication ###</span>
-<span class="hljs-comment">### config repl</span>
-<span class="hljs-attribute">dn</span>: olcOverlay=syncprov,olcDatabase=&#123;0&#125;config,cn=config
-<span class="hljs-attribute">changetype</span>: add
-<span class="hljs-attribute">objectClass</span>: olcOverlayConfig
-<span class="hljs-attribute">objectClass</span>: olcSyncProvConfig
-<span class="hljs-attribute">olcOverlay</span>: syncprov
-
-<span class="hljs-comment">### config repl details</span>
-<span class="hljs-attribute">dn</span>: olcDatabase=&#123;0&#125;config,cn=config
-<span class="hljs-attribute">changetype</span>: modify
-<span class="hljs-attribute">add</span>: olcSyncRepl
-<span class="hljs-attribute">olcSyncRepl:</span>
-<span class="hljs-attribute">  rid=001</span>
-<span class="hljs-attribute">  provider=ldap://10.10.253.16:10389</span>
-<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  bindmethod=simple</span>
-<span class="hljs-attribute">  credentials=Root_123</span>
-<span class="hljs-attribute">  searchbase="cn=config"</span>
-<span class="hljs-attribute">  type=refreshAndPersist</span>
-<span class="hljs-attribute">  retry="5 5 300 5"</span>
-<span class="hljs-attribute">  timeout=1</span>
-<span class="hljs-attribute">olcSyncRepl:</span>
-<span class="hljs-attribute">  rid=002</span>
-<span class="hljs-attribute">  provider=ldap://10.10.253.17:10389</span>
-<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  bindmethod=simple</span>
-<span class="hljs-attribute">  credentials=Root_123</span>
-<span class="hljs-attribute">  searchbase="cn=config"</span>
-<span class="hljs-attribute">  type=refreshAndPersist</span>
-<span class="hljs-attribute">  retry="5 5 300 5"</span>
-<span class="hljs-attribute">  timeout=1</span>
-<span class="hljs-attribute">-</span>
-<span class="hljs-attribute">add</span>: olcMirrorMode
-<span class="hljs-attribute">olcMirrorMode</span>: TRUE
-
+<h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><div class="hljs"><pre><code class="hljs bash">mkdir /etc/openvpn/server/easy-rsa
+cp -r /usr/share/easy-rsa/3.0.8/* /etc/openvpn/server/easy-rsa/
+cp /usr/share/doc/easy-rsa-3.0.8/vars.example /etc/openvpn/server/easy-rsa/vars
 <span class="hljs-comment">###</span>
-<span class="hljs-comment">### hdb data repl</span>
-<span class="hljs-attribute">dn</span>: olcOverlay=syncprov,olcDatabase=&#123;2&#125;hdb,cn=config
-<span class="hljs-attribute">changetype</span>: add
-<span class="hljs-attribute">objectClass</span>: olcOverlayConfig
-<span class="hljs-attribute">objectClass</span>: olcSyncProvConfig
-<span class="hljs-attribute">olcOverlay</span>: syncprov
+<span class="hljs-comment"># vim /etc/openvpn/server/easy-rsa/vars</span>
+set_var EASYRSA_REQ_COUNTRY	<span class="hljs-string">"CN"</span>
+set_var EASYRSA_REQ_PROVINCE	<span class="hljs-string">"Chongqing"</span>
+set_var EASYRSA_REQ_CITY	<span class="hljs-string">"Chongqing"</span>
+set_var EASYRSA_REQ_ORG		<span class="hljs-string">"Boer Inc."</span>
+set_var EASYRSA_REQ_EMAIL	<span class="hljs-string">"boer0924@gmail.com"</span>
+set_var EASYRSA_REQ_OU		<span class="hljs-string">"boer"</span>
+set_var EASYRSA_KEY_SIZE	2048
+set_var EASYRSA_ALGO		rsa
+set_var EASYRSA_CA_EXPIRE	36500
+set_var EASYRSA_CERT_EXPIRE	36500
 
-<span class="hljs-comment">### Adding details for replication ###</span>
-<span class="hljs-attribute">dn</span>: olcDatabase=&#123;2&#125;hdb,cn=config
-<span class="hljs-attribute">changetype</span>: modify
-<span class="hljs-attribute">add</span>: olcSyncRepl
-<span class="hljs-attribute">olcSyncRepl:</span>
-<span class="hljs-attribute">  rid=001</span>
-<span class="hljs-attribute">  provider=ldap://10.10.253.16:10389</span>
-<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  bindmethod=simple</span>
-<span class="hljs-attribute">  credentials=Root_123</span>
-<span class="hljs-attribute">  searchbase="dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  type=refreshAndPersist</span>
-<span class="hljs-attribute">  retry="5 5 300 5"</span>
-<span class="hljs-attribute">  timeout=1</span>
-<span class="hljs-attribute">olcSyncRepl:</span>
-<span class="hljs-attribute">  rid=002</span>
-<span class="hljs-attribute">  provider=ldap://10.10.253.17:10389</span>
-<span class="hljs-attribute">  binddn="cn=admin,dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  bindmethod=simple</span>
-<span class="hljs-attribute">  credentials=Root_123</span>
-<span class="hljs-attribute">  searchbase="dc=boer,dc=xyz"</span>
-<span class="hljs-attribute">  type=refreshAndPersist</span>
-<span class="hljs-attribute">  retry="5 5 300 5"</span>
-<span class="hljs-attribute">  timeout=1</span>
-<span class="hljs-attribute">-</span>
-<span class="hljs-attribute">add</span>: olcMirrorMode
-<span class="hljs-attribute">olcMirrorMode</span>: TRUE</code></pre></div>
+<span class="hljs-built_in">source</span> ./vars
+<span class="hljs-comment">###</span>
+./easyrsa init-pki
 
-<h3 id="管理端LDAP-Admin"><a href="#管理端LDAP-Admin" class="headerlink" title="管理端LDAP Admin"></a>管理端LDAP Admin</h3><p>LDAP Admin</p>
-<p>ldapmodify<br>ldapadd<br>ldapdelete<br>ldapsearch<br>slaptest -u</p>
-<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
-<li><a href="https://www.openldap.org/doc/admin24/replication.html" target="_blank" rel="noopener">https://www.openldap.org/doc/admin24/replication.html</a></li>
-<li><a href="https://www.jianshu.com/p/d7fbeb12d138" target="_blank" rel="noopener">https://www.jianshu.com/p/d7fbeb12d138</a></li>
+./easyrsa build-ca nopass <span class="hljs-comment"># boer</span>
+
+./easyrsa gen-dh
+
+./easyrsa build-server-full server nopass
+./easyrsa build-client-full client nopass <span class="hljs-comment"># client/用户</span>
+
+mkdir /etc/openvpn/server/certs/
+cp -r ca.crt dh.pem issued/*.crt private/*.key /etc/openvpn/server/certs/
+<span class="hljs-built_in">cd</span> /etc/openvpn/server
+openvpn --genkey --secret ta.key
+cp ta.key /etc/openvpn/server/certs/</code></pre></div>
+
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><ul>
+<li><a href="https://github.com/OpenVPN/openvpn/blob/master/sample/sample-config-files/server.conf" target="_blank" rel="noopener">https://github.com/OpenVPN/openvpn/blob/master/sample/sample-config-files/server.conf</a></li>
+<li><a href="https://github.com/OpenVPN/openvpn/blob/v2.4.11/sample/sample-config-files/server.conf" target="_blank" rel="noopener">https://github.com/OpenVPN/openvpn/blob/v2.4.11/sample/sample-config-files/server.conf</a></li>
+</ul>
+<div class="hljs"><pre><code class="hljs conf">### &#x2F;etc&#x2F;openvpn&#x2F;server
+### touch server.conf
+local 10.10.253.16
+port 1194
+
+; proto udp
+proto tcp
+
+; 使用三层路由IP隧道(tun)还是二层以太网隧道(tap)。一般都使用tun
+dev tun
+
+persist-key
+persist-tun
+
+ca certs&#x2F;ca.crt
+cert certs&#x2F;server.crt
+key certs&#x2F;server.key
+dh certs&#x2F;dh.pem
+tls-auth certs&#x2F;ta.key 0
+
+duplicate-cn
+
+cipher AES-256-CBC
+
+; comp-lzo
+compress lz4-v2
+push &quot;compress lz4-v2&quot;
+
+ifconfig-pool-persist ipp.txt
+server 172.30.1.0 255.255.255.0
+; push &quot;redirect-gateway def1 bypass-dhcp&quot;
+push &quot;dhcp-option DNS 223.5.5.5&quot;
+push &quot;dhcp-option DNS 223.6.6.6&quot;
+; vpn服务端向客户端推送vpn服务端内网网段的路由配置，以便让客户端能够找到服务端内网。多条路由就写多个Push指令
+client-config-dir ccd
+push &quot;route 10.0.0.0 255.255.0.0&quot;
+push &quot;route 10.96.0.0 255.240.0.0&quot;
+max-clients 100
+; 让vpn客户端之间可以互相看见对方，即能互相通信。默认情况客户端只能看到服务端一个人,默认是注释的，不能客户端之间相互看见
+client-to-client
+
+; user openvpn
+; group openvpn
+keepalive 10 120
+status openvpn-status.log
+log openvpn.log
+verb 3
+; explicit-exit-notify 1
+plugin &#x2F;usr&#x2F;lib64&#x2F;openvpn&#x2F;plugin&#x2F;lib&#x2F;openvpn-auth-ldap.so &#x2F;etc&#x2F;openvpn&#x2F;auth&#x2F;ldap.conf # openvpn-auth-ldap
+client-cert-not-required # ldap auth</code></pre></div>
+
+<h3 id="LDAP配置"><a href="#LDAP配置" class="headerlink" title="LDAP配置"></a>LDAP配置</h3><div class="hljs"><pre><code class="hljs conf">&lt;LDAP&gt;
+	URL		ldap:&#x2F;&#x2F;10.10.253.16:10389
+	BindDN		cn&#x3D;admin,dc&#x3D;boer,dc&#x3D;xyz
+	Password	&lt;your_password&gt;
+	Timeout		15
+	TLSEnable	no
+	FollowReferrals no
+&lt;&#x2F;LDAP&gt;
+
+&lt;Authorization&gt;
+	BaseDN		&quot;ou&#x3D;users,dc&#x3D;boer,dc&#x3D;xyz&quot;
+	SearchFilter	&quot;uid&#x3D;%u&quot;
+	RequireGroup	false # 2.0.3bug
+	&lt;Group&gt;
+		BaseDN		&quot;ou&#x3D;groups,dc&#x3D;boer,dc&#x3D;xyz&quot;
+		SearchFilter	&quot;(|(cn&#x3D;developers)(cn&#x3D;devops))&quot;
+		MemberAttribute	memberUid
+	&lt;&#x2F;Group&gt;
+&lt;&#x2F;Authorization&gt;</code></pre></div>
+
+<p>启动服务<code>systemctl start openvpn-server@server.service</code></p>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><ul>
+<li><a href="https://openvpn.net/community-downloads/" target="_blank" rel="noopener">https://openvpn.net/community-downloads/</a></li>
+<li><a href="https://github.com/OpenVPN/openvpn/blob/v2.4.11/sample/sample-config-files/client.conf" target="_blank" rel="noopener">https://github.com/OpenVPN/openvpn/blob/v2.4.11/sample/sample-config-files/client.conf</a></li>
+</ul>
+<p>1、下载服务端证书到本地</p>
+<ul>
+<li>ca.crt</li>
+<li>ta.key</li>
+<li>client.crt [可选]</li>
+<li>client.key [可选]</li>
+</ul>
+<p>2、配置文件</p>
+<div class="hljs"><pre><code class="hljs conf">### Windows client.ovpn
+client
+;dev tap
+dev tun
+proto tcp
+;proto udp
+remote 10.10.253.16 1194
+;remote my-server-2 1194
+;remote-random
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ca.crt
+; cert client.crt
+; key client.key
+auth-user-pass # ldap auth
+remote-cert-tls server
+tls-auth ta.key 1
+cipher AES-256-CBC
+verb 3</code></pre></div>
+
+<h3 id="他山之石"><a href="#他山之石" class="headerlink" title="他山之石"></a>他山之石</h3><ul>
+<li><a href="https://www.mtyun.com/library/how-to-install-OpenVPN" target="_blank" rel="noopener">https://www.mtyun.com/library/how-to-install-OpenVPN</a></li>
+<li><a href="http://www.itca.cc/VPN%E6%90%AD%E5%BB%BA/openvpn-1.html" target="_blank" rel="noopener">在 CentOS7 上搭建 OpenVPN 服务端并添加用户</a></li>
+<li><a href="https://i4t.com/4485.html" target="_blank" rel="noopener">OpenVPN 设置账号密码登录</a></li>
+<li><a href="https://www.liujason.com/old-blog/1698.html" target="_blank" rel="noopener">基于用户名/密码认证和流量控制的OpenVPN系统配置</a></li>
+<li><a href="https://blog.frognew.com/2017/09/openvpn-integration-ldap.html" target="_blank" rel="noopener">OpenVPN集成LDAP认证</a></li>
+<li><a href="https://mrpastor.github.io/2018-02-03/openvpn%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E9%85%8D%E7%BD%AE/" target="_blank" rel="noopener">https://mrpastor.github.io/2018-02-03/openvpn%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E9%85%8D%E7%BD%AE/</a></li>
+<li><a href="https://blog.nuface.tw/?p=1347" target="_blank" rel="noopener">https://blog.nuface.tw/?p=1347</a></li>
 </ul>
 
             </div>
@@ -410,7 +402,11 @@ SLAPD_URLS=<span class="hljs-string">"ldapi:/// ldap://127.0.0.1 ldap://10.10.25
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/OpenLDAP/">OpenLDAP</a>
+                      <a class="hover-with-bg" href="/tags/ocserv/">ocserv</a>
+                    
+                      <a class="hover-with-bg" href="/tags/VPN/">VPN</a>
+                    
+                      <a class="hover-with-bg" href="/tags/OpenVPN/">OpenVPN</a>
                     
                   </div>
                 
@@ -423,18 +419,12 @@ SLAPD_URLS=<span class="hljs-string">"ldapi:/// ldap://127.0.0.1 ldap://10.10.25
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/07/28/openvpn-ha-with-ldap/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">OpenVPN with ldap认证实践</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/07/01/clickhouse-distributed/">
-                        <span class="hidden-mobile">ClickHouse分布式实践</span>
+                      <a href="/2021/07/25/openldap-ha/">
+                        <span class="hidden-mobile">N-Way Multi-Provider OpenLDAP实践</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -638,7 +628,7 @@ SLAPD_URLS=<span class="hljs-string">"ldapi:/// ldap://127.0.0.1 ldap://10.10.25
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "N-Way Multi-Provider OpenLDAP实践&nbsp;",
+        "OpenVPN with ldap认证实践&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
