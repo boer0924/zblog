@@ -74,10 +74,16 @@ grub2-set-default 0;grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg;
 yum install kubelet kubeadm kubectl containerd.io
 
 ### contained retag images
-crictl pull docker.io/coredns/coredns:1.8.0
-ctr -n k8s.io i tag docker.io/coredns/coredns:1.8.0 registry.aliyuncs.com/google_containers/coredns:v1.8.0
+ctr -n k8s.io i pull registry.aliyuncs.com/google_containers/coredns:1.8.0
+ctr -n k8s.io i tag registry.aliyuncs.com/google_containers/coredns:1.8.0 registry.aliyuncs.com/google_containers/coredns:v1.8.0
+
+### 指定CoreDNS IP
+helm repo add coredns https://coredns.github.io/helm
+helm -n kube-system install coredns coredns/coredns --set service.clusterIP=10.96.0.10 service.name=kube-dns
 
 kubeadm config print init-defaults
+kubeadm --config init-defaults.yaml config images list
+kubeadm --config init-defaults.yaml config images pull
 ```yaml
 # https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/control-plane-flags/
 # kubeadm init --config init-defaults.yaml --upload-certs
@@ -135,6 +141,9 @@ mkdir -p $HOME/.kube
 kubeadm join 10.10.253.16:6443 --token 8gntrw.collopy8yolzmxzu \
 	--discovery-token-ca-cert-hash sha256:3b6ceec33bc3d99ce5f2dd157eed51c7cd010e48948a71068e4a63fece02a1b4
 
+vim /var/lib/kubelet/kubeadm-flags.env
+KUBELET_KUBEADM_ARGS="--container-runtime=remote --container-runtime-endpoint=/var/run/containerd/containerd.sock --pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.4.1"
+
 # ComponentStatus
 kubectl get cs
 /etc/kubernetes/manifests/kube-scheduler.yaml
@@ -143,4 +152,24 @@ kubectl get cs
 
 yum install bash-completion
 kubectl completion bash >/etc/bash_completion.d/kubectl
+helm completion bash > /etc/bash_completion.d/helm
+curl -L https://raw.githubusercontent.com/containerd/containerd/main/contrib/autocomplete/ctr -o /etc/bash_completion.d/ctr # ctr自动补全
 ```
+
+
+iptables -F
+iptables -X
+iptables -L
+
+ipvsadm --clear
+ipvsadm -l
+
+ctr -n k8s.io i rm $(ctr -n k8s.io i ls -q)
+ctr -n k8s.io task kill -s SIGKILL $(ctr -n k8s.io task ls -q)
+for t in $(ctr -n k8s.io task ls -q); do ctr -n k8s.io task kill -s SIGKILL $t; done
+ctr -n k8s.io c rm $(ctr -n k8s.io c ls -q)
+
+
+cilium install
+cilium status
+cilium hubble enable --ui
