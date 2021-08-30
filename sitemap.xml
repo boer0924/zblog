@@ -2,48 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.boer.xyz/2019/10/24/k8s-logging-efk/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/10/10/k8s-monitoring-prometheus/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/06/13/middleware-devops-guide/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/02/16/mirror-speed/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2021/05/20/mysql-note/</loc>
     
     <lastmod>2021-08-30</lastmod>
@@ -325,6 +283,48 @@
   
   <url>
     <loc>https://www.boer.xyz/2019/09/24/k8s-ha-deployment/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/10/24/k8s-logging-efk/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/10/10/k8s-monitoring-prometheus/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/06/13/middleware-devops-guide/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/02/16/mirror-speed/</loc>
     
     <lastmod>2021-08-30</lastmod>
     
