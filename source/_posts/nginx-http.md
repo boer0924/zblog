@@ -104,7 +104,7 @@ server {
 }
 
 ; 1、打包地址 VUE_APP_PUBLIC_PATH = '/'
-; 2、接口地址 VUE_APP_BASE_API = '//api.boer.xyz'
+; 2、接口地址 VUE_APP_BASE_API = '//api.boer.xyz' # 相对协议URL
 ; 3、Websocket地址
 ; initWebSocket() {
 ;   let url = window.location.href
