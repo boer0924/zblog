@@ -2,6 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2018/03/29/quick-file-share/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/03/03/redis-keys-command/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2016/09/24/windows-terminal-msys2/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/05/21/zuul-ratelimit/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/googleae03e72bc0dc0b3b.html</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/about/index.html</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
     
     <lastmod>2021-08-30</lastmod>
@@ -16,13 +86,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
     
     <lastmod>2021-08-30</lastmod>
@@ -31,6 +94,13 @@
   
   <url>
     <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
+    
+    <lastmod>2021-08-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
     
     <lastmod>2021-08-30</lastmod>
     
@@ -260,76 +330,6 @@
     
   </url>
   
-  <url>
-    <loc>https://www.boer.xyz/2018/03/29/quick-file-share/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/03/03/redis-keys-command/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2016/09/24/windows-terminal-msys2/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/05/21/zuul-ratelimit/</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/googleae03e72bc0dc0b3b.html</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/about/index.html</loc>
-    
-    <lastmod>2021-08-30</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>https://www.boer.xyz/</loc>
@@ -396,13 +396,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/tags/ClickHouse/</loc>
-    <lastmod>2021-08-30</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/tags/TCP-IP/</loc>
     <lastmod>2021-08-30</lastmod>
     <changefreq>daily</changefreq>
@@ -446,6 +439,13 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/reindex/</loc>
+    <lastmod>2021-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/ClickHouse/</loc>
     <lastmod>2021-08-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1014,14 +1014,14 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/categories/BigData/</loc>
+    <loc>https://www.boer.xyz/categories/Elastic/</loc>
     <lastmod>2021-08-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/categories/Elastic/</loc>
+    <loc>https://www.boer.xyz/categories/BigData/</loc>
     <lastmod>2021-08-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
