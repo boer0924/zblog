@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>对象存储MinIO实践</title>
+    <link href="/2021/09/01/object-storage-of-minio/"/>
+    <url>/2021/09/01/object-storage-of-minio/</url>
+    
+    <content type="html"><![CDATA[<p><a href="https://min.io/" target="_blank" rel="noopener">https://min.io/</a></p><a id="more"></a><h3 id="install-minio"><a href="#install-minio" class="headerlink" title="install minio"></a>install minio</h3><div class="hljs"><pre><code class="hljs groovy">useradd -M -d <span class="hljs-regexp">/opt/</span>minio -s <span class="hljs-regexp">/sbin/</span>nologin -c <span class="hljs-string">"MinIO User"</span> miniomkdir <span class="hljs-regexp">/opt/</span>minio<span class="hljs-regexp">/&#123;bin,data/</span>&#123;drive1,drive2&#125;,certs&#125;curl -sL <span class="hljs-string">https:</span><span class="hljs-comment">//dl.min.io/server/minio/release/linux-amd64/minio -o /opt/minio/bin/minio</span>chown -R minio. <span class="hljs-regexp">/opt/</span>miniochmod a+x <span class="hljs-regexp">/opt/</span>minio<span class="hljs-regexp">/bin/</span>minio</code></pre></div><h3 id="etc-default-minio"><a href="#etc-default-minio" class="headerlink" title="/etc/default/minio"></a>/etc/default/minio</h3><div class="hljs"><pre><code class="hljs conf"># Volume to be used for MinIO server.MINIO_VOLUMES&#x3D;&quot;http:&#x2F;&#x2F;10.10.253.16:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.16:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2 http:&#x2F;&#x2F;10.10.253.17:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.17:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2 http:&#x2F;&#x2F;10.10.253.18:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.18:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2&quot;### Please provide an even number of endpoints greater or equal to 4# Use if you want to run MinIO on a custom port.MINIO_OPTS&#x3D;&quot;--address :19000 --console-address :19001&quot;# Root user for the server.MINIO_ROOT_USER&#x3D;admin# Root secret for the server.MINIO_ROOT_PASSWORD&#x3D;passw0rd</code></pre></div><h3 id="etc-systemd-system"><a href="#etc-systemd-system" class="headerlink" title="/etc/systemd/system"></a>/etc/systemd/system</h3><div class="hljs"><pre><code class="hljs conf">[Unit]Description&#x3D;MinIODocumentation&#x3D;https:&#x2F;&#x2F;docs.min.ioWants&#x3D;network-online.targetAfter&#x3D;network-online.targetAssertFileIsExecutable&#x3D;&#x2F;opt&#x2F;minio&#x2F;bin&#x2F;minio[Service]WorkingDirectory&#x3D;&#x2F;opt&#x2F;minioUser&#x3D;minioGroup&#x3D;minioEnvironmentFile&#x3D;-&#x2F;etc&#x2F;default&#x2F;minioExecStartPre&#x3D;&#x2F;bin&#x2F;bash -c &quot;if [ -z \&quot;$&#123;MINIO_VOLUMES&#125;\&quot; ]; then echo \&quot;Variable MINIO_VOLUMES not set in &#x2F;etc&#x2F;default&#x2F;minio\&quot;; exit 1; fi&quot;ExecStart&#x3D;&#x2F;opt&#x2F;minio&#x2F;bin&#x2F;minio server $MINIO_OPTS $MINIO_VOLUMES# Let systemd restart this service alwaysRestart&#x3D;always# Specifies the maximum file descriptor number that can be opened by this processLimitNOFILE&#x3D;65536# Specifies the maximum number of threads this process can createTasksMax&#x3D;infinity# Disable timeout logic and wait until process is stoppedTimeoutStopSec&#x3D;infinitySendSIGKILL&#x3D;no[Install]WantedBy&#x3D;multi-user.target# Built for $&#123;project.name&#125;-$&#123;project.version&#125; ($&#123;project.name&#125;)</code></pre></div><h3 id="MinIO-Ops"><a href="#MinIO-Ops" class="headerlink" title="MinIO Ops"></a>MinIO Ops</h3><p><code>systemctl start minio.service</code><br><code>journalctl -fu minio.service</code></p><h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul><li><a href="https://github.com/minio/minio-service/tree/master/linux-systemd" target="_blank" rel="noopener">https://github.com/minio/minio-service/tree/master/linux-systemd</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MinIO</tag>
+      
+      <tag>OSS</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>MySQL To ClickHouse数据实时同步引擎MaterializeMySQL</title>
     <link href="/2021/08/26/mysql-to-clickhouse-with-materializemysql/"/>
     <url>/2021/08/26/mysql-to-clickhouse-with-materializemysql/</url>
