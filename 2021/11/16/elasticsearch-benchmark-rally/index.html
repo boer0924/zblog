@@ -17,7 +17,7 @@
   <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
-  <title>对象存储MinIO实践 · ~·boer·~ 乌托邦</title>
+  <title>Elasticsearch基准测试 · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -153,7 +153,7 @@
 </nav>
 
     <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center;
+         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -168,8 +168,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-09-01 15:56" pubdate>
-        2021年9月1日 下午
+      <time datetime="2021-11-16 15:36" pubdate>
+        2021年11月16日 下午
       </time>
     </span>
   
@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      410 字
+      913 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8
+      14
        分钟
     </span>
   
@@ -220,66 +220,40 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">对象存储MinIO实践</h1>
+            <h1 style="display: none">Elasticsearch基准测试</h1>
             
             <div class="markdown-body" id="post-body">
-              <p><a href="https://min.io/" target="_blank" rel="noopener">https://min.io/</a></p>
+              <p>ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测试模式：<br>1.使用和线上集群相同硬件配置的服务器搭建一个单节点集群。<br>2.使用和线上集群相同的映射创建一个 0 副本，1 分片的测试索引。<br>3.使用和线上集群相同的数据写入进行压测。<br>4.观察写入性能，或者运行查询请求观察搜索聚合性能。<br>5.持续压测数小时，使用监控系统记录 eps、requesttime、fielddata cache、GC count 等关键数据。</p>
+<p>测试完成后，根据监控系统数据，确定单分片的性能拐点，或者适合自己预期值的临界点。这个数据，就是一个基准数据。之后的扩容计划，都可以以这个基准单位进行。</p>
+<p>需要注意的是，测试是以分片为单位的，在实际使用中，因为主分片和副本分片都是在各自节点做 indexing 和 merge 操作，需要消耗同样的写入性能。所以，实际集群的容量预估中，要考虑副本数的影响。也就是说，假如你在基准测试中得到单机写入性能在 10000 eps，那么开启一个副本后所能达到的 eps 就只有 5000 了。还想写入 10000 eps 的话，就需要加一倍机器。</p>
 <a id="more"></a>
 
-<h3 id="install-minio"><a href="#install-minio" class="headerlink" title="install minio"></a>install minio</h3><div class="hljs"><pre><code class="hljs groovy">useradd -M -d <span class="hljs-regexp">/opt/</span>minio -s <span class="hljs-regexp">/sbin/</span>nologin -c <span class="hljs-string">"MinIO User"</span> minio
-mkdir <span class="hljs-regexp">/opt/</span>minio<span class="hljs-regexp">/&#123;bin,data/</span>&#123;drive1,drive2&#125;,certs&#125;
-curl -sL <span class="hljs-string">https:</span><span class="hljs-comment">//dl.min.io/server/minio/release/linux-amd64/minio -o /opt/minio/bin/minio</span>
-chown -R minio. <span class="hljs-regexp">/opt/</span>minio
-chmod a+x <span class="hljs-regexp">/opt/</span>minio<span class="hljs-regexp">/bin/</span>minio</code></pre></div>
-
-<h3 id="etc-default-minio"><a href="#etc-default-minio" class="headerlink" title="/etc/default/minio"></a>/etc/default/minio</h3><div class="hljs"><pre><code class="hljs conf"># Volume to be used for MinIO server.
-MINIO_VOLUMES&#x3D;&quot;http:&#x2F;&#x2F;10.10.253.16:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.16:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2 http:&#x2F;&#x2F;10.10.253.17:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.17:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2 http:&#x2F;&#x2F;10.10.253.18:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive1 http:&#x2F;&#x2F;10.10.253.18:19000&#x2F;opt&#x2F;minio&#x2F;data&#x2F;drive2&quot;
-### Please provide an even number of endpoints greater or equal to 4
-# Use if you want to run MinIO on a custom port.
-MINIO_OPTS&#x3D;&quot;--address :19000 --console-address :19001&quot;
-# Root user for the server.
-MINIO_ROOT_USER&#x3D;admin
-# Root secret for the server.
-MINIO_ROOT_PASSWORD&#x3D;passw0rd</code></pre></div>
-
-<h3 id="etc-systemd-system"><a href="#etc-systemd-system" class="headerlink" title="/etc/systemd/system"></a>/etc/systemd/system</h3><div class="hljs"><pre><code class="hljs conf">[Unit]
-Description&#x3D;MinIO
-Documentation&#x3D;https:&#x2F;&#x2F;docs.min.io
-Wants&#x3D;network-online.target
-After&#x3D;network-online.target
-AssertFileIsExecutable&#x3D;&#x2F;opt&#x2F;minio&#x2F;bin&#x2F;minio
-
-[Service]
-WorkingDirectory&#x3D;&#x2F;opt&#x2F;minio
-
-User&#x3D;minio
-Group&#x3D;minio
-
-EnvironmentFile&#x3D;-&#x2F;etc&#x2F;default&#x2F;minio
-ExecStartPre&#x3D;&#x2F;bin&#x2F;bash -c &quot;if [ -z \&quot;$&#123;MINIO_VOLUMES&#125;\&quot; ]; then echo \&quot;Variable MINIO_VOLUMES not set in &#x2F;etc&#x2F;default&#x2F;minio\&quot;; exit 1; fi&quot;
-ExecStart&#x3D;&#x2F;opt&#x2F;minio&#x2F;bin&#x2F;minio server $MINIO_OPTS $MINIO_VOLUMES
-
-# Let systemd restart this service always
-Restart&#x3D;always
-
-# Specifies the maximum file descriptor number that can be opened by this process
-LimitNOFILE&#x3D;65536
-
-# Specifies the maximum number of threads this process can create
-TasksMax&#x3D;infinity
-
-# Disable timeout logic and wait until process is stopped
-TimeoutStopSec&#x3D;infinity
-SendSIGKILL&#x3D;no
-
-[Install]
-WantedBy&#x3D;multi-user.target
-
-# Built for $&#123;project.name&#125;-$&#123;project.version&#125; ($&#123;project.name&#125;)</code></pre></div>
-
-<h3 id="MinIO-Ops"><a href="#MinIO-Ops" class="headerlink" title="MinIO Ops"></a>MinIO Ops</h3><p><code>systemctl start minio.service</code><br><code>journalctl -fu minio.service</code></p>
-<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
-<li><a href="https://github.com/minio/minio-service/tree/master/linux-systemd" target="_blank" rel="noopener">https://github.com/minio/minio-service/tree/master/linux-systemd</a></li>
+<p>esrally==2.2.1<br>elasticsearch==7.10.2</p>
+<p>team/car 测试集群<br>geonames 测试数据<br>tracks   索引定义<br>operation测试用例 index/search/term…<br>challenge执行测试 并发数<br>race_id  测试报告</p>
+<h1 id="race"><a href="#race" class="headerlink" title="race"></a>race</h1><p>  ~/.rally/benchmarks/races<br>  esrally list races<br>  esrally compare –baseline=<race_id_1> –contender=<race_id_2></p>
+<h1 id="pipeline"><a href="#pipeline" class="headerlink" title="pipeline"></a>pipeline</h1><p>  esrally list pipelines<br>  ** benchmark-only - 已有集群[car] **</p>
+<h1 id="tracks"><a href="#tracks" class="headerlink" title="tracks:"></a>tracks:</h1><ol>
+<li>operation - 压测的具体操作index/search</li>
+<li>challenge - 压测执行的任务throughput/iteration</li>
+</ol>
+<p>离线数据路径: <del>/.rally/benchmarks/data/geonames<br>  eg. <a href="https://github.com/elastic/rally-tracks/blob/master/geonames/track.json" target="_blank" rel="noopener">https://github.com/elastic/rally-tracks/blob/master/geonames/track.json</a><br>tracks定义仓库：</del>/.rally/benchmarks/tracks/default<br>  eg. <a href="https://github.com/elastic/rally-tracks" target="_blank" rel="noopener">https://github.com/elastic/rally-tracks</a></p>
+<h1 id="car-team-不同规格的es集群"><a href="#car-team-不同规格的es集群" class="headerlink" title="car/team - 不同规格的es集群"></a>car/team - 不同规格的es集群</h1><p><a href="https://github.com/elastic/rally-teams" target="_blank" rel="noopener">https://github.com/elastic/rally-teams</a></p>
+<h1 id="执行与输出"><a href="#执行与输出" class="headerlink" title="执行与输出"></a>执行与输出</h1><p>esrally race –pipeline=benchmark-only –target-hosts=<es_vip>:9200 –track=geonames  –client-options=”use_ssl:true,basic_auth_user:’admin’,basic_auth_password:’admin’,verify_certs:false” –challenge=append-no-conflicts  –offline</p>
+<div class="hljs"><pre><code>____        ____</code></pre></div><p>   / <em>_ ____ _/ / /</em>  <em>_<br>  / /</em>/ / <em>_ `/ / / / / /<br> / _, _/ /</em>/ / / / /<em>/ /<br>/</em>/ |<em>|__,</em>/<em>/</em>/_<em>, /<br>                /___</em>/</p>
+<p>[INFO] You did not provide an explicit timeout in the client options. Assuming default of 10 seconds.<br>[INFO] Decompressing track data from [/root/.rally/benchmarks/data/geonames/documents-2.json.bz2] to [/root/.rally/benchmarks/data/geonames/documents-2.json] (resulting size: [3.30] GB) … [OK]<br>[INFO] Preparing file offset table for [/root/.rally/benchmarks/data/geonames/documents-2.json] … [OK]<br>[INFO] Racing on track [geonames], challenge [append-no-conflicts] and car [‘external’] with version [7.10.2].</p>
+<p>[WARNING] merges_total_time is 11262 ms indicating that the cluster is not in a defined clean state. Recorded index time metrics may be misleading.<br>[WARNING] refresh_total_time is 3141 ms indicating that the cluster is not in a defined clean state. Recorded index time metrics may be misleading.<br>Running delete-index                                                           [100% done]<br>Running create-index                                                           [100% done]<br>Running check-cluster-health                                                   [100% done]<br>Running index-append                                                           [100% done]<br>Running refresh-after-index                                                    [100% done]<br>Running force-merge                                                            [100% done]<br>Running refresh-after-force-merge                                              [100% done]<br>Running wait-until-merges-finish                                               [100% done]<br>Running index-stats                                                            [100% done]<br>Running node-stats                                                             [100% done]<br>Running default                                                                [100% done]<br>Running term                                                                   [100% done]<br>Running phrase                                                                 [100% done]<br>Running country_agg_uncached                                                   [100% done]<br>Running country_agg_cached                                                     [100% done]<br>Running scroll                                                                 [100% done]<br>Running expression                                                             [100% done]<br>Running painless_static                                                        [100% done]<br>Running painless_dynamic                                                       [100% done]<br>Running decay_geo_gauss_function_score                                         [100% done]<br>Running decay_geo_gauss_script_score                                           [100% done]<br>Running field_value_function_score                                             [100% done]<br>Running field_value_script_score                                               [100% done]<br>Running large_terms                                                            [100% done]<br>Running large_filtered_terms                                                   [100% done]<br>Running large_prohibited_terms                                                 [100% done]<br>Running desc_sort_population                                                   [100% done]<br>Running asc_sort_population                                                    [100% done]<br>Running asc_sort_with_after_population                                         [100% done]<br>Running desc_sort_geonameid                                                    [100% done]<br>Running desc_sort_with_after_geonameid                                         [100% done]<br>Running asc_sort_geonameid                                                     [100% done]<br>Running asc_sort_with_after_geonameid                                          [100% done]</p>
+<hr>
+<div class="hljs"><pre><code>_______             __   _____</code></pre></div><p>   / <strong><em>_(</em>)_</strong>  <strong>__ _/ /  / _</strong>/<strong>_____</strong>  <strong>____</strong><br>  / /_  / / <em>_ / __ `/ /   __ / <strong><em>/ _</em> / _</strong>/ _ <br> / __/ / / / / / /</em>/ / /   <strong>_/ / /</strong>/ /<em>/ / /  /  __/<br>/</em>/   /<em>/</em>/ /<em>/__,</em>/<em>/   /<strong><em>_/\</em></strong>/____/</em>/   ___/</p>
+<hr>
+<h1 id="es-devtools"><a href="#es-devtools" class="headerlink" title="es devtools"></a>es devtools</h1><p>GET _cluster/health<br>GET _cluster/settings</p>
+<p>GET _cat/indices?v&amp;h=i,pri.store.size,status,rep,docs.count,health<br>GET /_cat/indices?v&amp;health=red<br>GET _cat/thread_pool?v</p>
+<p>GET _cat/pending_tasks<br>GET _cluster/allocation/explain</p>
+<p>GET _cat/indices?v<br>GET _nodes/stats<br>GET _all/_stats</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ</a></li>
+<li><a href="https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3" target="_blank" rel="noopener">https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3</a></li>
+<li><a href="https://esrally.readthedocs.io/en/stable/track.html" target="_blank" rel="noopener">https://esrally.readthedocs.io/en/stable/track.html</a></li>
+<li><a href="https://help.aliyun.com/document_detail/127657.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/127657.html</a></li>
 </ul>
 
             </div>
@@ -290,7 +264,7 @@ WantedBy&#x3D;multi-user.target
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
+                      <a class="hover-with-bg" href="/categories/BigData/">BigData</a>
                     
                   </div>
                 
@@ -298,9 +272,7 @@ WantedBy&#x3D;multi-user.target
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/MinIO/">MinIO</a>
-                    
-                      <a class="hover-with-bg" href="/tags/OSS/">OSS</a>
+                      <a class="hover-with-bg" href="/tags/Elasticserach/">Elasticserach</a>
                     
                   </div>
                 
@@ -313,18 +285,12 @@ WantedBy&#x3D;multi-user.target
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/11/16/elasticsearch-benchmark-rally/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Elasticsearch基准测试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/26/mysql-to-clickhouse-with-materializemysql/">
-                        <span class="hidden-mobile">MySQL To ClickHouse数据实时同步引擎MaterializeMySQL</span>
+                      <a href="/2021/09/01/object-storage-of-minio/">
+                        <span class="hidden-mobile">对象存储MinIO实践</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -528,7 +494,7 @@ WantedBy&#x3D;multi-user.target
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "对象存储MinIO实践&nbsp;",
+        "Elasticsearch基准测试&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 80,
