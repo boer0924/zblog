@@ -23,12 +23,15 @@ ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测�
 esrally==2.2.1
 elasticsearch==7.10.2
 
-team/car 测试集群
-geonames 测试数据
-tracks   索引定义
-operation测试用例 index/search/term...
-challenge执行测试 并发数
-race_id  测试报告
+| 概念 | 释义 |
+| ---  | ---- |
+|team/car  | 测试集群                      |    
+|geonames  | 测试数据                      |
+|tracks    | 索引定义                      |
+|operation | 测试用例 index/search/term... |
+|challenge | 执行测试 并发数                | 
+|race_id   | 测试报告                      |
+
 
 # race 
   ~/.rally/benchmarks/races
@@ -43,15 +46,16 @@ race_id  测试报告
   1. operation - 压测的具体操作index/search
   2. challenge - 压测执行的任务throughput/iteration
 
-离线数据路径: ~/.rally/benchmarks/data/geonames
-  eg. https://github.com/elastic/rally-tracks/blob/master/geonames/track.json
-tracks定义仓库：~/.rally/benchmarks/tracks/default 
-  eg. https://github.com/elastic/rally-tracks
+  3. 离线数据路径: ~/.rally/benchmarks/data/geonames
+    - eg. https://github.com/elastic/rally-tracks/blob/master/geonames/track.json
+  4. tracks定义仓库：~/.rally/benchmarks/tracks/default 
+    - eg. https://github.com/elastic/rally-tracks
 
 # car/team - 不同规格的es集群
 https://github.com/elastic/rally-teams
 
 # 执行与输出
+```bash
 esrally race --pipeline=benchmark-only --target-hosts=<es_vip>:9200 --track=geonames  --client-options="use_ssl:true,basic_auth_user:'admin',basic_auth_password:'admin',verify_certs:false" --challenge=append-no-conflicts  --offline
 
     ____        ____
@@ -109,8 +113,10 @@ Running asc_sort_with_after_geonameid                                          [
  / __/ / / / / / /_/ / /   ___/ / /__/ /_/ / /  /  __/
 /_/   /_/_/ /_/\__,_/_/   /____/\___/\____/_/   \___/
 ------------------------------------------------------
+```
 
 # es devtools
+```
 GET _cluster/health
 GET _cluster/settings
 
@@ -124,9 +130,11 @@ GET _cluster/allocation/explain
 GET _cat/indices?v
 GET _nodes/stats
 GET _all/_stats
+```
 
 # 参考
 - https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ
 - https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3
 - https://esrally.readthedocs.io/en/stable/track.html
 - https://help.aliyun.com/document_detail/127657.html
+- https://grafana.com/grafana/dashboards/14191
