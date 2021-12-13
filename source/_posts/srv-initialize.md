@@ -39,10 +39,21 @@ sysctl –p  # 配置生效
 
 # 文件描述符限制
 vim /etc/security/limits.conf
-* soft nofile 102400
-* hard nofile 204800
+* soft nofile 1024000
+* hard nofile 2048000
+*          soft    nproc     1024000
+*          hard    nproc     2048000
+root       soft    nproc     unlimited
 ulimit -Sn
 ulimit -Hn
+
+# history：
+echo 'HISTTIMEFORMAT="%F %T `whoami`"' >> /etc/profile
+sed -i "s/HISTSIZE=1000/HISTSIZE=200/" /etc/profile
+
+# sshd
+sed -i 's/UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
+sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 
 # nproc
 ## nproc是操作系统级别对每个用户创建的进程数的限制, 在Linux下运行多线程时, 每个线程的实现其实是一个轻量级的进程, 对应的术语是light weight process(LWP)。
@@ -52,7 +63,7 @@ ps h -Led -o user | sort | uniq -c | sort -n
 ps -o nlwp,pid,lwp,args -u boer | sort -n
 
 vim /etc/security/limits.d/20-nproc.conf # CentOS7
-*          soft    nproc     65536
+*          soft    nproc     1024000
 root       soft    nproc     unlimited
 
 ##
