@@ -180,7 +180,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      273 字
+      324 字
     </span>
   
 
@@ -190,7 +190,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      5
        分钟
     </span>
   
@@ -248,10 +248,21 @@ sysctl –p  <span class="hljs-comment"># 配置生效</span>
 
 <span class="hljs-comment"># 文件描述符限制</span>
 vim /etc/security/limits.conf
-* soft nofile 102400
-* hard nofile 204800
+* soft nofile 1024000
+* hard nofile 2048000
+*          soft    nproc     1024000
+*          hard    nproc     2048000
+root       soft    nproc     unlimited
 <span class="hljs-built_in">ulimit</span> -Sn
 <span class="hljs-built_in">ulimit</span> -Hn
+
+<span class="hljs-comment"># history：</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'HISTTIMEFORMAT="%F %T `whoami`"'</span> &gt;&gt; /etc/profile
+sed -i <span class="hljs-string">"s/HISTSIZE=1000/HISTSIZE=200/"</span> /etc/profile
+
+<span class="hljs-comment"># sshd</span>
+sed -i <span class="hljs-string">'s/UseDNS yes/UseDNS no/g'</span> /etc/ssh/sshd_config
+sed -i <span class="hljs-string">'s/UsePAM yes/UsePAM no/'</span> /etc/ssh/sshd_config
 
 <span class="hljs-comment"># nproc</span>
 <span class="hljs-comment">## nproc是操作系统级别对每个用户创建的进程数的限制, 在Linux下运行多线程时, 每个线程的实现其实是一个轻量级的进程, 对应的术语是light weight process(LWP)。</span>
@@ -261,7 +272,7 @@ ps h -Led -o user | sort | uniq -c | sort -n
 ps -o nlwp,pid,lwp,args -u boer | sort -n
 
 vim /etc/security/limits.d/20-nproc.conf <span class="hljs-comment"># CentOS7</span>
-*          soft    nproc     65536
+*          soft    nproc     1024000
 root       soft    nproc     unlimited
 
 <span class="hljs-comment">##</span></code></pre></div>
