@@ -1,4 +1,4 @@
-# `~·boer·~ 乌托邦` ![Build Status]https://github.com/boer0924/zblog/actions/workflows/pages.yml/badge.svg
+# `~·boer·~ 乌托邦` ![Build Status](https://github.com/boer0924/zblog/actions/workflows/pages.yml/badge.svg)
 
 ### 历史版本
 - 2012 Build from Pelican(https://getpelican.com/)
