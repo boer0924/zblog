@@ -1,70 +1,107 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="曾多少次，你在拉取Docker镜像时出现Timeout曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像又有多少回，即使你有梯子也翻不过GCR, Quay等镜像仓库的墙…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="那些年，拉取Docker镜像犯的困">
+<meta property="og:url" content="https://www.boer.xyz/2018/09/15/pull-docker-images/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="曾多少次，你在拉取Docker镜像时出现Timeout曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像又有多少回，即使你有梯子也翻不过GCR, Quay等镜像仓库的墙…">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?docker">
+<meta property="article:published_time" content="2018-09-15T08:16:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.269Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="DockerHub">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?docker">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>那些年，拉取Docker镜像犯的困 · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +120,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +132,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +144,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +156,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +168,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,79 +193,96 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2018-09-15 16:16" pubdate>
-        2018年9月15日 下午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.2k 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      23
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="那些年，拉取Docker镜像犯的困"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2018-09-15 16:16" pubdate>
+          2018年9月15日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          9.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          80 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">那些年，拉取Docker镜像犯的困</h1>
             
-            <div class="markdown-body" id="post-body">
-              <p>曾多少次，你在拉取Docker镜像时出现Timeout<br>曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像<br>又有多少回，即使你有梯子也翻不过<code>GCR</code>, <code>Quay</code>等镜像仓库的墙…</p>
-<a id="more"></a>
+            
+              <div class="markdown-body">
+                
+                <p>曾多少次，你在拉取Docker镜像时出现Timeout<br>曾几何时，你想在没有Docker客户端的情况下拉取Docker镜像<br>又有多少回，即使你有梯子也翻不过<code>GCR</code>, <code>Quay</code>等镜像仓库的墙…</p>
+<span id="more"></span>
 
 <p>以下，我们列举几种拉取镜像的场景并给出解决方法</p>
 <ol>
@@ -237,274 +294,114 @@
 <h3 id="1-K8S"><a href="#1-K8S" class="headerlink" title="1. K8S"></a>1. K8S</h3><blockquote>
 <p>registry.aliyuncs.com/google_containers</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment">## kubeadm-config.yaml</span>
-<span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span>
-<span class="hljs-comment"># kubeadm config print init-defaults</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
-<span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span>
-<span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">k8s.meitianiot.lo:6443</span>
-<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
-<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
-<span class="hljs-attr">apiServer:</span>
-  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span>
-<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
-<span class="hljs-attr">networking:</span>
-  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
-  <span class="hljs-attr">podSubnet:</span> <span class="hljs-number">172.30</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/16</span>
-  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
-<span class="hljs-attr">dns:</span>
-  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
-<span class="hljs-attr">etcd:</span>
-  <span class="hljs-attr">local:</span>
-    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
-<span class="hljs-meta">---</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
-<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span></code></pre></div>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">## kubeadm-config.yaml</span><br><span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span><br><span class="hljs-comment"># kubeadm config print init-defaults</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span><br><span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span><br><span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">k8s.meitianiot.lo:6443</span><br><span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span><br><span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span><br><span class="hljs-attr">apiServer:</span><br>  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span><br><span class="hljs-attr">controllerManager:</span> &#123;&#125;<br><span class="hljs-attr">scheduler:</span> &#123;&#125;<br><span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span><br><span class="hljs-attr">networking:</span><br>  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span><br>  <span class="hljs-attr">podSubnet:</span> <span class="hljs-number">172.30</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/16</span><br>  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span><br><span class="hljs-attr">dns:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span><br><span class="hljs-attr">etcd:</span><br>  <span class="hljs-attr">local:</span><br>    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span><br><span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="2-Docker镜像加速"><a href="#2-Docker镜像加速" class="headerlink" title="2. Docker镜像加速"></a>2. Docker镜像加速</h3><blockquote>
-<p><a href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors" target="_blank" rel="noopener">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</a></p>
+<p><a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</a></p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs json">&#123;
-  <span class="hljs-attr">"registry-mirrors"</span>: [<span class="hljs-string">"https://890une7x.mirror.aliyuncs.com"</span>],
-  <span class="hljs-attr">"exec-opts"</span>: [<span class="hljs-string">"native.cgroupdriver=systemd"</span>],
-  <span class="hljs-attr">"log-driver"</span>: <span class="hljs-string">"json-file"</span>,
-  <span class="hljs-attr">"log-opts"</span>: &#123;
-    <span class="hljs-attr">"max-size"</span>: <span class="hljs-string">"100m"</span>
-  &#125;,
-  <span class="hljs-attr">"storage-driver"</span>: <span class="hljs-string">"overlay2"</span>,
-  <span class="hljs-attr">"storage-opts"</span>: [
-    <span class="hljs-string">"overlay2.override_kernel_check=true"</span>
-  ]
-&#125;</code></pre></div>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;registry-mirrors&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;https://890une7x.mirror.aliyuncs.com&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;exec-opts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;native.cgroupdriver=systemd&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;log-driver&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;json-file&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;log-opts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;max-size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;100m&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;storage-driver&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;overlay2&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;storage-opts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;overlay2.override_kernel_check=true&quot;</span><br>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br><br></code></pre></td></tr></table></figure>
 
 <h3 id="3-docker-pull-py"><a href="#3-docker-pull-py" class="headerlink" title="3. docker_pull.py"></a>3. docker_pull.py</h3><blockquote>
-<p>无客户端拉取镜像 <a href="https://github.com/NotGlop/docker-drag" target="_blank" rel="noopener">https://github.com/NotGlop/docker-drag</a><br>以下脚本只是站在巨人的肩膀上，加入了<code>proxies</code>功能，以应对中国局域网。</p>
+<p>无客户端拉取镜像 <a target="_blank" rel="noopener" href="https://github.com/NotGlop/docker-drag">https://github.com/NotGlop/docker-drag</a><br>以下脚本只是站在巨人的肩膀上，加入了<code>proxies</code>功能，以应对中国局域网。</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs python"><span class="hljs-keyword">import</span> functools
-<span class="hljs-keyword">import</span> gzip
-<span class="hljs-keyword">import</span> hashlib
-<span class="hljs-keyword">import</span> json
-<span class="hljs-keyword">import</span> os
-<span class="hljs-keyword">import</span> shutil
-<span class="hljs-keyword">import</span> sys
-<span class="hljs-keyword">import</span> tarfile
-<span class="hljs-keyword">from</span> io <span class="hljs-keyword">import</span> BytesIO
-
-<span class="hljs-keyword">import</span> requests
-<span class="hljs-keyword">import</span> urllib3
-
-proxies = &#123;
-    <span class="hljs-string">'http'</span>: <span class="hljs-string">'http://127.0.0.1:1081'</span>,
-    <span class="hljs-string">'https'</span>: <span class="hljs-string">'http://127.0.0.1:1081'</span>
-&#125;
-
-proxy_get = functools.partial(requests.get, proxies=proxies)
-
-urllib3.disable_warnings()
-
-<span class="hljs-keyword">if</span> len(sys.argv) != <span class="hljs-number">2</span>:
-    print(<span class="hljs-string">'Usage:\n\tdocker_pull.py [registry/][repository/]image[:tag|@digest]\n'</span>)
-    exit(<span class="hljs-number">1</span>)
-
-<span class="hljs-comment"># Look for the Docker image to download</span>
-repo = <span class="hljs-string">'library'</span>
-tag = <span class="hljs-string">'latest'</span>
-imgparts = sys.argv[<span class="hljs-number">1</span>].split(<span class="hljs-string">'/'</span>)
-<span class="hljs-keyword">try</span>:
-    img, tag = imgparts[<span class="hljs-number">-1</span>].split(<span class="hljs-string">'@'</span>)
-<span class="hljs-keyword">except</span> ValueError:
-    <span class="hljs-keyword">try</span>:
-        img, tag = imgparts[<span class="hljs-number">-1</span>].split(<span class="hljs-string">':'</span>)
-    <span class="hljs-keyword">except</span> ValueError:
-        img = imgparts[<span class="hljs-number">-1</span>]
-<span class="hljs-comment"># Docker client doesn't seem to consider the first element as a potential registry unless there is a '.' or ':'</span>
-<span class="hljs-keyword">if</span> len(imgparts) &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-string">'.'</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>] <span class="hljs-keyword">or</span> <span class="hljs-string">':'</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>]):
-    registry = imgparts[<span class="hljs-number">0</span>]
-    repo = <span class="hljs-string">'/'</span>.join(imgparts[<span class="hljs-number">1</span>:<span class="hljs-number">-1</span>])
-<span class="hljs-keyword">else</span>:
-    registry = <span class="hljs-string">'registry-1.docker.io'</span>
-    <span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
-        repo = <span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>])
-    <span class="hljs-keyword">else</span>:
-        repo = <span class="hljs-string">'library'</span>
-repository = <span class="hljs-string">'&#123;&#125;/&#123;&#125;'</span>.format(repo, img)
-
-<span class="hljs-comment"># Get Docker authentication endpoint when it is required</span>
-auth_url = <span class="hljs-string">'https://auth.docker.io/token'</span>
-reg_service = <span class="hljs-string">'registry.docker.io'</span>
-resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/'</span>.format(registry), verify=<span class="hljs-literal">False</span>)
-<span class="hljs-keyword">if</span> resp.status_code == <span class="hljs-number">401</span>:
-    auth_url = resp.headers[<span class="hljs-string">'WWW-Authenticate'</span>].split(<span class="hljs-string">'"'</span>)[<span class="hljs-number">1</span>]
-    <span class="hljs-keyword">try</span>:
-        reg_service = resp.headers[<span class="hljs-string">'WWW-Authenticate'</span>].split(<span class="hljs-string">'"'</span>)[<span class="hljs-number">3</span>]
-    <span class="hljs-keyword">except</span> IndexError:
-        reg_service = <span class="hljs-string">""</span>
-
-<span class="hljs-comment"># Get Docker token and fetch manifest v2 (this part is useless for unauthenticated registries like Microsoft)</span>
-resp = proxy_get(<span class="hljs-string">'&#123;&#125;?service=&#123;&#125;&amp;scope=repository:&#123;&#125;:pull'</span>.format(auth_url, reg_service, repository), verify=<span class="hljs-literal">False</span>)
-access_token = resp.json()[<span class="hljs-string">'token'</span>]
-auth_head = &#123;<span class="hljs-string">'Authorization'</span>: <span class="hljs-string">'Bearer '</span> + access_token,
-             <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/vnd.docker.distribution.manifest.v2+json'</span>&#125;
-
-<span class="hljs-comment"># Get image layer digests</span>
-resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;'</span>.format(registry, repository, tag), headers=auth_head, verify=<span class="hljs-literal">False</span>)
-<span class="hljs-keyword">if</span> (resp.status_code != <span class="hljs-number">200</span>):
-    print(<span class="hljs-string">'[-] Cannot fetch manifest for &#123;&#125; [HTTP &#123;&#125;]'</span>.format(repository, resp.status_code))
-    print(resp.content)
-    auth_head = &#123;<span class="hljs-string">'Authorization'</span>: <span class="hljs-string">'Bearer '</span> + access_token,
-                 <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/vnd.docker.distribution.manifest.list.v2+json'</span>&#125;
-    resp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;'</span>.format(registry, repository, tag), headers=auth_head,
-                     verify=<span class="hljs-literal">False</span>)
-    <span class="hljs-keyword">if</span> (resp.status_code == <span class="hljs-number">200</span>):
-        print(<span class="hljs-string">'[+] Manifests found for this tag (use the @digest format to pull the corresponding image):'</span>)
-        manifests = resp.json()[<span class="hljs-string">'manifests'</span>]
-        <span class="hljs-keyword">for</span> manifest <span class="hljs-keyword">in</span> manifests:
-            <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> manifest[<span class="hljs-string">"platform"</span>].items():
-                sys.stdout.write(<span class="hljs-string">'&#123;&#125;: &#123;&#125;, '</span>.format(key, value))
-            print(<span class="hljs-string">'digest: &#123;&#125;'</span>.format(manifest[<span class="hljs-string">"digest"</span>]))
-    exit(<span class="hljs-number">1</span>)
-layers = resp.json()[<span class="hljs-string">'layers'</span>]
-
-<span class="hljs-comment"># Create tmp folder that will hold the image</span>
-imgdir = <span class="hljs-string">'tmp_&#123;&#125;_&#123;&#125;'</span>.format(img, tag.replace(<span class="hljs-string">':'</span>, <span class="hljs-string">'@'</span>))
-os.mkdir(imgdir)
-print(<span class="hljs-string">'Creating image structure in: '</span> + imgdir)
-
-config = resp.json()[<span class="hljs-string">'config'</span>][<span class="hljs-string">'digest'</span>]
-confresp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;'</span>.format(registry, repository, config), headers=auth_head,
-                     verify=<span class="hljs-literal">False</span>)
-file = open(<span class="hljs-string">'&#123;&#125;/&#123;&#125;.json'</span>.format(imgdir, config[<span class="hljs-number">7</span>:]), <span class="hljs-string">'wb'</span>)
-file.write(confresp.content)
-file.close()
-
-content = [&#123;
-    <span class="hljs-string">'Config'</span>: config[<span class="hljs-number">7</span>:] + <span class="hljs-string">'.json'</span>,
-    <span class="hljs-string">'RepoTags'</span>: [],
-    <span class="hljs-string">'Layers'</span>: []
-&#125;]
-<span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
-    content[<span class="hljs-number">0</span>][<span class="hljs-string">'RepoTags'</span>].append(<span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>]) + <span class="hljs-string">'/'</span> + img + <span class="hljs-string">':'</span> + tag)
-<span class="hljs-keyword">else</span>:
-    content[<span class="hljs-number">0</span>][<span class="hljs-string">'RepoTags'</span>].append(img + <span class="hljs-string">':'</span> + tag)
-
-empty_json = <span class="hljs-string">'&#123;"created":"1970-01-01T00:00:00Z","container_config":&#123;"Hostname":"","Domainname":"","User":"","AttachStdin":false, \</span>
-<span class="hljs-string">	"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false, "StdinOnce":false,"Env":null,"Cmd":null,"Image":"", \</span>
-<span class="hljs-string">	"Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":null&#125;&#125;'</span>
-
-<span class="hljs-comment"># Build layer folders</span>
-parentid = <span class="hljs-string">''</span>
-<span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> layers:
-    ublob = layer[<span class="hljs-string">'digest'</span>]
-    <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> Creating fake layer ID. Don't know how Docker generates it</span>
-    fake_layerid = hashlib.sha256((parentid + <span class="hljs-string">'\n'</span> + ublob + <span class="hljs-string">'\n'</span>).encode(<span class="hljs-string">'utf-8'</span>)).hexdigest()
-    layerdir = imgdir + <span class="hljs-string">'/'</span> + fake_layerid
-    os.mkdir(layerdir)
-
-    <span class="hljs-comment"># Creating VERSION file</span>
-    file = open(layerdir + <span class="hljs-string">'/VERSION'</span>, <span class="hljs-string">'w'</span>)
-    file.write(<span class="hljs-string">'1.0'</span>)
-    file.close()
-
-    <span class="hljs-comment"># Creating layer.tar file</span>
-    sys.stdout.write(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>] + <span class="hljs-string">': Downloading...'</span>)
-    sys.stdout.flush()
-    bresp = proxy_get(<span class="hljs-string">'https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;'</span>.format(registry, repository, ublob), headers=auth_head,
-                      verify=<span class="hljs-literal">False</span>)
-    <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):
-        bresp = proxy_get(layer[<span class="hljs-string">'urls'</span>][<span class="hljs-number">0</span>], headers=auth_head, verify=<span class="hljs-literal">False</span>)
-        <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):
-            print(<span class="hljs-string">'\rERROR: Cannot download layer &#123;&#125; [HTTP &#123;&#125;]'</span>.format(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.status_code,
-                                                                       bresp.headers[<span class="hljs-string">'Content-Length'</span>]))
-            print(bresp.content)
-            exit(<span class="hljs-number">1</span>)
-    print(<span class="hljs-string">"\r&#123;&#125;: Pull complete [&#123;&#125;]"</span>.format(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.headers[<span class="hljs-string">'Content-Length'</span>]))
-    content[<span class="hljs-number">0</span>][<span class="hljs-string">'Layers'</span>].append(fake_layerid + <span class="hljs-string">'/layer.tar'</span>)
-    file = open(layerdir + <span class="hljs-string">'/layer.tar'</span>, <span class="hljs-string">"wb"</span>)
-    mybuff = BytesIO(bresp.content)
-    unzLayer = gzip.GzipFile(fileobj=mybuff)
-    file.write(unzLayer.read())
-    unzLayer.close()
-    file.close()
-
-    <span class="hljs-comment"># Creating json file</span>
-    file = open(layerdir + <span class="hljs-string">'/json'</span>, <span class="hljs-string">'w'</span>)
-    <span class="hljs-comment"># last layer = config manifest - history - rootfs</span>
-    <span class="hljs-keyword">if</span> layers[<span class="hljs-number">-1</span>][<span class="hljs-string">'digest'</span>] == layer[<span class="hljs-string">'digest'</span>]:
-        <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> json.loads() automatically converts to unicode, thus decoding values whereas Docker doesn't</span>
-        json_obj = json.loads(confresp.content)
-        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">'history'</span>]
-        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">'rootfs'</span>]
-    <span class="hljs-keyword">else</span>:  <span class="hljs-comment"># other layers json are empty</span>
-        json_obj = json.loads(empty_json)
-    json_obj[<span class="hljs-string">'id'</span>] = fake_layerid
-    <span class="hljs-keyword">if</span> parentid:
-        json_obj[<span class="hljs-string">'parent'</span>] = parentid
-    parentid = json_obj[<span class="hljs-string">'id'</span>]
-    file.write(json.dumps(json_obj))
-    file.close()
-
-file = open(imgdir + <span class="hljs-string">'/manifest.json'</span>, <span class="hljs-string">'w'</span>)
-file.write(json.dumps(content))
-file.close()
-
-<span class="hljs-keyword">if</span> len(imgparts[:<span class="hljs-number">-1</span>]) != <span class="hljs-number">0</span>:
-    content = &#123;<span class="hljs-string">'/'</span>.join(imgparts[:<span class="hljs-number">-1</span>]) + <span class="hljs-string">'/'</span> + img: &#123;tag: fake_layerid&#125;&#125;
-<span class="hljs-keyword">else</span>:  <span class="hljs-comment"># when pulling only an img (without repo and registry)</span>
-    content = &#123;img: &#123;tag: fake_layerid&#125;&#125;
-file = open(imgdir + <span class="hljs-string">'/repositories'</span>, <span class="hljs-string">'w'</span>)
-file.write(json.dumps(content))
-file.close()
-
-<span class="hljs-comment"># Create image tar and clean tmp folder</span>
-docker_tar = repo.replace(<span class="hljs-string">'/'</span>, <span class="hljs-string">'_'</span>) + <span class="hljs-string">'_'</span> + img + <span class="hljs-string">'.tar'</span>
-tar = tarfile.open(docker_tar, <span class="hljs-string">"w"</span>)
-tar.add(imgdir, arcname=os.path.sep)
-tar.close()
-shutil.rmtree(imgdir)
-print(<span class="hljs-string">'Docker image pulled: '</span> + docker_tar)
-print(<span class="hljs-string">'Compress the tar file with transport: tar -zcf '</span> + docker_tar + <span class="hljs-string">'.gz'</span> + docker_tar)
-print(<span class="hljs-string">'Load the image: docker load -i '</span> + docker_tar)</code></pre></div>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> functools<br><span class="hljs-keyword">import</span> gzip<br><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> shutil<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> tarfile<br><span class="hljs-keyword">from</span> io <span class="hljs-keyword">import</span> BytesIO<br><br><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> urllib3<br><br>proxies = &#123;<br>    <span class="hljs-string">&#x27;http&#x27;</span>: <span class="hljs-string">&#x27;http://127.0.0.1:1081&#x27;</span>,<br>    <span class="hljs-string">&#x27;https&#x27;</span>: <span class="hljs-string">&#x27;http://127.0.0.1:1081&#x27;</span><br>&#125;<br><br>proxy_get = functools.partial(requests.get, proxies=proxies)<br><br>urllib3.disable_warnings()<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) != <span class="hljs-number">2</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Usage:\n\tdocker_pull.py [registry/][repository/]image[:tag|@digest]\n&#x27;</span>)<br>    exit(<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># Look for the Docker image to download</span><br>repo = <span class="hljs-string">&#x27;library&#x27;</span><br>tag = <span class="hljs-string">&#x27;latest&#x27;</span><br>imgparts = sys.argv[<span class="hljs-number">1</span>].split(<span class="hljs-string">&#x27;/&#x27;</span>)<br><span class="hljs-keyword">try</span>:<br>    img, tag = imgparts[-<span class="hljs-number">1</span>].split(<span class="hljs-string">&#x27;@&#x27;</span>)<br><span class="hljs-keyword">except</span> ValueError:<br>    <span class="hljs-keyword">try</span>:<br>        img, tag = imgparts[-<span class="hljs-number">1</span>].split(<span class="hljs-string">&#x27;:&#x27;</span>)<br>    <span class="hljs-keyword">except</span> ValueError:<br>        img = imgparts[-<span class="hljs-number">1</span>]<br><span class="hljs-comment"># Docker client doesn&#x27;t seem to consider the first element as a potential registry unless there is a &#x27;.&#x27; or &#x27;:&#x27;</span><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(imgparts) &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> (<span class="hljs-string">&#x27;.&#x27;</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>] <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;:&#x27;</span> <span class="hljs-keyword">in</span> imgparts[<span class="hljs-number">0</span>]):<br>    registry = imgparts[<span class="hljs-number">0</span>]<br>    repo = <span class="hljs-string">&#x27;/&#x27;</span>.join(imgparts[<span class="hljs-number">1</span>:-<span class="hljs-number">1</span>])<br><span class="hljs-keyword">else</span>:<br>    registry = <span class="hljs-string">&#x27;registry-1.docker.io&#x27;</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(imgparts[:-<span class="hljs-number">1</span>]) != <span class="hljs-number">0</span>:<br>        repo = <span class="hljs-string">&#x27;/&#x27;</span>.join(imgparts[:-<span class="hljs-number">1</span>])<br>    <span class="hljs-keyword">else</span>:<br>        repo = <span class="hljs-string">&#x27;library&#x27;</span><br>repository = <span class="hljs-string">&#x27;&#123;&#125;/&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(repo, img)<br><br><span class="hljs-comment"># Get Docker authentication endpoint when it is required</span><br>auth_url = <span class="hljs-string">&#x27;https://auth.docker.io/token&#x27;</span><br>reg_service = <span class="hljs-string">&#x27;registry.docker.io&#x27;</span><br>resp = proxy_get(<span class="hljs-string">&#x27;https://&#123;&#125;/v2/&#x27;</span>.<span class="hljs-built_in">format</span>(registry), verify=<span class="hljs-literal">False</span>)<br><span class="hljs-keyword">if</span> resp.status_code == <span class="hljs-number">401</span>:<br>    auth_url = resp.headers[<span class="hljs-string">&#x27;WWW-Authenticate&#x27;</span>].split(<span class="hljs-string">&#x27;&quot;&#x27;</span>)[<span class="hljs-number">1</span>]<br>    <span class="hljs-keyword">try</span>:<br>        reg_service = resp.headers[<span class="hljs-string">&#x27;WWW-Authenticate&#x27;</span>].split(<span class="hljs-string">&#x27;&quot;&#x27;</span>)[<span class="hljs-number">3</span>]<br>    <span class="hljs-keyword">except</span> IndexError:<br>        reg_service = <span class="hljs-string">&quot;&quot;</span><br><br><span class="hljs-comment"># Get Docker token and fetch manifest v2 (this part is useless for unauthenticated registries like Microsoft)</span><br>resp = proxy_get(<span class="hljs-string">&#x27;&#123;&#125;?service=&#123;&#125;&amp;scope=repository:&#123;&#125;:pull&#x27;</span>.<span class="hljs-built_in">format</span>(auth_url, reg_service, repository), verify=<span class="hljs-literal">False</span>)<br>access_token = resp.json()[<span class="hljs-string">&#x27;token&#x27;</span>]<br>auth_head = &#123;<span class="hljs-string">&#x27;Authorization&#x27;</span>: <span class="hljs-string">&#x27;Bearer &#x27;</span> + access_token,<br>             <span class="hljs-string">&#x27;Accept&#x27;</span>: <span class="hljs-string">&#x27;application/vnd.docker.distribution.manifest.v2+json&#x27;</span>&#125;<br><br><span class="hljs-comment"># Get image layer digests</span><br>resp = proxy_get(<span class="hljs-string">&#x27;https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(registry, repository, tag), headers=auth_head, verify=<span class="hljs-literal">False</span>)<br><span class="hljs-keyword">if</span> (resp.status_code != <span class="hljs-number">200</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;[-] Cannot fetch manifest for &#123;&#125; [HTTP &#123;&#125;]&#x27;</span>.<span class="hljs-built_in">format</span>(repository, resp.status_code))<br>    <span class="hljs-built_in">print</span>(resp.content)<br>    auth_head = &#123;<span class="hljs-string">&#x27;Authorization&#x27;</span>: <span class="hljs-string">&#x27;Bearer &#x27;</span> + access_token,<br>                 <span class="hljs-string">&#x27;Accept&#x27;</span>: <span class="hljs-string">&#x27;application/vnd.docker.distribution.manifest.list.v2+json&#x27;</span>&#125;<br>    resp = proxy_get(<span class="hljs-string">&#x27;https://&#123;&#125;/v2/&#123;&#125;/manifests/&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(registry, repository, tag), headers=auth_head,<br>                     verify=<span class="hljs-literal">False</span>)<br>    <span class="hljs-keyword">if</span> (resp.status_code == <span class="hljs-number">200</span>):<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;[+] Manifests found for this tag (use the @digest format to pull the corresponding image):&#x27;</span>)<br>        manifests = resp.json()[<span class="hljs-string">&#x27;manifests&#x27;</span>]<br>        <span class="hljs-keyword">for</span> manifest <span class="hljs-keyword">in</span> manifests:<br>            <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> manifest[<span class="hljs-string">&quot;platform&quot;</span>].items():<br>                sys.stdout.write(<span class="hljs-string">&#x27;&#123;&#125;: &#123;&#125;, &#x27;</span>.<span class="hljs-built_in">format</span>(key, value))<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;digest: &#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(manifest[<span class="hljs-string">&quot;digest&quot;</span>]))<br>    exit(<span class="hljs-number">1</span>)<br>layers = resp.json()[<span class="hljs-string">&#x27;layers&#x27;</span>]<br><br><span class="hljs-comment"># Create tmp folder that will hold the image</span><br>imgdir = <span class="hljs-string">&#x27;tmp_&#123;&#125;_&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(img, tag.replace(<span class="hljs-string">&#x27;:&#x27;</span>, <span class="hljs-string">&#x27;@&#x27;</span>))<br>os.mkdir(imgdir)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Creating image structure in: &#x27;</span> + imgdir)<br><br>config = resp.json()[<span class="hljs-string">&#x27;config&#x27;</span>][<span class="hljs-string">&#x27;digest&#x27;</span>]<br>confresp = proxy_get(<span class="hljs-string">&#x27;https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(registry, repository, config), headers=auth_head,<br>                     verify=<span class="hljs-literal">False</span>)<br>file = <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;&#123;&#125;/&#123;&#125;.json&#x27;</span>.<span class="hljs-built_in">format</span>(imgdir, config[<span class="hljs-number">7</span>:]), <span class="hljs-string">&#x27;wb&#x27;</span>)<br>file.write(confresp.content)<br>file.close()<br><br>content = [&#123;<br>    <span class="hljs-string">&#x27;Config&#x27;</span>: config[<span class="hljs-number">7</span>:] + <span class="hljs-string">&#x27;.json&#x27;</span>,<br>    <span class="hljs-string">&#x27;RepoTags&#x27;</span>: [],<br>    <span class="hljs-string">&#x27;Layers&#x27;</span>: []<br>&#125;]<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(imgparts[:-<span class="hljs-number">1</span>]) != <span class="hljs-number">0</span>:<br>    content[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;RepoTags&#x27;</span>].append(<span class="hljs-string">&#x27;/&#x27;</span>.join(imgparts[:-<span class="hljs-number">1</span>]) + <span class="hljs-string">&#x27;/&#x27;</span> + img + <span class="hljs-string">&#x27;:&#x27;</span> + tag)<br><span class="hljs-keyword">else</span>:<br>    content[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;RepoTags&#x27;</span>].append(img + <span class="hljs-string">&#x27;:&#x27;</span> + tag)<br><br>empty_json = <span class="hljs-string">&#x27;&#123;&quot;created&quot;:&quot;1970-01-01T00:00:00Z&quot;,&quot;container_config&quot;:&#123;&quot;Hostname&quot;:&quot;&quot;,&quot;Domainname&quot;:&quot;&quot;,&quot;User&quot;:&quot;&quot;,&quot;AttachStdin&quot;:false, \</span><br><span class="hljs-string">	&quot;AttachStdout&quot;:false,&quot;AttachStderr&quot;:false,&quot;Tty&quot;:false,&quot;OpenStdin&quot;:false, &quot;StdinOnce&quot;:false,&quot;Env&quot;:null,&quot;Cmd&quot;:null,&quot;Image&quot;:&quot;&quot;, \</span><br><span class="hljs-string">	&quot;Volumes&quot;:null,&quot;WorkingDir&quot;:&quot;&quot;,&quot;Entrypoint&quot;:null,&quot;OnBuild&quot;:null,&quot;Labels&quot;:null&#125;&#125;&#x27;</span><br><br><span class="hljs-comment"># Build layer folders</span><br>parentid = <span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> layers:<br>    ublob = layer[<span class="hljs-string">&#x27;digest&#x27;</span>]<br>    <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> Creating fake layer ID. Don&#x27;t know how Docker generates it</span><br>    fake_layerid = hashlib.sha256((parentid + <span class="hljs-string">&#x27;\n&#x27;</span> + ublob + <span class="hljs-string">&#x27;\n&#x27;</span>).encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)).hexdigest()<br>    layerdir = imgdir + <span class="hljs-string">&#x27;/&#x27;</span> + fake_layerid<br>    os.mkdir(layerdir)<br><br>    <span class="hljs-comment"># Creating VERSION file</span><br>    file = <span class="hljs-built_in">open</span>(layerdir + <span class="hljs-string">&#x27;/VERSION&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>)<br>    file.write(<span class="hljs-string">&#x27;1.0&#x27;</span>)<br>    file.close()<br><br>    <span class="hljs-comment"># Creating layer.tar file</span><br>    sys.stdout.write(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>] + <span class="hljs-string">&#x27;: Downloading...&#x27;</span>)<br>    sys.stdout.flush()<br>    bresp = proxy_get(<span class="hljs-string">&#x27;https://&#123;&#125;/v2/&#123;&#125;/blobs/&#123;&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(registry, repository, ublob), headers=auth_head,<br>                      verify=<span class="hljs-literal">False</span>)<br>    <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):<br>        bresp = proxy_get(layer[<span class="hljs-string">&#x27;urls&#x27;</span>][<span class="hljs-number">0</span>], headers=auth_head, verify=<span class="hljs-literal">False</span>)<br>        <span class="hljs-keyword">if</span> (bresp.status_code != <span class="hljs-number">200</span>):<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\rERROR: Cannot download layer &#123;&#125; [HTTP &#123;&#125;]&#x27;</span>.<span class="hljs-built_in">format</span>(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.status_code,<br>                                                                       bresp.headers[<span class="hljs-string">&#x27;Content-Length&#x27;</span>]))<br>            <span class="hljs-built_in">print</span>(bresp.content)<br>            exit(<span class="hljs-number">1</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\r&#123;&#125;: Pull complete [&#123;&#125;]&quot;</span>.<span class="hljs-built_in">format</span>(ublob[<span class="hljs-number">7</span>:<span class="hljs-number">19</span>], bresp.headers[<span class="hljs-string">&#x27;Content-Length&#x27;</span>]))<br>    content[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;Layers&#x27;</span>].append(fake_layerid + <span class="hljs-string">&#x27;/layer.tar&#x27;</span>)<br>    file = <span class="hljs-built_in">open</span>(layerdir + <span class="hljs-string">&#x27;/layer.tar&#x27;</span>, <span class="hljs-string">&quot;wb&quot;</span>)<br>    mybuff = BytesIO(bresp.content)<br>    unzLayer = gzip.GzipFile(fileobj=mybuff)<br>    file.write(unzLayer.read())<br>    unzLayer.close()<br>    file.close()<br><br>    <span class="hljs-comment"># Creating json file</span><br>    file = <span class="hljs-built_in">open</span>(layerdir + <span class="hljs-string">&#x27;/json&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>)<br>    <span class="hljs-comment"># last layer = config manifest - history - rootfs</span><br>    <span class="hljs-keyword">if</span> layers[-<span class="hljs-number">1</span>][<span class="hljs-string">&#x27;digest&#x27;</span>] == layer[<span class="hljs-string">&#x27;digest&#x27;</span>]:<br>        <span class="hljs-comment"># <span class="hljs-doctag">FIXME:</span> json.loads() automatically converts to unicode, thus decoding values whereas Docker doesn&#x27;t</span><br>        json_obj = json.loads(confresp.content)<br>        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">&#x27;history&#x27;</span>]<br>        <span class="hljs-keyword">del</span> json_obj[<span class="hljs-string">&#x27;rootfs&#x27;</span>]<br>    <span class="hljs-keyword">else</span>:  <span class="hljs-comment"># other layers json are empty</span><br>        json_obj = json.loads(empty_json)<br>    json_obj[<span class="hljs-string">&#x27;id&#x27;</span>] = fake_layerid<br>    <span class="hljs-keyword">if</span> parentid:<br>        json_obj[<span class="hljs-string">&#x27;parent&#x27;</span>] = parentid<br>    parentid = json_obj[<span class="hljs-string">&#x27;id&#x27;</span>]<br>    file.write(json.dumps(json_obj))<br>    file.close()<br><br>file = <span class="hljs-built_in">open</span>(imgdir + <span class="hljs-string">&#x27;/manifest.json&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>)<br>file.write(json.dumps(content))<br>file.close()<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(imgparts[:-<span class="hljs-number">1</span>]) != <span class="hljs-number">0</span>:<br>    content = &#123;<span class="hljs-string">&#x27;/&#x27;</span>.join(imgparts[:-<span class="hljs-number">1</span>]) + <span class="hljs-string">&#x27;/&#x27;</span> + img: &#123;tag: fake_layerid&#125;&#125;<br><span class="hljs-keyword">else</span>:  <span class="hljs-comment"># when pulling only an img (without repo and registry)</span><br>    content = &#123;img: &#123;tag: fake_layerid&#125;&#125;<br>file = <span class="hljs-built_in">open</span>(imgdir + <span class="hljs-string">&#x27;/repositories&#x27;</span>, <span class="hljs-string">&#x27;w&#x27;</span>)<br>file.write(json.dumps(content))<br>file.close()<br><br><span class="hljs-comment"># Create image tar and clean tmp folder</span><br>docker_tar = repo.replace(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;_&#x27;</span>) + <span class="hljs-string">&#x27;_&#x27;</span> + img + <span class="hljs-string">&#x27;.tar&#x27;</span><br>tar = tarfile.<span class="hljs-built_in">open</span>(docker_tar, <span class="hljs-string">&quot;w&quot;</span>)<br>tar.add(imgdir, arcname=os.path.sep)<br>tar.close()<br>shutil.rmtree(imgdir)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Docker image pulled: &#x27;</span> + docker_tar)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Compress the tar file with transport: tar -zcf &#x27;</span> + docker_tar + <span class="hljs-string">&#x27;.gz&#x27;</span> + docker_tar)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Load the image: docker load -i &#x27;</span> + docker_tar)<br></code></pre></td></tr></table></figure>
 
 <h3 id="4-Quay镜像"><a href="#4-Quay镜像" class="headerlink" title="4. Quay镜像"></a>4. Quay镜像</h3><blockquote>
 <p>如：quay.mirrors.ustc.edu.cn</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs bash">sed -i -e <span class="hljs-string">'s_quay.io_quay.mirrors.ustc.edu.cn_'</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span></code></pre></div>
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/DevOps/">DevOps</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
-                    
-                      <a class="hover-with-bg" href="/tags/DockerHub/">DockerHub</a>
-                    
-                  </div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -i -e <span class="hljs-string">&#x27;s_quay.io_quay.mirrors.ustc.edu.cn_&#x27;</span> manifests/*.yaml manifests/setup/*.yaml <span class="hljs-comment"># quay.mirrors.ustc.edu.cn源</span><br></code></pre></td></tr></table></figure>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/">#Docker</a>
+      
+        <a href="/tags/DockerHub/">#DockerHub</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>那些年，拉取Docker镜像犯的困</div>
+      <div>https://www.boer.xyz/2018/09/15/pull-docker-images/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2018年9月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2019/03/24/es-data-migrate/">
+                      <a href="/2019/03/24/es-data-migrate/" title="Elasticsearch数据迁移">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Elasticsearch数据迁移</span>
                         <span class="visible-mobile">上一篇</span>
@@ -514,7 +411,7 @@ print(<span class="hljs-string">'Load the image: docker load -i '</span> + docke
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/07/28/springboot-logging-configuration/">
+                      <a href="/2018/07/28/springboot-logging-configuration/" title="Springboot Logback自定义日志">
                         <span class="hidden-mobile">Springboot Logback自定义日志</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -526,68 +423,96 @@ print(<span class="hljs-string">'Load the image: docker load -i '</span> + docke
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: '7ce4d74bb87b2432946fa78a05d1fdf4'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -600,86 +525,196 @@ print(<span class="hljs-string">'Load the image: docker load -i '</span> + docke
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -687,114 +722,15 @@ print(<span class="hljs-string">'Load the image: docker load -i '</span> + docke
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "那些年，拉取Docker镜像犯的困&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

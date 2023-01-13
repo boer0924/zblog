@@ -1,70 +1,108 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;setup&#x2F;production-environment&#x2F;tools&#x2F;kubeadm&#x2F;install-kubeadm&#x2F; system requirement2C2G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubeadm部署HA高可用Kubernetes集群">
+<meta property="og:url" content="https://www.boer.xyz/2019/09/24/k8s-ha-deployment/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="https:&#x2F;&#x2F;kubernetes.io&#x2F;docs&#x2F;setup&#x2F;production-environment&#x2F;tools&#x2F;kubeadm&#x2F;install-kubeadm&#x2F; system requirement2C2G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?k8s">
+<meta property="article:published_time" content="2019-09-24T08:16:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.269Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="Calico">
+<meta property="article:tag" content="IPVS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?k8s">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>Kubeadm部署HA高可用Kubernetes集群 · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +121,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +133,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +145,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +157,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +169,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,453 +194,244 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2019-09-24 16:16" pubdate>
-        2019年9月24日 下午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1.7k 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      32
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kubeadm部署HA高可用Kubernetes集群"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-09-24 16:16" pubdate>
+          2019年9月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          88 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Kubeadm部署HA高可用Kubernetes集群</h1>
             
-            <div class="markdown-body" id="post-body">
-              <p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" target="_blank" rel="noopener">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/</a></p>
+            
+              <div class="markdown-body">
+                
+                <p><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/</a></p>
 <p>system requirement<br>2C2G</p>
-<a id="more"></a>
+<span id="more"></span>
 
-<h3 id="安装Aliyun-YUM-Repo"><a href="#安装Aliyun-YUM-Repo" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span>
+<h3 id="安装Aliyun-YUM-Repo"><a href="#安装Aliyun-YUM-Repo" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span><br><br><span class="hljs-comment">### base</span><br><span class="hljs-built_in">mv</span> /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup<br>curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo<br><br><span class="hljs-comment">### epel</span><br><span class="hljs-built_in">mv</span> /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup<br><span class="hljs-built_in">mv</span> /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup<br>wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo<br><br><br><span class="hljs-comment"># 安装必需软件</span><br><span class="hljs-comment">### https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md</span><br>yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git<br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment">### base</span>
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+<h3 id="优化内核参数"><a href="#优化内核参数" class="headerlink" title="优化内核参数"></a>优化内核参数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF | sudo tee /etc/sysctl.d/k8s.conf</span><br><span class="hljs-string">net.bridge.bridge-nf-call-iptables=1</span><br><span class="hljs-string">net.bridge.bridge-nf-call-ip6tables=1</span><br><span class="hljs-string">net.ipv4.ip_forward=1</span><br><span class="hljs-string">net.ipv4.tcp_tw_recycle=0</span><br><span class="hljs-string">net.ipv4.tcp_tw_reuse=1</span><br><span class="hljs-string">net.ipv4.tcp_timestamps=1</span><br><span class="hljs-string">net.ipv4.neigh.default.gc_thresh1=1024</span><br><span class="hljs-string">net.ipv4.neigh.default.gc_thresh2=2048</span><br><span class="hljs-string">net.ipv4.neigh.default.gc_thresh3=4096</span><br><span class="hljs-string">vm.swappiness=0</span><br><span class="hljs-string">vm.overcommit_memory=1</span><br><span class="hljs-string">vm.panic_on_oom=0</span><br><span class="hljs-string">vm.max_map_count = 262144</span><br><span class="hljs-string">fs.inotify.max_user_instances=8192</span><br><span class="hljs-string">fs.inotify.max_user_watches=1048576</span><br><span class="hljs-string">fs.file-max=52706963</span><br><span class="hljs-string">fs.nr_open=52706963</span><br><span class="hljs-string">net.ipv6.conf.all.disable_ipv6=1</span><br><span class="hljs-string">net.netfilter.nf_conntrack_max=2310720</span><br><span class="hljs-string">EOF</span><br>sysctl --system<br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment">### epel</span>
-mv /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
-mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
-wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
-
-
-<span class="hljs-comment"># 安装必需软件</span>
-<span class="hljs-comment">### https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/01.%E5%88%9D%E5%A7%8B%E5%8C%96%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.md</span>
-yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git</code></pre></div>
-
-<h3 id="优化内核参数"><a href="#优化内核参数" class="headerlink" title="优化内核参数"></a>优化内核参数</h3><div class="hljs"><pre><code class="hljs bash">cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-iptables=1
-net.bridge.bridge-nf-call-ip6tables=1
-net.ipv4.ip_forward=1
-net.ipv4.tcp_tw_recycle=0
-net.ipv4.tcp_tw_reuse=1
-net.ipv4.tcp_timestamps=1
-net.ipv4.neigh.default.gc_thresh1=1024
-net.ipv4.neigh.default.gc_thresh2=2048
-net.ipv4.neigh.default.gc_thresh3=4096
-vm.swappiness=0
-vm.overcommit_memory=1
-vm.panic_on_oom=0
-vm.max_map_count = 262144
-fs.inotify.max_user_instances=8192
-fs.inotify.max_user_watches=1048576
-fs.file-max=52706963
-fs.nr_open=52706963
-net.ipv6.conf.all.disable_ipv6=1
-net.netfilter.nf_conntrack_max=2310720
-EOF
-sysctl --system</code></pre></div>
-
-<h3 id="IPVS加载内核模块"><a href="#IPVS加载内核模块" class="headerlink" title="IPVS加载内核模块"></a>IPVS加载内核模块</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md</span>
-
-vim /etc/sysconfig/modules/ipvs.modules
-<span class="hljs-meta">#!/bin/bash</span>
-modprobe -- ip_vs
-modprobe -- ip_vs_rr
-modprobe -- ip_vs_wrr
-modprobe -- ip_vs_sh
-modprobe -- nf_conntrack_ipv4</code></pre></div>
+<h3 id="IPVS加载内核模块"><a href="#IPVS加载内核模块" class="headerlink" title="IPVS加载内核模块"></a>IPVS加载内核模块</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## https://github.com/kubernetes/kubernetes/blob/master/pkg/proxy/ipvs/README.md</span><br><br>vim /etc/sysconfig/modules/ipvs.modules<br><span class="hljs-comment">#!/bin/bash</span><br>modprobe -- ip_vs<br>modprobe -- ip_vs_rr<br>modprobe -- ip_vs_wrr<br>modprobe -- ip_vs_sh<br>modprobe -- nf_conntrack_ipv4<br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>modprobe br_netfilter</p>
 </blockquote>
-<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><div class="hljs"><pre><code class="hljs bash">setenforce 0
-sed -i <span class="hljs-string">'s/^SELINUX=.*/SELINUX=disabled/'</span> /etc/selinux/config</code></pre></div>
+<h3 id="SELinux"><a href="#SELinux" class="headerlink" title="SELinux"></a>SELinux</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">setenforce 0<br>sed -i <span class="hljs-string">&#x27;s/^SELINUX=.*/SELINUX=disabled/&#x27;</span> /etc/selinux/config<br></code></pre></td></tr></table></figure>
 
-<h3 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h3><div class="hljs"><pre><code class="hljs bash">swapoff -a
-sed -i <span class="hljs-string">'/ swap / s/^\(.*\)$/#\1/g'</span> /etc/fstab</code></pre></div>
+<h3 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">swapoff -a<br>sed -i <span class="hljs-string">&#x27;/ swap / s/^\(.*\)$/#\1/g&#x27;</span> /etc/fstab<br></code></pre></td></tr></table></figure>
 
-<h3 id="设置iptables默认转发策略"><a href="#设置iptables默认转发策略" class="headerlink" title="设置iptables默认转发策略"></a>设置iptables默认转发策略</h3><div class="hljs"><pre><code class="hljs bash">systemctl stop firewalld
-systemctl <span class="hljs-built_in">disable</span> firewalld
-iptables -F &amp;&amp; iptables -X &amp;&amp; iptables -F -t nat &amp;&amp; iptables -X -t nat
-iptables -P FORWARD ACCEPT</code></pre></div>
+<h3 id="设置iptables默认转发策略"><a href="#设置iptables默认转发策略" class="headerlink" title="设置iptables默认转发策略"></a>设置iptables默认转发策略</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl stop firewalld<br>systemctl <span class="hljs-built_in">disable</span> firewalld<br>iptables -F &amp;&amp; iptables -X &amp;&amp; iptables -F -t nat &amp;&amp; iptables -X -t nat<br>iptables -P FORWARD ACCEPT<br></code></pre></td></tr></table></figure>
 
 <h3 id="关闭无用服务"><a href="#关闭无用服务" class="headerlink" title="关闭无用服务"></a>关闭无用服务</h3><p><code>systemctl stop postfix &amp;&amp; systemctl disable postfix</code></p>
-<h3 id="安装Aliyun-YUM-Repo-1"><a href="#安装Aliyun-YUM-Repo-1" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span>
-<span class="hljs-comment">### k8s</span>
-cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-EOF</code></pre></div>
+<h3 id="安装Aliyun-YUM-Repo-1"><a href="#安装Aliyun-YUM-Repo-1" class="headerlink" title="安装Aliyun YUM Repo"></a>安装Aliyun YUM Repo</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## https://developer.aliyun.com/mirror/</span><br><span class="hljs-comment">### k8s</span><br><span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF &gt; /etc/yum.repos.d/kubernetes.repo</span><br><span class="hljs-string">[kubernetes]</span><br><span class="hljs-string">name=Kubernetes</span><br><span class="hljs-string">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/</span><br><span class="hljs-string">enabled=1</span><br><span class="hljs-string">gpgcheck=1</span><br><span class="hljs-string">repo_gpgcheck=1</span><br><span class="hljs-string">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="安装kube-amp-docker"><a href="#安装kube-amp-docker" class="headerlink" title="安装kube* &amp; docker"></a>安装kube* &amp; docker</h3><div class="hljs"><pre><code class="hljs bash">yum install -y kubelet kubeadm kubectl <span class="hljs-comment"># 注意版本需要和镜像版本对应</span>
-systemctl <span class="hljs-built_in">enable</span> kubelet &amp;&amp; systemctl start kubelet
-
-yum install -y yum-utils device-mapper-persistent-data lvm2
-yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-
-<span class="hljs-comment"># https://docs.docker.com/engine/install/centos/</span>
-
-yum remove docker \
-                  docker-client \
-                  docker-client-latest \
-                  docker-common \
-                  docker-latest \
-                  docker-latest-logrotate \
-                  docker-logrotate \
-                  docker-engine
-
-yum update -y &amp;&amp; yum install -y \
-  containerd.io-1.2.13 \
-  docker-ce-19.03.8 \
-  docker-ce-cli-19.03.8
-mkdir /etc/docker
-<span class="hljs-comment"># 镜像加速  https://cr.console.aliyun.com/cn-beijing/instances/mirrors</span>
-cat &gt; /etc/docker/daemon.json &lt;&lt;EOF
-&#123;
-  <span class="hljs-string">"registry-mirrors"</span>: [<span class="hljs-string">"https://890une7x.mirror.aliyuncs.com"</span>],
-  <span class="hljs-string">"exec-opts"</span>: [<span class="hljs-string">"native.cgroupdriver=systemd"</span>],
-  <span class="hljs-string">"log-driver"</span>: <span class="hljs-string">"json-file"</span>,
-  <span class="hljs-string">"log-opts"</span>: &#123;
-    <span class="hljs-string">"max-size"</span>: <span class="hljs-string">"100m"</span>
-  &#125;,
-  <span class="hljs-string">"storage-driver"</span>: <span class="hljs-string">"overlay2"</span>,
-  <span class="hljs-string">"storage-opts"</span>: [
-    <span class="hljs-string">"overlay2.override_kernel_check=true"</span>
-  ]
-&#125;
-EOF
-mkdir -p /etc/systemd/system/docker.service.d
-systemctl start docker.service
-systemctl <span class="hljs-built_in">enable</span> docker.service
-systemctl status docker.service</code></pre></div>
+<h3 id="安装kube-amp-docker"><a href="#安装kube-amp-docker" class="headerlink" title="安装kube* &amp; docker"></a>安装kube* &amp; docker</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y kubelet kubeadm kubectl <span class="hljs-comment"># 注意版本需要和镜像版本对应</span><br>systemctl <span class="hljs-built_in">enable</span> kubelet &amp;&amp; systemctl start kubelet<br><br>yum install -y yum-utils device-mapper-persistent-data lvm2<br>yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo<br><br><span class="hljs-comment"># https://docs.docker.com/engine/install/centos/</span><br><br>yum remove docker \<br>                  docker-client \<br>                  docker-client-latest \<br>                  docker-common \<br>                  docker-latest \<br>                  docker-latest-logrotate \<br>                  docker-logrotate \<br>                  docker-engine<br><br>yum update -y &amp;&amp; yum install -y \<br>  containerd.io-1.2.13 \<br>  docker-ce-19.03.8 \<br>  docker-ce-cli-19.03.8<br><span class="hljs-built_in">mkdir</span> /etc/docker<br><span class="hljs-comment"># 镜像加速  https://cr.console.aliyun.com/cn-beijing/instances/mirrors</span><br><span class="hljs-built_in">cat</span> &gt; /etc/docker/daemon.json &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">&#123;</span><br><span class="hljs-string">  &quot;registry-mirrors&quot;: [&quot;https://890une7x.mirror.aliyuncs.com&quot;],</span><br><span class="hljs-string">  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],</span><br><span class="hljs-string">  &quot;log-driver&quot;: &quot;json-file&quot;,</span><br><span class="hljs-string">  &quot;log-opts&quot;: &#123;</span><br><span class="hljs-string">    &quot;max-size&quot;: &quot;100m&quot;</span><br><span class="hljs-string">  &#125;,</span><br><span class="hljs-string">  &quot;storage-driver&quot;: &quot;overlay2&quot;,</span><br><span class="hljs-string">  &quot;storage-opts&quot;: [</span><br><span class="hljs-string">    &quot;overlay2.override_kernel_check=true&quot;</span><br><span class="hljs-string">  ]</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">EOF</span><br><span class="hljs-built_in">mkdir</span> -p /etc/systemd/system/docker.service.d<br>systemctl start docker.service<br>systemctl <span class="hljs-built_in">enable</span> docker.service<br>systemctl status docker.service<br></code></pre></td></tr></table></figure>
 
 <h3 id="kubectl-autocompletion"><a href="#kubectl-autocompletion" class="headerlink" title="kubectl autocompletion"></a>kubectl autocompletion</h3><p><code>https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion</code></p>
 <h3 id="kubeadm-config"><a href="#kubeadm-config" class="headerlink" title="kubeadm config"></a>kubeadm config</h3><p><code>vim kubeadm-config.yaml</code></p>
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span>
-<span class="hljs-comment"># kubeadm config print init-defaults</span>
-<span class="hljs-comment"># https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span>
-<span class="hljs-comment"># https://storage.googleapis.com/kubernetes-release/release/stable.txt</span>
-<span class="hljs-comment"># kubernetesVersion: stable</span>
-<span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span>
-<span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">&lt;your-lb-ip&gt;:&lt;port&gt;</span>
-<span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span>
-<span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span>
-<span class="hljs-attr">apiServer:</span>
-  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span>
-<span class="hljs-attr">controllerManager:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-attr">scheduler:</span> <span class="hljs-string">&#123;&#125;</span>
-<span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span>
-<span class="hljs-attr">networking:</span>
-  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span>
-  <span class="hljs-attr">podSubnet:</span> <span class="hljs-number">172.30</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/16</span>
-  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span>
-<span class="hljs-attr">dns:</span>
-  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span>
-<span class="hljs-attr">etcd:</span>
-  <span class="hljs-attr">local:</span>
-    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span>
-<span class="hljs-meta">---</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span>
-<span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># kubeadm init --config kubeadm-config.yaml --upload-certs</span><br><span class="hljs-comment"># kubeadm config print init-defaults</span><br><span class="hljs-comment"># https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeadm.k8s.io/v1beta2</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterConfiguration</span><br><span class="hljs-comment"># https://storage.googleapis.com/kubernetes-release/release/stable.txt</span><br><span class="hljs-comment"># kubernetesVersion: stable</span><br><span class="hljs-attr">kubernetesVersion:</span> <span class="hljs-string">v1.18.3</span><br><span class="hljs-attr">controlPlaneEndpoint:</span> <span class="hljs-string">&lt;your-lb-ip&gt;:&lt;port&gt;</span><br><span class="hljs-attr">certificatesDir:</span> <span class="hljs-string">/etc/kubernetes/pki</span><br><span class="hljs-attr">clusterName:</span> <span class="hljs-string">kubernetes</span><br><span class="hljs-attr">apiServer:</span><br>  <span class="hljs-attr">timeoutForControlPlane:</span> <span class="hljs-string">4m0s</span><br><span class="hljs-attr">controllerManager:</span> &#123;&#125;<br><span class="hljs-attr">scheduler:</span> &#123;&#125;<br><span class="hljs-attr">imageRepository:</span> <span class="hljs-string">registry.aliyuncs.com/google_containers</span><br><span class="hljs-attr">networking:</span><br>  <span class="hljs-attr">dnsDomain:</span> <span class="hljs-string">cluster.local</span><br>  <span class="hljs-attr">podSubnet:</span> <span class="hljs-number">172.30</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/16</span><br>  <span class="hljs-attr">serviceSubnet:</span> <span class="hljs-number">10.96</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><span class="hljs-string">/12</span><br><span class="hljs-attr">dns:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">CoreDNS</span><br><span class="hljs-attr">etcd:</span><br>  <span class="hljs-attr">local:</span><br>    <span class="hljs-attr">dataDir:</span> <span class="hljs-string">/var/lib/etcd</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubeproxy.config.k8s.io/v1alpha1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">KubeProxyConfiguration</span><br><span class="hljs-attr">mode:</span> <span class="hljs-string">ipvs</span><br><br><span class="hljs-comment">## 自定义CA</span><br><span class="hljs-comment"># https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/</span><br><span class="hljs-comment"># This means you can, for example, copy an existing CA into /etc/kubernetes/pki/ca.crt and /etc/kubernetes/pki/ca.key, and kubeadm will use this CA for signing the rest of the certificates</span><br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment">## 自定义CA</span>
-<span class="hljs-comment"># https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/</span>
-<span class="hljs-comment"># This means you can, for example, copy an existing CA into /etc/kubernetes/pki/ca.crt and /etc/kubernetes/pki/ca.key, and kubeadm will use this CA for signing the rest of the certificates</span></code></pre></div>
+<h3 id="kubeadm-deploy"><a href="#kubeadm-deploy" class="headerlink" title="kubeadm deploy"></a>kubeadm deploy</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubeadm init --config kubeadm-config.yaml --upload-certs<br>kubeadm config images pull --config kubeadm-config.yaml <span class="hljs-comment"># 先拉取镜像</span><br>curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml<br><span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16</span><br><span class="hljs-comment"># - name: CALICO_IPV4POOL_CIDR</span><br><span class="hljs-comment">#   value: &quot;172.30.0.0/16&quot;</span><br><span class="hljs-comment"># 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration</span><br><span class="hljs-comment"># Enable IPIP</span><br><span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span><br><span class="hljs-comment">#   value: &quot;Never&quot;</span><br>kubectl apply -f calico.yaml<br><br><span class="hljs-comment"># core-dns pod不再pending</span><br><br>kubeadm reset<br>kubectl delete node &lt;node-name&gt;<br></code></pre></td></tr></table></figure>
 
-<h3 id="kubeadm-deploy"><a href="#kubeadm-deploy" class="headerlink" title="kubeadm deploy"></a>kubeadm deploy</h3><div class="hljs"><pre><code class="hljs bash">kubeadm init --config kubeadm-config.yaml --upload-certs
-kubeadm config images pull --config kubeadm-config.yaml <span class="hljs-comment"># 先拉取镜像</span>
-curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
-<span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16</span>
-<span class="hljs-comment"># - name: CALICO_IPV4POOL_CIDR</span>
-<span class="hljs-comment">#   value: "172.30.0.0/16"</span>
-<span class="hljs-comment"># 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration</span>
-<span class="hljs-comment"># Enable IPIP</span>
-<span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span>
-<span class="hljs-comment">#   value: "Never"</span>
-kubectl apply -f calico.yaml
+<h3 id="ipvs重建"><a href="#ipvs重建" class="headerlink" title="ipvs重建"></a>ipvs重建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 如果安装时为iptables模式</span><br>kubectl -n kube-system edit cm kube-proxy<br><span class="hljs-comment"># mode: &quot;ipvs&quot;</span><br>kubectl get pod -n kube-system | grep kube-proxy | awk <span class="hljs-string">&#x27;&#123;system(&quot;kubectl delete pod &quot;$1&quot; -n kube-system&quot;)&#125;&#x27;</span> <span class="hljs-comment"># 重建kube-proxy的pod</span><br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment"># core-dns pod不再pending</span>
+<h3 id="Calico-BGP模式重建"><a href="#Calico-BGP模式重建" class="headerlink" title="Calico BGP模式重建"></a>Calico BGP模式重建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/kubernetes/installation/config-options</span><br>curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml<br><span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16</span><br><span class="hljs-comment"># - name: CALICO_IPV4POOL_CIDR</span><br><span class="hljs-comment">#   value: &quot;172.30.0.0/16&quot;</span><br><span class="hljs-comment"># 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration</span><br><span class="hljs-comment"># Enable IPIP</span><br><span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span><br><span class="hljs-comment">#   value: &quot;Never&quot;</span><br>kubectl apply -f calico.yaml<br></code></pre></td></tr></table></figure>
 
-kubeadm reset
-kubectl delete node &lt;node-name&gt;</code></pre></div>
+<h3 id="Operations"><a href="#Operations" class="headerlink" title="Operations"></a>Operations</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 切换默认namespace</span><br>kubectl config set-context $(kubectl config current-context) --namespace=&lt;insert-namespace-name-here&gt;<br><span class="hljs-comment"># Validate it</span><br>kubectl config view | grep namespace<br><br><span class="hljs-comment"># create registry secret</span><br>kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xyz --docker-username=admin --docker-password=Admin@123 --docker-email=boer0924@gmail.com --namespace=boer-public<br><br><span class="hljs-comment"># join node</span><br>kubeadm token list<br>kubeadm token create --print-join-command<br><br>kubectl drain <span class="hljs-variable">$NODENAME</span><br>kubectl uncordon <span class="hljs-variable">$NODENAME</span><br><br><span class="hljs-comment"># https://docs.docker.com/engine/reference/commandline/ps/#filtering</span><br>docker <span class="hljs-built_in">rm</span> $(docker ps -a -f status=exited -q)<br>docker ps --format <span class="hljs-string">&quot;&#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Command&#125;&#125;\t&#123;&#123;.Status&#125;&#125;\t&#123;&#123;.Ports&#125;&#125;&quot;</span><br>docker ps --filter <span class="hljs-string">&quot;status=exited&quot;</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="ipvs重建"><a href="#ipvs重建" class="headerlink" title="ipvs重建"></a>ipvs重建</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 如果安装时为iptables模式</span>
-kubectl -n kube-system edit cm kube-proxy
-<span class="hljs-comment"># mode: "ipvs"</span>
-kubectl get pod -n kube-system | grep kube-proxy | awk <span class="hljs-string">'&#123;system("kubectl delete pod "$1" -n kube-system")&#125;'</span> <span class="hljs-comment"># 重建kube-proxy的pod</span></code></pre></div>
+<h4 id="etcdctl"><a href="#etcdctl" class="headerlink" title="etcdctl"></a>etcdctl</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># https://jimmysong.io/kubernetes-handbook/guide/using-etcdctl-to-access-kubernetes-data.html</span><br>curl -LO etcd-v3.4.3-linux-amd64.tar.gz<br><span class="hljs-built_in">alias</span> etcdctl=<span class="hljs-string">&#x27;etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key&#x27;</span><br>etcdctl get /registry/namespaces/kube-system -w=json | jq .<br>etcdctl member list<br>etcdctl <span class="hljs-built_in">help</span><br><span class="hljs-comment"># 备份</span><br>etcdctl snapshot save<br>etcdctl snapshot status<br>etcdctl snapshot restore<br></code></pre></td></tr></table></figure>
 
-<h3 id="Calico-BGP模式重建"><a href="#Calico-BGP模式重建" class="headerlink" title="Calico BGP模式重建"></a>Calico BGP模式重建</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/kubernetes/installation/config-options</span>
-curl -LO https://docs.projectcalico.org/v3.14/manifests/calico.yaml
-<span class="hljs-comment"># 更改CALICO_IPV4POOL_CIDR 为podSubnet: 172.30.0.0/16</span>
-<span class="hljs-comment"># - name: CALICO_IPV4POOL_CIDR</span>
-<span class="hljs-comment">#   value: "172.30.0.0/16"</span>
-<span class="hljs-comment"># 更改为BGP模式 https://docs.projectcalico.org/reference/node/configuration</span>
-<span class="hljs-comment"># Enable IPIP</span>
-<span class="hljs-comment"># - name: CALICO_IPV4POOL_IPIP</span>
-<span class="hljs-comment">#   value: "Never"</span>
-kubectl apply -f calico.yaml</code></pre></div>
+<h4 id="Calicoctl"><a href="#Calicoctl" class="headerlink" title="Calicoctl"></a>Calicoctl</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span><br>curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl<br><span class="hljs-built_in">mv</span> calicoctl /usr/local/bin/<br><span class="hljs-built_in">chmod</span> a+x /usr/local/bin/calicoctl<br><br>vim /etc/calico/calicoctl.cfg<br>apiVersion: projectcalico.org/v3<br>kind: CalicoAPIConfig<br>metadata:<br>spec:<br>  datastoreType: <span class="hljs-string">&quot;kubernetes&quot;</span><br>  kubeconfig: <span class="hljs-string">&quot;/root/.kube/config&quot;</span><br><br>calicoctl get nodes<br>calicoctl node status <span class="hljs-comment"># 查看calico运行模式</span><br>calicoctl get ipPool -o yaml<br></code></pre></td></tr></table></figure>
 
-<h3 id="Operations"><a href="#Operations" class="headerlink" title="Operations"></a>Operations</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment">## 切换默认namespace</span>
-kubectl config <span class="hljs-built_in">set</span>-context $(kubectl config current-context) --namespace=&lt;insert-namespace-name-here&gt;
-<span class="hljs-comment"># Validate it</span>
-kubectl config view | grep namespace
+<h4 id="Helm-v2安装"><a href="#Helm-v2安装" class="headerlink" title="Helm v2安装"></a>Helm v2安装</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</span><br>curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz<br><br>vim rbac-config.yaml<br>apiVersion: v1<br>kind: ServiceAccount<br>metadata:<br>  name: tiller<br>  namespace: kube-system<br>---<br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRoleBinding<br>metadata:<br>  name: tiller<br>roleRef:<br>  apiGroup: rbac.authorization.k8s.io<br>  kind: ClusterRole<br>  name: cluster-admin<br>subjects:<br>  - kind: ServiceAccount<br>    name: tiller<br>    namespace: kube-system<br><br>helm init --service-account tiller -i registry.aliyuncs.com/google_containers/tiller:v2.16.6<br><br>helm repo list<br>helm repo add stable https://mirror.azure.cn/kubernetes/charts<br>helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator<br><br>helm repo update<br>helm fetch stable/mysql <span class="hljs-comment"># 当前目录现在xxx.tgz</span><br>helm install stable/mysql<br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment"># create registry secret</span>
-kubectl create secret docker-registry boer-harbor --docker-server=harbor.boer.xyz --docker-username=admin --docker-password=Admin@123 --docker-email=boer0924@gmail.com --namespace=boer-public
-
-<span class="hljs-comment"># join node</span>
-kubeadm token list
-kubeadm token create --<span class="hljs-built_in">print</span>-join-command
-
-kubectl drain <span class="hljs-variable">$NODENAME</span>
-kubectl uncordon <span class="hljs-variable">$NODENAME</span>
-
-<span class="hljs-comment"># https://docs.docker.com/engine/reference/commandline/ps/#filtering</span>
-docker rm $(docker ps -a -f status=exited -q)
-docker ps --format <span class="hljs-string">"&#123;&#123;.ID&#125;&#125;\t&#123;&#123;.Command&#125;&#125;\t&#123;&#123;.Status&#125;&#125;\t&#123;&#123;.Ports&#125;&#125;"</span>
-docker ps --filter <span class="hljs-string">"status=exited"</span></code></pre></div>
-
-<h4 id="etcdctl"><a href="#etcdctl" class="headerlink" title="etcdctl"></a>etcdctl</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://jimmysong.io/kubernetes-handbook/guide/using-etcdctl-to-access-kubernetes-data.html</span>
-curl -LO etcd-v3.4.3-linux-amd64.tar.gz
-<span class="hljs-built_in">alias</span> etcdctl=<span class="hljs-string">'etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key'</span>
-etcdctl get /registry/namespaces/kube-system -w=json | jq .
-etcdctl member list
-etcdctl <span class="hljs-built_in">help</span>
-<span class="hljs-comment"># 备份</span>
-etcdctl snapshot save
-etcdctl snapshot status
-etcdctl snapshot restore</code></pre></div>
-
-<h4 id="Calicoctl"><a href="#Calicoctl" class="headerlink" title="Calicoctl"></a>Calicoctl</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://docs.projectcalico.org/archive/v3.14/getting-started/clis/calicoctl/</span>
-curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.14.1/calicoctl
-mv calicoctl /usr/<span class="hljs-built_in">local</span>/bin/
-chmod a+x /usr/<span class="hljs-built_in">local</span>/bin/calicoctl
-
-vim /etc/calico/calicoctl.cfg
-apiVersion: projectcalico.org/v3
-kind: CalicoAPIConfig
-metadata:
-spec:
-  datastoreType: <span class="hljs-string">"kubernetes"</span>
-  kubeconfig: <span class="hljs-string">"/root/.kube/config"</span>
-
-calicoctl get nodes
-calicoctl node status <span class="hljs-comment"># 查看calico运行模式</span>
-calicoctl get ipPool -o yaml</code></pre></div>
-
-<h4 id="Helm-v2安装"><a href="#Helm-v2安装" class="headerlink" title="Helm v2安装"></a>Helm v2安装</h4><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://qhh.me/2019/08/08/Helm-%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/</span>
-curl -LO https://get.helm.sh/helm-v2.16.6-linux-amd64.tar.gz
-
-vim rbac-config.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
-
-helm init --service-account tiller -i registry.aliyuncs.com/google_containers/tiller:v2.16.6
-
-helm repo list
-helm repo add stable https://mirror.azure.cn/kubernetes/charts
-helm repo add incubator https://mirror.azure.cn/kubernetes/charts-incubator
-
-helm repo update
-helm fetch stable/mysql <span class="hljs-comment"># 当前目录现在xxx.tgz</span>
-helm install stable/mysql</code></pre></div>
-
-<h3 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># 不让私有云用户成为K8S世界的二等公民</span>
-<span class="hljs-comment"># https://metallb.universe.tf/installation/</span>
-
-<span class="hljs-comment"># 用法demo</span>
-apiVersion: v1
-kind: Service
-metadata:
-  name: theapp-service
-  annotations:
-    metallb.universe.tf/address-pool: default
-  labels:
-    app: theapp
-spec:
-  <span class="hljs-built_in">type</span>: LoadBalancer
-  <span class="hljs-comment"># type: NodePort</span>
-  <span class="hljs-comment"># type: ClusterIP</span>
-  ports:
-  - port: 5000
-    targetPort: 5000
-    <span class="hljs-comment"># nodePort: 31090</span>
-  selector:
-    app: theapp
-
-kubectl get svc <span class="hljs-comment"># curl -v EXTERNAL-IP</span></code></pre></div>
-<p>MetalLB (头等舱)<br><img src="/img/figure/metallb.jpg" srcset="/img/loading.gif" alt="metallb"></p>
+<h3 id="MetalLB"><a href="#MetalLB" class="headerlink" title="MetalLB"></a>MetalLB</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 不让私有云用户成为K8S世界的二等公民</span><br><span class="hljs-comment"># https://metallb.universe.tf/installation/</span><br><br><span class="hljs-comment"># 用法demo</span><br>apiVersion: v1<br>kind: Service<br>metadata:<br>  name: theapp-service<br>  annotations:<br>    metallb.universe.tf/address-pool: default<br>  labels:<br>    app: theapp<br>spec:<br>  <span class="hljs-built_in">type</span>: LoadBalancer<br>  <span class="hljs-comment"># type: NodePort</span><br>  <span class="hljs-comment"># type: ClusterIP</span><br>  ports:<br>  - port: 5000<br>    targetPort: 5000<br>    <span class="hljs-comment"># nodePort: 31090</span><br>  selector:<br>    app: theapp<br><br>kubectl get svc <span class="hljs-comment"># curl -v EXTERNAL-IP</span><br></code></pre></td></tr></table></figure>
+<p>MetalLB (头等舱)<br><img src="/img/figure/metallb.jpg" srcset="/img/loading.gif" lazyload alt="metallb"></p>
 <center>vs</center>
 
-<p>NodePort (经济舱)<br><img src="/img/figure/nodeport.jpg" srcset="/img/loading.gif" alt="nodeport"></p>
-<h3 id="Ingress-Nginx-L7"><a href="#Ingress-Nginx-L7" class="headerlink" title="Ingress-Nginx L7"></a>Ingress-Nginx L7</h3><div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal</span>
-<span class="hljs-comment"># 更改controller-service的type: LoadBalancer(默认NodePort)</span>
-<span class="hljs-comment"># 添加MetalLB annotations</span>
-metadata:
-  annotations:
-    metallb.universe.tf/address-pool: default
-spec:
-  <span class="hljs-built_in">type</span>: LoadBalancer
+<p>NodePort (经济舱)<br><img src="/img/figure/nodeport.jpg" srcset="/img/loading.gif" lazyload alt="nodeport"></p>
+<h3 id="Ingress-Nginx-L7"><a href="#Ingress-Nginx-L7" class="headerlink" title="Ingress-Nginx L7"></a>Ingress-Nginx L7</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># https://kubernetes.github.io/ingress-nginx/deploy/#bare-metal</span><br><span class="hljs-comment"># 更改controller-service的type: LoadBalancer(默认NodePort)</span><br><span class="hljs-comment"># 添加MetalLB annotations</span><br>metadata:<br>  annotations:<br>    metallb.universe.tf/address-pool: default<br>spec:<br>  <span class="hljs-built_in">type</span>: LoadBalancer<br><br><span class="hljs-comment"># 用法demo</span><br>apiVersion: networking.k8s.io/v1beta1<br>kind: Ingress<br>metadata:<br>  name: theapp-ingress<br>  annotations:<br>    nginx.ingress.kubernetes.io/rewrite-target: /<br>    nginx.ingress.kubernetes.io/load-balance: <span class="hljs-string">&quot;ip_hash&quot;</span><br>    nginx.ingress.kubernetes.io/upstream-hash-by: <span class="hljs-string">&quot;<span class="hljs-variable">$request_uri</span>&quot;</span><br>spec:<br>  rules:<br>  - host: theapp.boer.xyz<br>    http:<br>      paths:<br>      - path: /<br>        backend:<br>          serviceName: theapp-service<br>          servicePort: 5000<br></code></pre></td></tr></table></figure>
 
-<span class="hljs-comment"># 用法demo</span>
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: theapp-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/load-balance: <span class="hljs-string">"ip_hash"</span>
-    nginx.ingress.kubernetes.io/upstream-hash-by: <span class="hljs-string">"<span class="hljs-variable">$request_uri</span>"</span>
-spec:
-  rules:
-  - host: theapp.boer.xyz
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: theapp-service
-          servicePort: 5000</code></pre></div>
+<h3 id="Rancher卸载"><a href="#Rancher卸载" class="headerlink" title="Rancher卸载"></a>Rancher卸载</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment"># https://blog.csdn.net/gui951753/article/details/106160427</span><br>kubectl<span class="hljs-built_in"> proxy </span>&amp;<br><span class="hljs-attribute">NAMESPACE</span>=local<br>kubectl <span class="hljs-built_in">get</span> namespace <span class="hljs-variable">$NAMESPACE</span> -o json |jq <span class="hljs-string">&#x27;.spec = &#123;&quot;finalizers&quot;:[]&#125;&#x27;</span> &gt;temp.json<br>curl -k -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/<span class="hljs-variable">$NAMESPACE</span>/finalize<br><br><span class="hljs-comment"># https://github.com/rancher/rancher/issues/14715#issuecomment-430194650</span><br>kubectl <span class="hljs-built_in">get</span> customresourcedefinitions | grep cattle.io | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> | xargs kubectl delete customresourcedefinitions<br></code></pre></td></tr></table></figure>
 
-<h3 id="Rancher卸载"><a href="#Rancher卸载" class="headerlink" title="Rancher卸载"></a>Rancher卸载</h3><div class="hljs"><pre><code class="hljs routeros"><span class="hljs-comment"># https://blog.csdn.net/gui951753/article/details/106160427</span>
-kubectl<span class="hljs-built_in"> proxy </span>&amp;
-<span class="hljs-attribute">NAMESPACE</span>=local
-kubectl <span class="hljs-builtin-name">get</span> namespace <span class="hljs-variable">$NAMESPACE</span> -o json |jq <span class="hljs-string">'.spec = &#123;"finalizers":[]&#125;'</span> &gt;temp.json
-curl -k -H <span class="hljs-string">"Content-Type: application/json"</span> -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/<span class="hljs-variable">$NAMESPACE</span>/finalize
-
-<span class="hljs-comment"># https://github.com/rancher/rancher/issues/14715#issuecomment-430194650</span>
-kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | grep cattle.io | awk <span class="hljs-string">'&#123;print $1&#125;'</span> | xargs kubectl delete customresourcedefinitions</code></pre></div>
-
-<h3 id="模型概览"><a href="#模型概览" class="headerlink" title="模型概览"></a>模型概览</h3><p><img src="/img/figure/k8s_network_outbound.jpg" srcset="/img/loading.gif" alt="k8s-boer"></p>
+<h3 id="模型概览"><a href="#模型概览" class="headerlink" title="模型概览"></a>模型概览</h3><p><img src="/img/figure/k8s_network_outbound.jpg" srcset="/img/loading.gif" lazyload alt="k8s-boer"></p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
-<li><a href="https://www.qikqiak.com/k8strain" target="_blank" rel="noopener">https://www.qikqiak.com/k8strain</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/opsnull/follow-me-install-kubernetes-cluster">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/k8strain">https://www.qikqiak.com/k8strain</a></li>
 </ul>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Kubernetes/">Kubernetes</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Kubernetes/">Kubernetes</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Calico/">Calico</a>
-                    
-                      <a class="hover-with-bg" href="/tags/IPVS/">IPVS</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Kubernetes/" class="category-chain-item">Kubernetes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/Calico/">#Calico</a>
+      
+        <a href="/tags/IPVS/">#IPVS</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubeadm部署HA高可用Kubernetes集群</div>
+      <div>https://www.boer.xyz/2019/09/24/k8s-ha-deployment/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年9月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2019/10/10/k8s-monitoring-prometheus/">
+                      <a href="/2019/10/10/k8s-monitoring-prometheus/" title="Kubernetes监控系统Prometheus">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Kubernetes监控系统Prometheus</span>
                         <span class="visible-mobile">上一篇</span>
@@ -609,7 +441,7 @@ kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | g
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2019/09/09/k8s-registry-harbor/">
+                      <a href="/2019/09/09/k8s-registry-harbor/" title="Kubernetes镜像仓库Harbor">
                         <span class="hidden-mobile">Kubernetes镜像仓库Harbor</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -621,68 +453,96 @@ kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | g
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: '83b82b7913fcc3f27c7e957454b6f116'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -695,86 +555,196 @@ kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | g
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -782,114 +752,15 @@ kubectl <span class="hljs-builtin-name">get</span> customresourcedefinitions | g
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "Kubeadm部署HA高可用Kubernetes集群&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

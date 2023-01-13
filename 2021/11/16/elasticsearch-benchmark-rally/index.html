@@ -1,70 +1,106 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测试模式：1.使用和线上集群相同硬件配置的服务器搭建一个单节点集群。2.使用和线上集群相同的映射创建一个 0 副本，1 分片的测试索引。3.使用和线上集群相同的数据写入进行压测。4.观察写入性能，或者运行查询请求观察搜索聚合性能。5.持续压测数小时，使用监控系统记录 eps、requesttime、fielddata cache、GC coun">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch基准测试">
+<meta property="og:url" content="https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测试模式：1.使用和线上集群相同硬件配置的服务器搭建一个单节点集群。2.使用和线上集群相同的映射创建一个 0 副本，1 分片的测试索引。3.使用和线上集群相同的数据写入进行压测。4.观察写入性能，或者运行查询请求观察搜索聚合性能。5.持续压测数小时，使用监控系统记录 eps、requesttime、fielddata cache、GC coun">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?rally">
+<meta property="article:published_time" content="2021-11-16T07:36:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.265Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="Elasticserach">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?rally">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>Elasticsearch基准测试 · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +119,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +131,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +143,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +155,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +167,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,81 +192,98 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-11-16 15:36" pubdate>
-        2021年11月16日 下午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      955 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      15
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Elasticsearch基准测试"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-16 15:36" pubdate>
+          2021年11月16日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Elasticsearch基准测试</h1>
             
-            <div class="markdown-body" id="post-body">
-              <p>ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测试模式：<br>1.使用和线上集群相同硬件配置的服务器搭建一个单节点集群。<br>2.使用和线上集群相同的映射创建一个 0 副本，1 分片的测试索引。<br>3.使用和线上集群相同的数据写入进行压测。<br>4.观察写入性能，或者运行查询请求观察搜索聚合性能。<br>5.持续压测数小时，使用监控系统记录 eps、requesttime、fielddata cache、GC count 等关键数据。</p>
+            
+              <div class="markdown-body">
+                
+                <p>ES 是近乎线性扩展的分布式系统，所以可以总结成同一个测试模式：<br>1.使用和线上集群相同硬件配置的服务器搭建一个单节点集群。<br>2.使用和线上集群相同的映射创建一个 0 副本，1 分片的测试索引。<br>3.使用和线上集群相同的数据写入进行压测。<br>4.观察写入性能，或者运行查询请求观察搜索聚合性能。<br>5.持续压测数小时，使用监控系统记录 eps、requesttime、fielddata cache、GC count 等关键数据。</p>
 <p>测试完成后，根据监控系统数据，确定单分片的性能拐点，或者适合自己预期值的临界点。这个数据，就是一个基准数据。之后的扩容计划，都可以以这个基准单位进行。</p>
 <p>需要注意的是，测试是以分片为单位的，在实际使用中，因为主分片和副本分片都是在各自节点做 indexing 和 merge 操作，需要消耗同样的写入性能。所以，实际集群的容量预估中，要考虑副本数的影响。也就是说，假如你在基准测试中得到单机写入性能在 10000 eps，那么开启一个副本后所能达到的 eps 就只有 5000 了。还想写入 10000 eps 的话，就需要加一倍机器。</p>
-<a id="more"></a>
+<span id="more"></span>
 
 <p>esrally==2.2.1<br>elasticsearch==7.10.2</p>
 <table>
@@ -269,124 +325,110 @@
 </li>
 <li><p>challenge - 压测执行的任务throughput/iteration</p>
 </li>
-<li><p>离线数据路径: ~/.rally/benchmarks/data/geonames</p>
-<ul>
-<li>eg. <a href="https://github.com/elastic/rally-tracks/blob/master/geonames/track.json" target="_blank" rel="noopener">https://github.com/elastic/rally-tracks/blob/master/geonames/track.json</a></li>
-</ul>
+<li><p>离线数据路径: ~/.rally/benchmarks/data/geonames    - eg. <a target="_blank" rel="noopener" href="https://github.com/elastic/rally-tracks/blob/master/geonames/track.json">https://github.com/elastic/rally-tracks/blob/master/geonames/track.json</a></p>
 </li>
-<li><p>tracks定义仓库：~/.rally/benchmarks/tracks/default </p>
-<ul>
-<li>eg. <a href="https://github.com/elastic/rally-tracks" target="_blank" rel="noopener">https://github.com/elastic/rally-tracks</a></li>
-</ul>
+<li><p>tracks定义仓库：~/.rally/benchmarks/tracks/default     - eg. <a target="_blank" rel="noopener" href="https://github.com/elastic/rally-tracks">https://github.com/elastic/rally-tracks</a></p>
 </li>
 </ol>
-<h1 id="car-team-不同规格的es集群"><a href="#car-team-不同规格的es集群" class="headerlink" title="car/team - 不同规格的es集群"></a>car/team - 不同规格的es集群</h1><p><a href="https://github.com/elastic/rally-teams" target="_blank" rel="noopener">https://github.com/elastic/rally-teams</a></p>
-<h1 id="执行与输出"><a href="#执行与输出" class="headerlink" title="执行与输出"></a>执行与输出</h1><div class="hljs"><pre><code class="hljs bash">esrally race --pipeline=benchmark-only --target-hosts=&lt;es_vip&gt;:9200 --track=geonames  --client-options=<span class="hljs-string">"use_ssl:true,basic_auth_user:'admin',basic_auth_password:'admin',verify_certs:false"</span> --challenge=append-no-conflicts  --offline
+<h1 id="car-team-不同规格的es集群"><a href="#car-team-不同规格的es集群" class="headerlink" title="car/team - 不同规格的es集群"></a>car/team - 不同规格的es集群</h1><p><a target="_blank" rel="noopener" href="https://github.com/elastic/rally-teams">https://github.com/elastic/rally-teams</a></p>
+<h1 id="执行与输出"><a href="#执行与输出" class="headerlink" title="执行与输出"></a>执行与输出</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs bash">esrally race --pipeline=benchmark-only --target-hosts=&lt;es_vip&gt;:9200 --track=geonames  --client-options=<span class="hljs-string">&quot;use_ssl:true,basic_auth_user:&#x27;admin&#x27;,basic_auth_password:&#x27;admin&#x27;,verify_certs:false&quot;</span> --challenge=append-no-conflicts  --offline<br><br>    ____        ____<br>   / __ \____ _/ / /_  __<br>  / /_/ / __ `/ / / / / /<br> / _, _/ /_/ / / / /_/ /<br>/_/ |_|\__,_/_/_/\__, /<br>                /____/<br><br>[INFO] You did not provide an explicit <span class="hljs-built_in">timeout</span> <span class="hljs-keyword">in</span> the client options. Assuming default of 10 seconds.<br>[INFO] Decompressing track data from [/root/.rally/benchmarks/data/geonames/documents-2.json.bz2] to [/root/.rally/benchmarks/data/geonames/documents-2.json] (resulting size: [3.30] GB) ... [OK]<br>[INFO] Preparing file offset table <span class="hljs-keyword">for</span> [/root/.rally/benchmarks/data/geonames/documents-2.json] ... [OK]<br>[INFO] Racing on track [geonames], challenge [append-no-conflicts] and car [<span class="hljs-string">&#x27;external&#x27;</span>] with version [7.10.2].<br><br>[WARNING] merges_total_time is 11262 ms indicating that the cluster is not <span class="hljs-keyword">in</span> a defined clean state. Recorded index time metrics may be misleading.<br>[WARNING] refresh_total_time is 3141 ms indicating that the cluster is not <span class="hljs-keyword">in</span> a defined clean state. Recorded index time metrics may be misleading.<br>Running delete-index                                                           [100% <span class="hljs-keyword">done</span>]<br>Running create-index                                                           [100% <span class="hljs-keyword">done</span>]<br>Running check-cluster-health                                                   [100% <span class="hljs-keyword">done</span>]<br>Running index-append                                                           [100% <span class="hljs-keyword">done</span>]<br>Running refresh-after-index                                                    [100% <span class="hljs-keyword">done</span>]<br>Running force-merge                                                            [100% <span class="hljs-keyword">done</span>]<br>Running refresh-after-force-merge                                              [100% <span class="hljs-keyword">done</span>]<br>Running wait-until-merges-finish                                               [100% <span class="hljs-keyword">done</span>]<br>Running index-stats                                                            [100% <span class="hljs-keyword">done</span>]<br>Running node-stats                                                             [100% <span class="hljs-keyword">done</span>]<br>Running default                                                                [100% <span class="hljs-keyword">done</span>]<br>Running term                                                                   [100% <span class="hljs-keyword">done</span>]<br>Running phrase                                                                 [100% <span class="hljs-keyword">done</span>]<br>Running country_agg_uncached                                                   [100% <span class="hljs-keyword">done</span>]<br>Running country_agg_cached                                                     [100% <span class="hljs-keyword">done</span>]<br>Running scroll                                                                 [100% <span class="hljs-keyword">done</span>]<br>Running expression                                                             [100% <span class="hljs-keyword">done</span>]<br>Running painless_static                                                        [100% <span class="hljs-keyword">done</span>]<br>Running painless_dynamic                                                       [100% <span class="hljs-keyword">done</span>]<br>Running decay_geo_gauss_function_score                                         [100% <span class="hljs-keyword">done</span>]<br>Running decay_geo_gauss_script_score                                           [100% <span class="hljs-keyword">done</span>]<br>Running field_value_function_score                                             [100% <span class="hljs-keyword">done</span>]<br>Running field_value_script_score                                               [100% <span class="hljs-keyword">done</span>]<br>Running large_terms                                                            [100% <span class="hljs-keyword">done</span>]<br>Running large_filtered_terms                                                   [100% <span class="hljs-keyword">done</span>]<br>Running large_prohibited_terms                                                 [100% <span class="hljs-keyword">done</span>]<br>Running desc_sort_population                                                   [100% <span class="hljs-keyword">done</span>]<br>Running asc_sort_population                                                    [100% <span class="hljs-keyword">done</span>]<br>Running asc_sort_with_after_population                                         [100% <span class="hljs-keyword">done</span>]<br>Running desc_sort_geonameid                                                    [100% <span class="hljs-keyword">done</span>]<br>Running desc_sort_with_after_geonameid                                         [100% <span class="hljs-keyword">done</span>]<br>Running asc_sort_geonameid                                                     [100% <span class="hljs-keyword">done</span>]<br>Running asc_sort_with_after_geonameid                                          [100% <span class="hljs-keyword">done</span>]<br><br>------------------------------------------------------<br>    _______             __   _____<br>   / ____(_)___  ____ _/ /  / ___/_________  ________<br>  / /_  / / __ \/ __ `/ /   \__ \/ ___/ __ \/ ___/ _ \<br> / __/ / / / / / /_/ / /   ___/ / /__/ /_/ / /  /  __/<br>/_/   /_/_/ /_/\__,_/_/   /____/\___/\____/_/   \___/<br>------------------------------------------------------<br></code></pre></td></tr></table></figure>
 
-    ____        ____
-   / __ \____ _/ / /_  __
-  / /_/ / __ `/ / / / / /
- / _, _/ /_/ / / / /_/ /
-/_/ |_|\__,_/_/_/\__, /
-                /____/
-
-[INFO] You did not provide an explicit timeout <span class="hljs-keyword">in</span> the client options. Assuming default of 10 seconds.
-[INFO] Decompressing track data from [/root/.rally/benchmarks/data/geonames/documents-2.json.bz2] to [/root/.rally/benchmarks/data/geonames/documents-2.json] (resulting size: [3.30] GB) ... [OK]
-[INFO] Preparing file offset table <span class="hljs-keyword">for</span> [/root/.rally/benchmarks/data/geonames/documents-2.json] ... [OK]
-[INFO] Racing on track [geonames], challenge [append-no-conflicts] and car [<span class="hljs-string">'external'</span>] with version [7.10.2].
-
-[WARNING] merges_total_time is 11262 ms indicating that the cluster is not <span class="hljs-keyword">in</span> a defined clean state. Recorded index time metrics may be misleading.
-[WARNING] refresh_total_time is 3141 ms indicating that the cluster is not <span class="hljs-keyword">in</span> a defined clean state. Recorded index time metrics may be misleading.
-Running delete-index                                                           [100% <span class="hljs-keyword">done</span>]
-Running create-index                                                           [100% <span class="hljs-keyword">done</span>]
-Running check-cluster-health                                                   [100% <span class="hljs-keyword">done</span>]
-Running index-append                                                           [100% <span class="hljs-keyword">done</span>]
-Running refresh-after-index                                                    [100% <span class="hljs-keyword">done</span>]
-Running force-merge                                                            [100% <span class="hljs-keyword">done</span>]
-Running refresh-after-force-merge                                              [100% <span class="hljs-keyword">done</span>]
-Running <span class="hljs-built_in">wait</span>-until-merges-finish                                               [100% <span class="hljs-keyword">done</span>]
-Running index-stats                                                            [100% <span class="hljs-keyword">done</span>]
-Running node-stats                                                             [100% <span class="hljs-keyword">done</span>]
-Running default                                                                [100% <span class="hljs-keyword">done</span>]
-Running term                                                                   [100% <span class="hljs-keyword">done</span>]
-Running phrase                                                                 [100% <span class="hljs-keyword">done</span>]
-Running country_agg_uncached                                                   [100% <span class="hljs-keyword">done</span>]
-Running country_agg_cached                                                     [100% <span class="hljs-keyword">done</span>]
-Running scroll                                                                 [100% <span class="hljs-keyword">done</span>]
-Running expression                                                             [100% <span class="hljs-keyword">done</span>]
-Running painless_static                                                        [100% <span class="hljs-keyword">done</span>]
-Running painless_dynamic                                                       [100% <span class="hljs-keyword">done</span>]
-Running decay_geo_gauss_function_score                                         [100% <span class="hljs-keyword">done</span>]
-Running decay_geo_gauss_script_score                                           [100% <span class="hljs-keyword">done</span>]
-Running field_value_function_score                                             [100% <span class="hljs-keyword">done</span>]
-Running field_value_script_score                                               [100% <span class="hljs-keyword">done</span>]
-Running large_terms                                                            [100% <span class="hljs-keyword">done</span>]
-Running large_filtered_terms                                                   [100% <span class="hljs-keyword">done</span>]
-Running large_prohibited_terms                                                 [100% <span class="hljs-keyword">done</span>]
-Running desc_sort_population                                                   [100% <span class="hljs-keyword">done</span>]
-Running asc_sort_population                                                    [100% <span class="hljs-keyword">done</span>]
-Running asc_sort_with_after_population                                         [100% <span class="hljs-keyword">done</span>]
-Running desc_sort_geonameid                                                    [100% <span class="hljs-keyword">done</span>]
-Running desc_sort_with_after_geonameid                                         [100% <span class="hljs-keyword">done</span>]
-Running asc_sort_geonameid                                                     [100% <span class="hljs-keyword">done</span>]
-Running asc_sort_with_after_geonameid                                          [100% <span class="hljs-keyword">done</span>]
-
-------------------------------------------------------
-    _______             __   _____
-   / ____(_)___  ____ _/ /  / ___/_________  ________
-  / /_  / / __ \/ __ `/ /   \__ \/ ___/ __ \/ ___/ _ \
- / __/ / / / / / /_/ / /   ___/ / /__/ /_/ / /  /  __/
-/_/   /_/_/ /_/\__,_/_/   /____/\___/\____/_/   \___/
-------------------------------------------------------</code></pre></div>
-
-<h1 id="es-devtools"><a href="#es-devtools" class="headerlink" title="es devtools"></a>es devtools</h1><div class="hljs"><pre><code class="hljs routeros"><span class="hljs-builtin-name">GET</span> _cluster/health
-<span class="hljs-builtin-name">GET</span> _cluster/settings
-
-<span class="hljs-builtin-name">GET</span> _cat/indices?v&amp;<span class="hljs-attribute">h</span>=i,pri.store.size,status,rep,docs.count,health
-<span class="hljs-builtin-name">GET</span> /_cat/indices?v&amp;<span class="hljs-attribute">health</span>=red
-<span class="hljs-builtin-name">GET</span> _cat/thread_pool?v
-
-<span class="hljs-builtin-name">GET</span> _cat/pending_tasks
-<span class="hljs-builtin-name">GET</span> _cluster/allocation/explain
-
-<span class="hljs-builtin-name">GET</span> _cat/indices?v
-<span class="hljs-builtin-name">GET</span> _nodes/stats
-<span class="hljs-builtin-name">GET</span> _all/_stats</code></pre></div>
+<h1 id="es-devtools"><a href="#es-devtools" class="headerlink" title="es devtools"></a>es devtools</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">GET</span> _cluster<span class="hljs-built_in">/health</span><br><span class="hljs-built_in"></span><span class="hljs-built_in">GET</span> _cluster<span class="hljs-built_in">/settings</span><br><span class="hljs-built_in"></span><br><span class="hljs-built_in">GET</span> _cat/indices?v&amp;<span class="hljs-attribute">h</span>=i,pri.store.size,status,rep,docs.count,health<br><span class="hljs-built_in">GET</span> /_cat/indices?v&amp;<span class="hljs-attribute">health</span>=red<br><span class="hljs-built_in">GET</span> _cat/thread_pool?v<br><br><span class="hljs-built_in">GET</span> _cat/pending_tasks<br><span class="hljs-built_in">GET</span> _cluster/allocation/explain<br><br><span class="hljs-built_in">GET</span> _cat/indices?v<br><span class="hljs-built_in">GET</span> _nodes/stats<br><span class="hljs-built_in">GET</span> _all/_stats<br></code></pre></td></tr></table></figure>
 
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ</a></li>
-<li><a href="https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3" target="_blank" rel="noopener">https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3</a></li>
-<li><a href="https://esrally.readthedocs.io/en/stable/track.html" target="_blank" rel="noopener">https://esrally.readthedocs.io/en/stable/track.html</a></li>
-<li><a href="https://help.aliyun.com/document_detail/127657.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/127657.html</a></li>
-<li><a href="https://grafana.com/grafana/dashboards/14191" target="_blank" rel="noopener">https://grafana.com/grafana/dashboards/14191</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ">https://mp.weixin.qq.com/s/JCIWXCY60IM9reHziuxdoQ</a></li>
+<li><a target="_blank" rel="noopener" href="https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3">https://discuss.elastic.co/t/premature-end-of-benchmark-run/102684/3</a></li>
+<li><a target="_blank" rel="noopener" href="https://esrally.readthedocs.io/en/stable/track.html">https://esrally.readthedocs.io/en/stable/track.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/127657.html">https://help.aliyun.com/document_detail/127657.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards/14191">https://grafana.com/grafana/dashboards/14191</a></li>
 </ul>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/BigData/">BigData</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Elasticserach/">Elasticserach</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/BigData/" class="category-chain-item">BigData</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Elasticserach/">#Elasticserach</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Elasticsearch基准测试</div>
+      <div>https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年11月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
@@ -394,7 +436,7 @@ Running asc_sort_with_after_geonameid                                          [
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/09/01/object-storage-of-minio/">
+                      <a href="/2021/09/01/object-storage-of-minio/" title="对象存储MinIO实践">
                         <span class="hidden-mobile">对象存储MinIO实践</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -406,68 +448,96 @@ Running asc_sort_with_after_geonameid                                          [
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: 'c032073480c779339434bf5def7f972b'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -480,86 +550,196 @@ Running asc_sort_with_after_geonameid                                          [
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -567,114 +747,15 @@ Running asc_sort_with_after_geonameid                                          [
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "Elasticsearch基准测试&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

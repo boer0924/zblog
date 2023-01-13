@@ -1,70 +1,106 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ClickHouse分布式实践">
+<meta property="og:url" content="https://www.boer.xyz/2021/07/01/clickhouse-distributed/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?ch">
+<meta property="article:published_time" content="2021-07-01T02:16:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.265Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="ClickHouse">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?ch">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>ClickHouse分布式实践 · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +119,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +131,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +143,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +155,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +167,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,684 +192,222 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-07-01 10:16" pubdate>
-        2021年7月1日 上午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      2k 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      39
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ClickHouse分布式实践"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-07-01 10:16" pubdate>
+          2021年7月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          127 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">ClickHouse分布式实践</h1>
             
-            <div class="markdown-body" id="post-body">
-              <p>ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)</p>
-<a id="more"></a>
+            
+              <div class="markdown-body">
+                
+                <p>ClickHouse是一个用于联机分析(OLAP)的列式数据库管理系统(DBMS)</p>
+<span id="more"></span>
 
-<h3 id="ClickHouse配置"><a href="#ClickHouse配置" class="headerlink" title="ClickHouse配置"></a>ClickHouse配置</h3><div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">logger</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">level</span>&gt;</span>information<span class="hljs-tag">&lt;/<span class="hljs-name">level</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">log</span>&gt;</span>/var/log/clickhouse-server/clickhouse-server.log<span class="hljs-tag">&lt;/<span class="hljs-name">log</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">errorlog</span>&gt;</span>/var/log/clickhouse-server/clickhouse-server.err.log<span class="hljs-tag">&lt;/<span class="hljs-name">errorlog</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">size</span>&gt;</span>1000M<span class="hljs-tag">&lt;/<span class="hljs-name">size</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">count</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">count</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">logger</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">listen_host</span>&gt;</span>0.0.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">listen_host</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">timezone</span>&gt;</span>Asia/Shanghai<span class="hljs-tag">&lt;/<span class="hljs-name">timezone</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">max_connections</span>&gt;</span>4096<span class="hljs-tag">&lt;/<span class="hljs-name">max_connections</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">max_concurrent_queries</span>&gt;</span>100<span class="hljs-tag">&lt;/<span class="hljs-name">max_concurrent_queries</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">max_thread_pool_size</span>&gt;</span>10000<span class="hljs-tag">&lt;/<span class="hljs-name">max_thread_pool_size</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">path</span>&gt;</span>/var/lib/clickhouse/<span class="hljs-tag">&lt;/<span class="hljs-name">path</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">tmp_path</span>&gt;</span>/var/lib/clickhouse/tmp/<span class="hljs-tag">&lt;/<span class="hljs-name">tmp_path</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">user_files_path</span>&gt;</span>/var/lib/clickhouse/user_files/<span class="hljs-tag">&lt;/<span class="hljs-name">user_files_path</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">remote_servers</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">mycluster</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>
-        <span class="hljs-comment">&lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span>
-        <span class="hljs-comment">&lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">mycluster</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">remote_servers</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">zookeeper</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"1"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"2"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"3"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper</span>&gt;</span>
-  <span class="hljs-comment">&lt;!-- vm-node001 --&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span>
-  <span class="hljs-comment">&lt;!-- vm-node002 --&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span>
-  <span class="hljs-comment">&lt;!-- vm-node003 --&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span></code></pre></div>
+<h3 id="ClickHouse配置"><a href="#ClickHouse配置" class="headerlink" title="ClickHouse配置"></a>ClickHouse配置</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">logger</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">level</span>&gt;</span>information<span class="hljs-tag">&lt;/<span class="hljs-name">level</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">log</span>&gt;</span>/var/log/clickhouse-server/clickhouse-server.log<span class="hljs-tag">&lt;/<span class="hljs-name">log</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">errorlog</span>&gt;</span>/var/log/clickhouse-server/clickhouse-server.err.log<span class="hljs-tag">&lt;/<span class="hljs-name">errorlog</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">size</span>&gt;</span>1000M<span class="hljs-tag">&lt;/<span class="hljs-name">size</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">count</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">count</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">logger</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">listen_host</span>&gt;</span>0.0.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">listen_host</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">timezone</span>&gt;</span>Asia/Shanghai<span class="hljs-tag">&lt;/<span class="hljs-name">timezone</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">max_connections</span>&gt;</span>4096<span class="hljs-tag">&lt;/<span class="hljs-name">max_connections</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">max_concurrent_queries</span>&gt;</span>100<span class="hljs-tag">&lt;/<span class="hljs-name">max_concurrent_queries</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">max_thread_pool_size</span>&gt;</span>10000<span class="hljs-tag">&lt;/<span class="hljs-name">max_thread_pool_size</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">path</span>&gt;</span>/var/lib/clickhouse/<span class="hljs-tag">&lt;/<span class="hljs-name">path</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">tmp_path</span>&gt;</span>/var/lib/clickhouse/tmp/<span class="hljs-tag">&lt;/<span class="hljs-name">tmp_path</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">user_files_path</span>&gt;</span>/var/lib/clickhouse/user_files/<span class="hljs-tag">&lt;/<span class="hljs-name">user_files_path</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">remote_servers</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">mycluster</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">mycluster</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">remote_servers</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">zookeeper</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- vm-node001 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- vm-node002 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br>  <span class="hljs-comment">&lt;!-- vm-node003 --&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span><br></code></pre></td></tr></table></figure>
 <blockquote>
 <ul>
-<li><a href="https://clickhouse.tech/docs/zh/engines/table-engines/mergetree-family/replication/" target="_blank" rel="noopener">https://clickhouse.tech/docs/zh/engines/table-engines/mergetree-family/replication/</a></li>
-<li><a href="https://clickhouse.tech/docs/zh/getting-started/tutorial/" target="_blank" rel="noopener">https://clickhouse.tech/docs/zh/getting-started/tutorial/</a></li>
+<li><a target="_blank" rel="noopener" href="https://clickhouse.tech/docs/zh/engines/table-engines/mergetree-family/replication/">https://clickhouse.tech/docs/zh/engines/table-engines/mergetree-family/replication/</a></li>
+<li><a target="_blank" rel="noopener" href="https://clickhouse.tech/docs/zh/getting-started/tutorial/">https://clickhouse.tech/docs/zh/getting-started/tutorial/</a></li>
 </ul>
 </blockquote>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h3 id="创建库"><a href="#创建库" class="headerlink" title="创建库"></a>创建库</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> tutorial</code></pre></div>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h3 id="创建库"><a href="#创建库" class="headerlink" title="创建库"></a>创建库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> tutorial<br></code></pre></td></tr></table></figure>
 
-<h3 id="创建本地表hits-v1"><a href="#创建本地表hits-v1" class="headerlink" title="创建本地表hits_v1"></a>创建本地表<code>hits_v1</code></h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.hits_v1
-(
-    <span class="hljs-string">`WatchID`</span> UInt64,
-    <span class="hljs-string">`JavaEnable`</span> UInt8,
-    <span class="hljs-string">`Title`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`GoodEvent`</span> Int16,
-    <span class="hljs-string">`EventTime`</span> DateTime,
-    <span class="hljs-string">`EventDate`</span> <span class="hljs-built_in">Date</span>,
-    <span class="hljs-string">`CounterID`</span> UInt32,
-    <span class="hljs-string">`ClientIP`</span> UInt32,
-    <span class="hljs-string">`ClientIP6`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`RegionID`</span> UInt32,
-    <span class="hljs-string">`UserID`</span> UInt64,
-    <span class="hljs-string">`CounterClass`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`OS`</span> UInt8,
-    <span class="hljs-string">`UserAgent`</span> UInt8,
-    <span class="hljs-string">`URL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`Referer`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`URLDomain`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`RefererDomain`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`Refresh`</span> UInt8,
-    <span class="hljs-string">`IsRobot`</span> UInt8,
-    <span class="hljs-string">`RefererCategories`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`URLCategories`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`URLRegions`</span> <span class="hljs-built_in">Array</span>(UInt32),
-    <span class="hljs-string">`RefererRegions`</span> <span class="hljs-built_in">Array</span>(UInt32),
-    <span class="hljs-string">`ResolutionWidth`</span> UInt16,
-    <span class="hljs-string">`ResolutionHeight`</span> UInt16,
-    <span class="hljs-string">`ResolutionDepth`</span> UInt8,
-    <span class="hljs-string">`FlashMajor`</span> UInt8,
-    <span class="hljs-string">`FlashMinor`</span> UInt8,
-    <span class="hljs-string">`FlashMinor2`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`NetMajor`</span> UInt8,
-    <span class="hljs-string">`NetMinor`</span> UInt8,
-    <span class="hljs-string">`UserAgentMajor`</span> UInt16,
-    <span class="hljs-string">`UserAgentMinor`</span> FixedString(<span class="hljs-number">2</span>),
-    <span class="hljs-string">`CookieEnable`</span> UInt8,
-    <span class="hljs-string">`JavascriptEnable`</span> UInt8,
-    <span class="hljs-string">`IsMobile`</span> UInt8,
-    <span class="hljs-string">`MobilePhone`</span> UInt8,
-    <span class="hljs-string">`MobilePhoneModel`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`Params`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`IPNetworkID`</span> UInt32,
-    <span class="hljs-string">`TraficSourceID`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`SearchEngineID`</span> UInt16,
-    <span class="hljs-string">`SearchPhrase`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`AdvEngineID`</span> UInt8,
-    <span class="hljs-string">`IsArtifical`</span> UInt8,
-    <span class="hljs-string">`WindowClientWidth`</span> UInt16,
-    <span class="hljs-string">`WindowClientHeight`</span> UInt16,
-    <span class="hljs-string">`ClientTimeZone`</span> Int16,
-    <span class="hljs-string">`ClientEventTime`</span> DateTime,
-    <span class="hljs-string">`SilverlightVersion1`</span> UInt8,
-    <span class="hljs-string">`SilverlightVersion2`</span> UInt8,
-    <span class="hljs-string">`SilverlightVersion3`</span> UInt32,
-    <span class="hljs-string">`SilverlightVersion4`</span> UInt16,
-    <span class="hljs-string">`PageCharset`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`CodeVersion`</span> UInt32,
-    <span class="hljs-string">`IsLink`</span> UInt8,
-    <span class="hljs-string">`IsDownload`</span> UInt8,
-    <span class="hljs-string">`IsNotBounce`</span> UInt8,
-    <span class="hljs-string">`FUniqID`</span> UInt64,
-    <span class="hljs-string">`HID`</span> UInt32,
-    <span class="hljs-string">`IsOldCounter`</span> UInt8,
-    <span class="hljs-string">`IsEvent`</span> UInt8,
-    <span class="hljs-string">`IsParameter`</span> UInt8,
-    <span class="hljs-string">`DontCountHits`</span> UInt8,
-    <span class="hljs-string">`WithHash`</span> UInt8,
-    <span class="hljs-string">`HitColor`</span> FixedString(<span class="hljs-number">1</span>),
-    <span class="hljs-string">`UTCEventTime`</span> DateTime,
-    <span class="hljs-string">`Age`</span> UInt8,
-    <span class="hljs-string">`Sex`</span> UInt8,
-    <span class="hljs-string">`Income`</span> UInt8,
-    <span class="hljs-string">`Interests`</span> UInt16,
-    <span class="hljs-string">`Robotness`</span> UInt8,
-    <span class="hljs-string">`GeneralInterests`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`RemoteIP`</span> UInt32,
-    <span class="hljs-string">`RemoteIP6`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`WindowName`</span> Int32,
-    <span class="hljs-string">`OpenerName`</span> Int32,
-    <span class="hljs-string">`HistoryLength`</span> Int16,
-    <span class="hljs-string">`BrowserLanguage`</span> FixedString(<span class="hljs-number">2</span>),
-    <span class="hljs-string">`BrowserCountry`</span> FixedString(<span class="hljs-number">2</span>),
-    <span class="hljs-string">`SocialNetwork`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`SocialAction`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`HTTPError`</span> UInt16,
-    <span class="hljs-string">`SendTiming`</span> Int32,
-    <span class="hljs-string">`DNSTiming`</span> Int32,
-    <span class="hljs-string">`ConnectTiming`</span> Int32,
-    <span class="hljs-string">`ResponseStartTiming`</span> Int32,
-    <span class="hljs-string">`ResponseEndTiming`</span> Int32,
-    <span class="hljs-string">`FetchTiming`</span> Int32,
-    <span class="hljs-string">`RedirectTiming`</span> Int32,
-    <span class="hljs-string">`DOMInteractiveTiming`</span> Int32,
-    <span class="hljs-string">`DOMContentLoadedTiming`</span> Int32,
-    <span class="hljs-string">`DOMCompleteTiming`</span> Int32,
-    <span class="hljs-string">`LoadEventStartTiming`</span> Int32,
-    <span class="hljs-string">`LoadEventEndTiming`</span> Int32,
-    <span class="hljs-string">`NSToDOMContentLoadedTiming`</span> Int32,
-    <span class="hljs-string">`FirstPaintTiming`</span> Int32,
-    <span class="hljs-string">`RedirectCount`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`SocialSourceNetworkID`</span> UInt8,
-    <span class="hljs-string">`SocialSourcePage`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ParamPrice`</span> Int64,
-    <span class="hljs-string">`ParamOrderID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ParamCurrency`</span> FixedString(<span class="hljs-number">3</span>),
-    <span class="hljs-string">`ParamCurrencyID`</span> UInt16,
-    <span class="hljs-string">`GoalsReached`</span> <span class="hljs-built_in">Array</span>(UInt32),
-    <span class="hljs-string">`OpenstatServiceName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatCampaignID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatAdID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatSourceID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMSource`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMMedium`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMCampaign`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMContent`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMTerm`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`FromTag`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`HasGCLID`</span> UInt8,
-    <span class="hljs-string">`RefererHash`</span> UInt64,
-    <span class="hljs-string">`URLHash`</span> UInt64,
-    <span class="hljs-string">`CLID`</span> UInt32,
-    <span class="hljs-string">`YCLID`</span> UInt64,
-    <span class="hljs-string">`ShareService`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ShareURL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ShareTitle`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ParsedParams`</span> <span class="hljs-keyword">Nested</span>(
-        Key1 <span class="hljs-keyword">String</span>,
-        Key2 <span class="hljs-keyword">String</span>,
-        Key3 <span class="hljs-keyword">String</span>,
-        Key4 <span class="hljs-keyword">String</span>,
-        Key5 <span class="hljs-keyword">String</span>,
-        ValueDouble Float64),
-    <span class="hljs-string">`IslandID`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`RequestNum`</span> UInt32,
-    <span class="hljs-string">`RequestTry`</span> UInt8
-)
-<span class="hljs-keyword">ENGINE</span> = ReplicatedMergeTree(<span class="hljs-string">'/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/hits_v1'</span>, <span class="hljs-string">'&#123;replica&#125;'</span>)
-<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> toYYYYMM(EventDate)
-<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> (CounterID, EventDate, intHash32(UserID))
-<span class="hljs-keyword">SAMPLE</span> <span class="hljs-keyword">BY</span> intHash32(UserID)</code></pre></div>
+<h3 id="创建本地表hits-v1"><a href="#创建本地表hits-v1" class="headerlink" title="创建本地表hits_v1"></a>创建本地表<code>hits_v1</code></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.hits_v1<br>(<br>    `WatchID` UInt64,<br>    `JavaEnable` UInt8,<br>    `Title` String,<br>    `GoodEvent` Int16,<br>    `EventTime` DateTime,<br>    `EventDate` <span class="hljs-type">Date</span>,<br>    `CounterID` UInt32,<br>    `ClientIP` UInt32,<br>    `ClientIP6` FixedString(<span class="hljs-number">16</span>),<br>    `RegionID` UInt32,<br>    `UserID` UInt64,<br>    `CounterClass` Int8,<br>    `OS` UInt8,<br>    `UserAgent` UInt8,<br>    `URL` String,<br>    `Referer` String,<br>    `URLDomain` String,<br>    `RefererDomain` String,<br>    `Refresh` UInt8,<br>    `IsRobot` UInt8,<br>    `RefererCategories` <span class="hljs-keyword">Array</span>(UInt16),<br>    `URLCategories` <span class="hljs-keyword">Array</span>(UInt16),<br>    `URLRegions` <span class="hljs-keyword">Array</span>(UInt32),<br>    `RefererRegions` <span class="hljs-keyword">Array</span>(UInt32),<br>    `ResolutionWidth` UInt16,<br>    `ResolutionHeight` UInt16,<br>    `ResolutionDepth` UInt8,<br>    `FlashMajor` UInt8,<br>    `FlashMinor` UInt8,<br>    `FlashMinor2` String,<br>    `NetMajor` UInt8,<br>    `NetMinor` UInt8,<br>    `UserAgentMajor` UInt16,<br>    `UserAgentMinor` FixedString(<span class="hljs-number">2</span>),<br>    `CookieEnable` UInt8,<br>    `JavascriptEnable` UInt8,<br>    `IsMobile` UInt8,<br>    `MobilePhone` UInt8,<br>    `MobilePhoneModel` String,<br>    `Params` String,<br>    `IPNetworkID` UInt32,<br>    `TraficSourceID` Int8,<br>    `SearchEngineID` UInt16,<br>    `SearchPhrase` String,<br>    `AdvEngineID` UInt8,<br>    `IsArtifical` UInt8,<br>    `WindowClientWidth` UInt16,<br>    `WindowClientHeight` UInt16,<br>    `ClientTimeZone` Int16,<br>    `ClientEventTime` DateTime,<br>    `SilverlightVersion1` UInt8,<br>    `SilverlightVersion2` UInt8,<br>    `SilverlightVersion3` UInt32,<br>    `SilverlightVersion4` UInt16,<br>    `PageCharset` String,<br>    `CodeVersion` UInt32,<br>    `IsLink` UInt8,<br>    `IsDownload` UInt8,<br>    `IsNotBounce` UInt8,<br>    `FUniqID` UInt64,<br>    `HID` UInt32,<br>    `IsOldCounter` UInt8,<br>    `IsEvent` UInt8,<br>    `IsParameter` UInt8,<br>    `DontCountHits` UInt8,<br>    `WithHash` UInt8,<br>    `HitColor` FixedString(<span class="hljs-number">1</span>),<br>    `UTCEventTime` DateTime,<br>    `Age` UInt8,<br>    `Sex` UInt8,<br>    `Income` UInt8,<br>    `Interests` UInt16,<br>    `Robotness` UInt8,<br>    `GeneralInterests` <span class="hljs-keyword">Array</span>(UInt16),<br>    `RemoteIP` UInt32,<br>    `RemoteIP6` FixedString(<span class="hljs-number">16</span>),<br>    `WindowName` Int32,<br>    `OpenerName` Int32,<br>    `HistoryLength` Int16,<br>    `BrowserLanguage` FixedString(<span class="hljs-number">2</span>),<br>    `BrowserCountry` FixedString(<span class="hljs-number">2</span>),<br>    `SocialNetwork` String,<br>    `SocialAction` String,<br>    `HTTPError` UInt16,<br>    `SendTiming` Int32,<br>    `DNSTiming` Int32,<br>    `ConnectTiming` Int32,<br>    `ResponseStartTiming` Int32,<br>    `ResponseEndTiming` Int32,<br>    `FetchTiming` Int32,<br>    `RedirectTiming` Int32,<br>    `DOMInteractiveTiming` Int32,<br>    `DOMContentLoadedTiming` Int32,<br>    `DOMCompleteTiming` Int32,<br>    `LoadEventStartTiming` Int32,<br>    `LoadEventEndTiming` Int32,<br>    `NSToDOMContentLoadedTiming` Int32,<br>    `FirstPaintTiming` Int32,<br>    `RedirectCount` Int8,<br>    `SocialSourceNetworkID` UInt8,<br>    `SocialSourcePage` String,<br>    `ParamPrice` Int64,<br>    `ParamOrderID` String,<br>    `ParamCurrency` FixedString(<span class="hljs-number">3</span>),<br>    `ParamCurrencyID` UInt16,<br>    `GoalsReached` <span class="hljs-keyword">Array</span>(UInt32),<br>    `OpenstatServiceName` String,<br>    `OpenstatCampaignID` String,<br>    `OpenstatAdID` String,<br>    `OpenstatSourceID` String,<br>    `UTMSource` String,<br>    `UTMMedium` String,<br>    `UTMCampaign` String,<br>    `UTMContent` String,<br>    `UTMTerm` String,<br>    `FromTag` String,<br>    `HasGCLID` UInt8,<br>    `RefererHash` UInt64,<br>    `URLHash` UInt64,<br>    `CLID` UInt32,<br>    `YCLID` UInt64,<br>    `ShareService` String,<br>    `ShareURL` String,<br>    `ShareTitle` String,<br>    `ParsedParams` Nested(<br>        Key1 String,<br>        Key2 String,<br>        Key3 String,<br>        Key4 String,<br>        Key5 String,<br>        ValueDouble Float64),<br>    `IslandID` FixedString(<span class="hljs-number">16</span>),<br>    `RequestNum` UInt32,<br>    `RequestTry` UInt8<br>)<br>ENGINE <span class="hljs-operator">=</span> ReplicatedMergeTree(<span class="hljs-string">&#x27;/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/hits_v1&#x27;</span>, <span class="hljs-string">&#x27;&#123;replica&#125;&#x27;</span>)<br><span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> toYYYYMM(EventDate)<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> (CounterID, EventDate, intHash32(UserID))<br>SAMPLE <span class="hljs-keyword">BY</span> intHash32(UserID)<br></code></pre></td></tr></table></figure>
 
-<h3 id="创建本地表visits-v1"><a href="#创建本地表visits-v1" class="headerlink" title="创建本地表visits_v1"></a>创建本地表<code>visits_v1</code></h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.visits_v1
-(
-    <span class="hljs-string">`CounterID`</span> UInt32,
-    <span class="hljs-string">`StartDate`</span> <span class="hljs-built_in">Date</span>,
-    <span class="hljs-string">`Sign`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`IsNew`</span> UInt8,
-    <span class="hljs-string">`VisitID`</span> UInt64,
-    <span class="hljs-string">`UserID`</span> UInt64,
-    <span class="hljs-string">`StartTime`</span> DateTime,
-    <span class="hljs-string">`Duration`</span> UInt32,
-    <span class="hljs-string">`UTCStartTime`</span> DateTime,
-    <span class="hljs-string">`PageViews`</span> Int32,
-    <span class="hljs-string">`Hits`</span> Int32,
-    <span class="hljs-string">`IsBounce`</span> UInt8,
-    <span class="hljs-string">`Referer`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`StartURL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`RefererDomain`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`StartURLDomain`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`EndURL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`LinkURL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`IsDownload`</span> UInt8,
-    <span class="hljs-string">`TraficSourceID`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`SearchEngineID`</span> UInt16,
-    <span class="hljs-string">`SearchPhrase`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`AdvEngineID`</span> UInt8,
-    <span class="hljs-string">`PlaceID`</span> Int32,
-    <span class="hljs-string">`RefererCategories`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`URLCategories`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`URLRegions`</span> <span class="hljs-built_in">Array</span>(UInt32),
-    <span class="hljs-string">`RefererRegions`</span> <span class="hljs-built_in">Array</span>(UInt32),
-    <span class="hljs-string">`IsYandex`</span> UInt8,
-    <span class="hljs-string">`GoalReachesDepth`</span> Int32,
-    <span class="hljs-string">`GoalReachesURL`</span> Int32,
-    <span class="hljs-string">`GoalReachesAny`</span> Int32,
-    <span class="hljs-string">`SocialSourceNetworkID`</span> UInt8,
-    <span class="hljs-string">`SocialSourcePage`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`MobilePhoneModel`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClientEventTime`</span> DateTime,
-    <span class="hljs-string">`RegionID`</span> UInt32,
-    <span class="hljs-string">`ClientIP`</span> UInt32,
-    <span class="hljs-string">`ClientIP6`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`RemoteIP`</span> UInt32,
-    <span class="hljs-string">`RemoteIP6`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`IPNetworkID`</span> UInt32,
-    <span class="hljs-string">`SilverlightVersion3`</span> UInt32,
-    <span class="hljs-string">`CodeVersion`</span> UInt32,
-    <span class="hljs-string">`ResolutionWidth`</span> UInt16,
-    <span class="hljs-string">`ResolutionHeight`</span> UInt16,
-    <span class="hljs-string">`UserAgentMajor`</span> UInt16,
-    <span class="hljs-string">`UserAgentMinor`</span> UInt16,
-    <span class="hljs-string">`WindowClientWidth`</span> UInt16,
-    <span class="hljs-string">`WindowClientHeight`</span> UInt16,
-    <span class="hljs-string">`SilverlightVersion2`</span> UInt8,
-    <span class="hljs-string">`SilverlightVersion4`</span> UInt16,
-    <span class="hljs-string">`FlashVersion3`</span> UInt16,
-    <span class="hljs-string">`FlashVersion4`</span> UInt16,
-    <span class="hljs-string">`ClientTimeZone`</span> Int16,
-    <span class="hljs-string">`OS`</span> UInt8,
-    <span class="hljs-string">`UserAgent`</span> UInt8,
-    <span class="hljs-string">`ResolutionDepth`</span> UInt8,
-    <span class="hljs-string">`FlashMajor`</span> UInt8,
-    <span class="hljs-string">`FlashMinor`</span> UInt8,
-    <span class="hljs-string">`NetMajor`</span> UInt8,
-    <span class="hljs-string">`NetMinor`</span> UInt8,
-    <span class="hljs-string">`MobilePhone`</span> UInt8,
-    <span class="hljs-string">`SilverlightVersion1`</span> UInt8,
-    <span class="hljs-string">`Age`</span> UInt8,
-    <span class="hljs-string">`Sex`</span> UInt8,
-    <span class="hljs-string">`Income`</span> UInt8,
-    <span class="hljs-string">`JavaEnable`</span> UInt8,
-    <span class="hljs-string">`CookieEnable`</span> UInt8,
-    <span class="hljs-string">`JavascriptEnable`</span> UInt8,
-    <span class="hljs-string">`IsMobile`</span> UInt8,
-    <span class="hljs-string">`BrowserLanguage`</span> UInt16,
-    <span class="hljs-string">`BrowserCountry`</span> UInt16,
-    <span class="hljs-string">`Interests`</span> UInt16,
-    <span class="hljs-string">`Robotness`</span> UInt8,
-    <span class="hljs-string">`GeneralInterests`</span> <span class="hljs-built_in">Array</span>(UInt16),
-    <span class="hljs-string">`Params`</span> <span class="hljs-built_in">Array</span>(<span class="hljs-keyword">String</span>),
-    <span class="hljs-string">`Goals`</span> <span class="hljs-keyword">Nested</span>(
-        <span class="hljs-keyword">ID</span> UInt32,
-        <span class="hljs-built_in">Serial</span> UInt32,
-        EventTime DateTime,
-        Price Int64,
-        OrderID <span class="hljs-keyword">String</span>,
-        CurrencyID UInt32),
-    <span class="hljs-string">`WatchIDs`</span> <span class="hljs-built_in">Array</span>(UInt64),
-    <span class="hljs-string">`ParamSumPrice`</span> Int64,
-    <span class="hljs-string">`ParamCurrency`</span> FixedString(<span class="hljs-number">3</span>),
-    <span class="hljs-string">`ParamCurrencyID`</span> UInt16,
-    <span class="hljs-string">`ClickLogID`</span> UInt64,
-    <span class="hljs-string">`ClickEventID`</span> Int32,
-    <span class="hljs-string">`ClickGoodEvent`</span> Int32,
-    <span class="hljs-string">`ClickEventTime`</span> DateTime,
-    <span class="hljs-string">`ClickPriorityID`</span> Int32,
-    <span class="hljs-string">`ClickPhraseID`</span> Int32,
-    <span class="hljs-string">`ClickPageID`</span> Int32,
-    <span class="hljs-string">`ClickPlaceID`</span> Int32,
-    <span class="hljs-string">`ClickTypeID`</span> Int32,
-    <span class="hljs-string">`ClickResourceID`</span> Int32,
-    <span class="hljs-string">`ClickCost`</span> UInt32,
-    <span class="hljs-string">`ClickClientIP`</span> UInt32,
-    <span class="hljs-string">`ClickDomainID`</span> UInt32,
-    <span class="hljs-string">`ClickURL`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickAttempt`</span> UInt8,
-    <span class="hljs-string">`ClickOrderID`</span> UInt32,
-    <span class="hljs-string">`ClickBannerID`</span> UInt32,
-    <span class="hljs-string">`ClickMarketCategoryID`</span> UInt32,
-    <span class="hljs-string">`ClickMarketPP`</span> UInt32,
-    <span class="hljs-string">`ClickMarketCategoryName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickMarketPPName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickAWAPSCampaignName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickPageName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickTargetType`</span> UInt16,
-    <span class="hljs-string">`ClickTargetPhraseID`</span> UInt64,
-    <span class="hljs-string">`ClickContextType`</span> UInt8,
-    <span class="hljs-string">`ClickSelectType`</span> <span class="hljs-built_in">Int8</span>,
-    <span class="hljs-string">`ClickOptions`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`ClickGroupBannerID`</span> Int32,
-    <span class="hljs-string">`OpenstatServiceName`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatCampaignID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatAdID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`OpenstatSourceID`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMSource`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMMedium`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMCampaign`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMContent`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`UTMTerm`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`FromTag`</span> <span class="hljs-keyword">String</span>,
-    <span class="hljs-string">`HasGCLID`</span> UInt8,
-    <span class="hljs-string">`FirstVisit`</span> DateTime,
-    <span class="hljs-string">`PredLastVisit`</span> <span class="hljs-built_in">Date</span>,
-    <span class="hljs-string">`LastVisit`</span> <span class="hljs-built_in">Date</span>,
-    <span class="hljs-string">`TotalVisits`</span> UInt32,
-    <span class="hljs-string">`TraficSource`</span> <span class="hljs-keyword">Nested</span>(
-        <span class="hljs-keyword">ID</span> <span class="hljs-built_in">Int8</span>,
-        SearchEngineID UInt16,
-        AdvEngineID UInt8,
-        PlaceID UInt16,
-        SocialSourceNetworkID UInt8,
-        <span class="hljs-keyword">Domain</span> <span class="hljs-keyword">String</span>,
-        SearchPhrase <span class="hljs-keyword">String</span>,
-        SocialSourcePage <span class="hljs-keyword">String</span>),
-    <span class="hljs-string">`Attendance`</span> FixedString(<span class="hljs-number">16</span>),
-    <span class="hljs-string">`CLID`</span> UInt32,
-    <span class="hljs-string">`YCLID`</span> UInt64,
-    <span class="hljs-string">`NormalizedRefererHash`</span> UInt64,
-    <span class="hljs-string">`SearchPhraseHash`</span> UInt64,
-    <span class="hljs-string">`RefererDomainHash`</span> UInt64,
-    <span class="hljs-string">`NormalizedStartURLHash`</span> UInt64,
-    <span class="hljs-string">`StartURLDomainHash`</span> UInt64,
-    <span class="hljs-string">`NormalizedEndURLHash`</span> UInt64,
-    <span class="hljs-string">`TopLevelDomain`</span> UInt64,
-    <span class="hljs-string">`URLScheme`</span> UInt64,
-    <span class="hljs-string">`OpenstatServiceNameHash`</span> UInt64,
-    <span class="hljs-string">`OpenstatCampaignIDHash`</span> UInt64,
-    <span class="hljs-string">`OpenstatAdIDHash`</span> UInt64,
-    <span class="hljs-string">`OpenstatSourceIDHash`</span> UInt64,
-    <span class="hljs-string">`UTMSourceHash`</span> UInt64,
-    <span class="hljs-string">`UTMMediumHash`</span> UInt64,
-    <span class="hljs-string">`UTMCampaignHash`</span> UInt64,
-    <span class="hljs-string">`UTMContentHash`</span> UInt64,
-    <span class="hljs-string">`UTMTermHash`</span> UInt64,
-    <span class="hljs-string">`FromHash`</span> UInt64,
-    <span class="hljs-string">`WebVisorEnabled`</span> UInt8,
-    <span class="hljs-string">`WebVisorActivity`</span> UInt32,
-    <span class="hljs-string">`ParsedParams`</span> <span class="hljs-keyword">Nested</span>(
-        Key1 <span class="hljs-keyword">String</span>,
-        Key2 <span class="hljs-keyword">String</span>,
-        Key3 <span class="hljs-keyword">String</span>,
-        Key4 <span class="hljs-keyword">String</span>,
-        Key5 <span class="hljs-keyword">String</span>,
-        ValueDouble Float64),
-    <span class="hljs-string">`Market`</span> <span class="hljs-keyword">Nested</span>(
-        <span class="hljs-keyword">Type</span> UInt8,
-        GoalID UInt32,
-        OrderID <span class="hljs-keyword">String</span>,
-        OrderPrice Int64,
-        PP UInt32,
-        DirectPlaceID UInt32,
-        DirectOrderID UInt32,
-        DirectBannerID UInt32,
-        GoodID <span class="hljs-keyword">String</span>,
-        GoodName <span class="hljs-keyword">String</span>,
-        GoodQuantity Int32,
-        GoodPrice Int64),
-    <span class="hljs-string">`IslandID`</span> FixedString(<span class="hljs-number">16</span>)
-)
-<span class="hljs-keyword">ENGINE</span> = ReplicatedCollapsingMergeTree(<span class="hljs-string">'/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/visits_v1'</span>, <span class="hljs-string">'&#123;replica&#125;'</span>, <span class="hljs-keyword">Sign</span>)
-<span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> toYYYYMM(StartDate)
-<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> (CounterID, StartDate, intHash32(UserID), VisitID)
-<span class="hljs-keyword">SAMPLE</span> <span class="hljs-keyword">BY</span> intHash32(UserID)</code></pre></div>
+<h3 id="创建本地表visits-v1"><a href="#创建本地表visits-v1" class="headerlink" title="创建本地表visits_v1"></a>创建本地表<code>visits_v1</code></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.visits_v1<br>(<br>    `CounterID` UInt32,<br>    `StartDate` <span class="hljs-type">Date</span>,<br>    `Sign` Int8,<br>    `IsNew` UInt8,<br>    `VisitID` UInt64,<br>    `UserID` UInt64,<br>    `StartTime` DateTime,<br>    `Duration` UInt32,<br>    `UTCStartTime` DateTime,<br>    `PageViews` Int32,<br>    `Hits` Int32,<br>    `IsBounce` UInt8,<br>    `Referer` String,<br>    `StartURL` String,<br>    `RefererDomain` String,<br>    `StartURLDomain` String,<br>    `EndURL` String,<br>    `LinkURL` String,<br>    `IsDownload` UInt8,<br>    `TraficSourceID` Int8,<br>    `SearchEngineID` UInt16,<br>    `SearchPhrase` String,<br>    `AdvEngineID` UInt8,<br>    `PlaceID` Int32,<br>    `RefererCategories` <span class="hljs-keyword">Array</span>(UInt16),<br>    `URLCategories` <span class="hljs-keyword">Array</span>(UInt16),<br>    `URLRegions` <span class="hljs-keyword">Array</span>(UInt32),<br>    `RefererRegions` <span class="hljs-keyword">Array</span>(UInt32),<br>    `IsYandex` UInt8,<br>    `GoalReachesDepth` Int32,<br>    `GoalReachesURL` Int32,<br>    `GoalReachesAny` Int32,<br>    `SocialSourceNetworkID` UInt8,<br>    `SocialSourcePage` String,<br>    `MobilePhoneModel` String,<br>    `ClientEventTime` DateTime,<br>    `RegionID` UInt32,<br>    `ClientIP` UInt32,<br>    `ClientIP6` FixedString(<span class="hljs-number">16</span>),<br>    `RemoteIP` UInt32,<br>    `RemoteIP6` FixedString(<span class="hljs-number">16</span>),<br>    `IPNetworkID` UInt32,<br>    `SilverlightVersion3` UInt32,<br>    `CodeVersion` UInt32,<br>    `ResolutionWidth` UInt16,<br>    `ResolutionHeight` UInt16,<br>    `UserAgentMajor` UInt16,<br>    `UserAgentMinor` UInt16,<br>    `WindowClientWidth` UInt16,<br>    `WindowClientHeight` UInt16,<br>    `SilverlightVersion2` UInt8,<br>    `SilverlightVersion4` UInt16,<br>    `FlashVersion3` UInt16,<br>    `FlashVersion4` UInt16,<br>    `ClientTimeZone` Int16,<br>    `OS` UInt8,<br>    `UserAgent` UInt8,<br>    `ResolutionDepth` UInt8,<br>    `FlashMajor` UInt8,<br>    `FlashMinor` UInt8,<br>    `NetMajor` UInt8,<br>    `NetMinor` UInt8,<br>    `MobilePhone` UInt8,<br>    `SilverlightVersion1` UInt8,<br>    `Age` UInt8,<br>    `Sex` UInt8,<br>    `Income` UInt8,<br>    `JavaEnable` UInt8,<br>    `CookieEnable` UInt8,<br>    `JavascriptEnable` UInt8,<br>    `IsMobile` UInt8,<br>    `BrowserLanguage` UInt16,<br>    `BrowserCountry` UInt16,<br>    `Interests` UInt16,<br>    `Robotness` UInt8,<br>    `GeneralInterests` <span class="hljs-keyword">Array</span>(UInt16),<br>    `Params` <span class="hljs-keyword">Array</span>(String),<br>    `Goals` Nested(<br>        ID UInt32,<br>        Serial UInt32,<br>        EventTime DateTime,<br>        Price Int64,<br>        OrderID String,<br>        CurrencyID UInt32),<br>    `WatchIDs` <span class="hljs-keyword">Array</span>(UInt64),<br>    `ParamSumPrice` Int64,<br>    `ParamCurrency` FixedString(<span class="hljs-number">3</span>),<br>    `ParamCurrencyID` UInt16,<br>    `ClickLogID` UInt64,<br>    `ClickEventID` Int32,<br>    `ClickGoodEvent` Int32,<br>    `ClickEventTime` DateTime,<br>    `ClickPriorityID` Int32,<br>    `ClickPhraseID` Int32,<br>    `ClickPageID` Int32,<br>    `ClickPlaceID` Int32,<br>    `ClickTypeID` Int32,<br>    `ClickResourceID` Int32,<br>    `ClickCost` UInt32,<br>    `ClickClientIP` UInt32,<br>    `ClickDomainID` UInt32,<br>    `ClickURL` String,<br>    `ClickAttempt` UInt8,<br>    `ClickOrderID` UInt32,<br>    `ClickBannerID` UInt32,<br>    `ClickMarketCategoryID` UInt32,<br>    `ClickMarketPP` UInt32,<br>    `ClickMarketCategoryName` String,<br>    `ClickMarketPPName` String,<br>    `ClickAWAPSCampaignName` String,<br>    `ClickPageName` String,<br>    `ClickTargetType` UInt16,<br>    `ClickTargetPhraseID` UInt64,<br>    `ClickContextType` UInt8,<br>    `ClickSelectType` Int8,<br>    `ClickOptions` String,<br>    `ClickGroupBannerID` Int32,<br>    `OpenstatServiceName` String,<br>    `OpenstatCampaignID` String,<br>    `OpenstatAdID` String,<br>    `OpenstatSourceID` String,<br>    `UTMSource` String,<br>    `UTMMedium` String,<br>    `UTMCampaign` String,<br>    `UTMContent` String,<br>    `UTMTerm` String,<br>    `FromTag` String,<br>    `HasGCLID` UInt8,<br>    `FirstVisit` DateTime,<br>    `PredLastVisit` <span class="hljs-type">Date</span>,<br>    `LastVisit` <span class="hljs-type">Date</span>,<br>    `TotalVisits` UInt32,<br>    `TraficSource` Nested(<br>        ID Int8,<br>        SearchEngineID UInt16,<br>        AdvEngineID UInt8,<br>        PlaceID UInt16,<br>        SocialSourceNetworkID UInt8,<br>        Domain String,<br>        SearchPhrase String,<br>        SocialSourcePage String),<br>    `Attendance` FixedString(<span class="hljs-number">16</span>),<br>    `CLID` UInt32,<br>    `YCLID` UInt64,<br>    `NormalizedRefererHash` UInt64,<br>    `SearchPhraseHash` UInt64,<br>    `RefererDomainHash` UInt64,<br>    `NormalizedStartURLHash` UInt64,<br>    `StartURLDomainHash` UInt64,<br>    `NormalizedEndURLHash` UInt64,<br>    `TopLevelDomain` UInt64,<br>    `URLScheme` UInt64,<br>    `OpenstatServiceNameHash` UInt64,<br>    `OpenstatCampaignIDHash` UInt64,<br>    `OpenstatAdIDHash` UInt64,<br>    `OpenstatSourceIDHash` UInt64,<br>    `UTMSourceHash` UInt64,<br>    `UTMMediumHash` UInt64,<br>    `UTMCampaignHash` UInt64,<br>    `UTMContentHash` UInt64,<br>    `UTMTermHash` UInt64,<br>    `FromHash` UInt64,<br>    `WebVisorEnabled` UInt8,<br>    `WebVisorActivity` UInt32,<br>    `ParsedParams` Nested(<br>        Key1 String,<br>        Key2 String,<br>        Key3 String,<br>        Key4 String,<br>        Key5 String,<br>        ValueDouble Float64),<br>    `Market` Nested(<br>        Type UInt8,<br>        GoalID UInt32,<br>        OrderID String,<br>        OrderPrice Int64,<br>        PP UInt32,<br>        DirectPlaceID UInt32,<br>        DirectOrderID UInt32,<br>        DirectBannerID UInt32,<br>        GoodID String,<br>        GoodName String,<br>        GoodQuantity Int32,<br>        GoodPrice Int64),<br>    `IslandID` FixedString(<span class="hljs-number">16</span>)<br>)<br>ENGINE <span class="hljs-operator">=</span> ReplicatedCollapsingMergeTree(<span class="hljs-string">&#x27;/clickhouse/tables/&#123;layer&#125;-&#123;shard&#125;/visits_v1&#x27;</span>, <span class="hljs-string">&#x27;&#123;replica&#125;&#x27;</span>, Sign)<br><span class="hljs-keyword">PARTITION</span> <span class="hljs-keyword">BY</span> toYYYYMM(StartDate)<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> (CounterID, StartDate, intHash32(UserID), VisitID)<br>SAMPLE <span class="hljs-keyword">BY</span> intHash32(UserID)<br></code></pre></td></tr></table></figure>
 <p><strong>本地表需要在所有node上创建</strong></p>
-<h3 id="创建分布式表"><a href="#创建分布式表" class="headerlink" title="创建分布式表"></a>创建分布式表</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-comment">-- hits_v1</span>
-<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.hits_v1_dis <span class="hljs-keyword">ON</span> CLUSTER mycluster
- <span class="hljs-keyword">AS</span> tutorial.hits_v1 
-<span class="hljs-keyword">ENGINE</span> = <span class="hljs-keyword">Distributed</span>(mycluster, tutorial, hits_v1, <span class="hljs-keyword">rand</span>())
-<span class="hljs-comment">-- visits_v1</span>
-<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.visits_v1_dis <span class="hljs-keyword">ON</span> CLUSTER mycluster
- <span class="hljs-keyword">AS</span> tutorial.visits_v1 
-<span class="hljs-keyword">ENGINE</span> = <span class="hljs-keyword">Distributed</span>(mycluster, tutorial, visits_v1, <span class="hljs-keyword">rand</span>())</code></pre></div>
+<h3 id="创建分布式表"><a href="#创建分布式表" class="headerlink" title="创建分布式表"></a>创建分布式表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- hits_v1</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.hits_v1_dis <span class="hljs-keyword">ON</span> CLUSTER mycluster<br> <span class="hljs-keyword">AS</span> tutorial.hits_v1 <br>ENGINE <span class="hljs-operator">=</span> Distributed(mycluster, tutorial, hits_v1, rand())<br><span class="hljs-comment">-- visits_v1</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> tutorial.visits_v1_dis <span class="hljs-keyword">ON</span> CLUSTER mycluster<br> <span class="hljs-keyword">AS</span> tutorial.visits_v1 <br>ENGINE <span class="hljs-operator">=</span> Distributed(mycluster, tutorial, visits_v1, rand())<br></code></pre></td></tr></table></figure>
 <p><strong>分布式表在shard的其中一台创建即可，其他replica无需执行</strong></p>
-<h3 id="导入测试数据"><a href="#导入测试数据" class="headerlink" title="导入测试数据"></a>导入测试数据</h3><div class="hljs"><pre><code class="hljs bash">curl https://datasets.clickhouse.tech/hits/tsv/hits_v1.tsv.xz | unxz --threads=`nproc` &gt; hits_v1.tsv
-curl https://datasets.clickhouse.tech/visits/tsv/visits_v1.tsv.xz | unxz --threads=`nproc` &gt; visits_v1.tsv
+<h3 id="导入测试数据"><a href="#导入测试数据" class="headerlink" title="导入测试数据"></a>导入测试数据</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl https://datasets.clickhouse.tech/hits/tsv/hits_v1.tsv.xz | unxz --threads=`<span class="hljs-built_in">nproc</span>` &gt; hits_v1.tsv<br>curl https://datasets.clickhouse.tech/visits/tsv/visits_v1.tsv.xz | unxz --threads=`<span class="hljs-built_in">nproc</span>` &gt; visits_v1.tsv<br><br>clickhouse-client --query <span class="hljs-string">&quot;INSERT INTO tutorial.hits_v1_dis FORMAT TSV&quot;</span> --max_insert_block_size=100000 &lt; hits_v1.tsv<br><br>clickhouse-client --query <span class="hljs-string">&quot;INSERT INTO tutorial.visits_v1_dis FORMAT TSV&quot;</span> --max_insert_block_size=100000 &lt; visits_v1.tsv<br></code></pre></td></tr></table></figure>
 
-clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.hits_v1_dis FORMAT TSV"</span> --max_insert_block_size=100000 &lt; hits_v1.tsv
+<h3 id="验证数据"><a href="#验证数据" class="headerlink" title="验证数据"></a>验证数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> tutorial.hits_v1_dis<br><span class="hljs-comment">-- </span><br><span class="hljs-keyword">select</span> <span class="hljs-built_in">count</span>(<span class="hljs-operator">*</span>) <span class="hljs-keyword">from</span> tutorial.visits_v1_dis<br><span class="hljs-comment">-- </span><br><span class="hljs-keyword">SELECT</span><br>    StartURL <span class="hljs-keyword">AS</span> URL,<br>    <span class="hljs-built_in">AVG</span>(Duration) <span class="hljs-keyword">AS</span> AvgDuration<br><span class="hljs-keyword">FROM</span> tutorial.visits_v1<br><span class="hljs-keyword">WHERE</span> StartDate <span class="hljs-keyword">BETWEEN</span> <span class="hljs-string">&#x27;2014-03-23&#x27;</span> <span class="hljs-keyword">AND</span> <span class="hljs-string">&#x27;2014-03-30&#x27;</span><br><span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> URL<br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> AvgDuration <span class="hljs-keyword">DESC</span><br>LIMIT <span class="hljs-number">10</span><br><span class="hljs-comment">-- </span><br><span class="hljs-keyword">SELECT</span><br>    <span class="hljs-built_in">sum</span>(Sign) <span class="hljs-keyword">AS</span> visits,<br>    sumIf(Sign, has(Goals.ID, <span class="hljs-number">1105530</span>)) <span class="hljs-keyword">AS</span> goal_visits,<br>    (<span class="hljs-number">100.</span> <span class="hljs-operator">*</span> goal_visits) <span class="hljs-operator">/</span> visits <span class="hljs-keyword">AS</span> goal_percent<br><span class="hljs-keyword">FROM</span> tutorial.visits_v1<br><span class="hljs-keyword">WHERE</span> (CounterID <span class="hljs-operator">=</span> <span class="hljs-number">912887</span>) <span class="hljs-keyword">AND</span> (toYYYYMM(StartDate) <span class="hljs-operator">=</span> <span class="hljs-number">201403</span>) <span class="hljs-keyword">AND</span> (domain(StartURL) <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;yandex.ru&#x27;</span>)<br></code></pre></td></tr></table></figure>
 
-clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits_v1_dis FORMAT TSV"</span> --max_insert_block_size=100000 &lt; visits_v1.tsv</code></pre></div>
+<h3 id="Ops"><a href="#Ops" class="headerlink" title="Ops"></a>Ops</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>    cluster,<br>    shard_num,<br>    replica_num,<br>    host_name,<br>    is_local,<br>    <span class="hljs-keyword">user</span>,<br>    default_database<br><span class="hljs-keyword">FROM</span> system.clusters<br></code></pre></td></tr></table></figure>
 
-<h3 id="验证数据"><a href="#验证数据" class="headerlink" title="验证数据"></a>验证数据</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">from</span> tutorial.hits_v1_dis
-<span class="hljs-comment">-- </span>
-<span class="hljs-keyword">select</span> <span class="hljs-keyword">count</span>(*) <span class="hljs-keyword">from</span> tutorial.visits_v1_dis
-<span class="hljs-comment">-- </span>
-<span class="hljs-keyword">SELECT</span>
-    StartURL <span class="hljs-keyword">AS</span> <span class="hljs-keyword">URL</span>,
-    <span class="hljs-keyword">AVG</span>(<span class="hljs-keyword">Duration</span>) <span class="hljs-keyword">AS</span> AvgDuration
-<span class="hljs-keyword">FROM</span> tutorial.visits_v1
-<span class="hljs-keyword">WHERE</span> StartDate <span class="hljs-keyword">BETWEEN</span> <span class="hljs-string">'2014-03-23'</span> <span class="hljs-keyword">AND</span> <span class="hljs-string">'2014-03-30'</span>
-<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> <span class="hljs-keyword">URL</span>
-<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> AvgDuration <span class="hljs-keyword">DESC</span>
-<span class="hljs-keyword">LIMIT</span> <span class="hljs-number">10</span>
-<span class="hljs-comment">-- </span>
-<span class="hljs-keyword">SELECT</span>
-    <span class="hljs-keyword">sum</span>(<span class="hljs-keyword">Sign</span>) <span class="hljs-keyword">AS</span> visits,
-    sumIf(<span class="hljs-keyword">Sign</span>, has(Goals.ID, <span class="hljs-number">1105530</span>)) <span class="hljs-keyword">AS</span> goal_visits,
-    (<span class="hljs-number">100.</span> * goal_visits) / visits <span class="hljs-keyword">AS</span> goal_percent
-<span class="hljs-keyword">FROM</span> tutorial.visits_v1
-<span class="hljs-keyword">WHERE</span> (CounterID = <span class="hljs-number">912887</span>) <span class="hljs-keyword">AND</span> (toYYYYMM(StartDate) = <span class="hljs-number">201403</span>) <span class="hljs-keyword">AND</span> (<span class="hljs-keyword">domain</span>(StartURL) = <span class="hljs-string">'yandex.ru'</span>)</code></pre></div>
+<h3 id="用户权限"><a href="#用户权限" class="headerlink" title="用户权限"></a>用户权限</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">users</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- If user name was not specified, &#x27;default&#x27; user is used. --&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">user_name</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span><br>      <span class="hljs-comment">&lt;!-- Or --&gt;</span><br>      <span class="hljs-comment">&lt;!-- PASSWORD=$(base64 &lt; /dev/urandom | head -c8); echo &quot;$PASSWORD&quot;; echo -n &quot;$PASSWORD&quot; | sha256sum | tr -d &#x27;-&#x27; --&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">password_sha256_hex</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password_sha256_hex</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">access_management</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">access_management</span>&gt;</span><br><br>      <span class="hljs-tag">&lt;<span class="hljs-name">networks</span> <span class="hljs-attr">incl</span>=<span class="hljs-string">&quot;networks&quot;</span> <span class="hljs-attr">replace</span>=<span class="hljs-string">&quot;replace&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">networks</span>&gt;</span><br><br>      <span class="hljs-tag">&lt;<span class="hljs-name">profile</span>&gt;</span>profile_name<span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span><br><br>      <span class="hljs-tag">&lt;<span class="hljs-name">quota</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">quota</span>&gt;</span><br><br>      <span class="hljs-tag">&lt;<span class="hljs-name">databases</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">database_name</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span><br>                  <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>expression<span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">database_name</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">databases</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">user_name</span>&gt;</span><br>    <span class="hljs-comment">&lt;!-- Other users settings --&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">users</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="Ops"><a href="#Ops" class="headerlink" title="Ops"></a>Ops</h3><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>
-    cluster,
-    shard_num,
-    replica_num,
-    host_name,
-    is_local,
-    <span class="hljs-keyword">user</span>,
-    default_database
-<span class="hljs-keyword">FROM</span> system.clusters</code></pre></div>
-
-<h3 id="用户权限"><a href="#用户权限" class="headerlink" title="用户权限"></a>用户权限</h3><div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">yandex</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">users</span>&gt;</span>
-    <span class="hljs-comment">&lt;!-- If user name was not specified, 'default' user is used. --&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">user_name</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span>
-      <span class="hljs-comment">&lt;!-- Or --&gt;</span>
-      <span class="hljs-comment">&lt;!-- PASSWORD=$(base64 &lt; /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-' --&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">password_sha256_hex</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">password_sha256_hex</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">access_management</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">access_management</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-name">networks</span> <span class="hljs-attr">incl</span>=<span class="hljs-string">"networks"</span> <span class="hljs-attr">replace</span>=<span class="hljs-string">"replace"</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">networks</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-name">profile</span>&gt;</span>profile_name<span class="hljs-tag">&lt;/<span class="hljs-name">profile</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-name">quota</span>&gt;</span>default<span class="hljs-tag">&lt;/<span class="hljs-name">quota</span>&gt;</span>
-
-      <span class="hljs-tag">&lt;<span class="hljs-name">databases</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">database_name</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span>
-                  <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>expression<span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">table_name</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">database_name</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">databases</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">user_name</span>&gt;</span>
-    <span class="hljs-comment">&lt;!-- Other users settings --&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">users</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">yandex</span>&gt;</span></code></pre></div>
-
-<div class="hljs"><pre><code class="hljs bash">PASSWORD=$(base64 &lt; /dev/urandom | head -c8); <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$PASSWORD</span>"</span>; <span class="hljs-built_in">echo</span> -n <span class="hljs-string">"<span class="hljs-variable">$PASSWORD</span>"</span> | sha256sum | tr -d <span class="hljs-string">'-'</span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">PASSWORD=$(<span class="hljs-built_in">base64</span> &lt; /dev/urandom | <span class="hljs-built_in">head</span> -c8); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWORD</span>&quot;</span>; <span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;<span class="hljs-variable">$PASSWORD</span>&quot;</span> | <span class="hljs-built_in">sha256sum</span> | <span class="hljs-built_in">tr</span> -d <span class="hljs-string">&#x27;-&#x27;</span><br></code></pre></td></tr></table></figure>
 
 <ul>
-<li><a href="https://clickhouse.tech/docs/zh/operations/access-rights/" target="_blank" rel="noopener">https://clickhouse.tech/docs/zh/operations/access-rights/</a></li>
+<li><a target="_blank" rel="noopener" href="https://clickhouse.tech/docs/zh/operations/access-rights/">https://clickhouse.tech/docs/zh/operations/access-rights/</a></li>
 </ul>
 <h1 id="理想配置"><a href="#理想配置" class="headerlink" title="理想配置"></a>理想配置</h1><blockquote>
 <ul>
-<li><a href="https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse" target="_blank" rel="noopener">https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse</a></li>
-<li><a href="https://github.com/ClickHouse/ClickHouse/issues/1287" target="_blank" rel="noopener">https://github.com/ClickHouse/ClickHouse/issues/1287</a></li>
+<li><a target="_blank" rel="noopener" href="https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse">https://altinity.com/blog/2018/5/10/circular-replication-cluster-topology-in-clickhouse</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ClickHouse/ClickHouse/issues/1287">https://github.com/ClickHouse/ClickHouse/issues/1287</a></li>
 </ul>
 </blockquote>
-<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">remote_servers</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">mycluster</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>
-          <span class="hljs-comment">&lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span>
-          <span class="hljs-comment">&lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">mycluster</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">remote_servers</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">zookeeper</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"1"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"2"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">"3"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span>
-  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper</span>&gt;</span>
-<span class="hljs-comment">&lt;!-- vm-node001 --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span>
-<span class="hljs-comment">&lt;!-- vm-node002 --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>02<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>02<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span>
-<span class="hljs-comment">&lt;!-- vm-node003 --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>03<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>03<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span></code></pre></div>
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/BigData/">BigData</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/ClickHouse/">ClickHouse</a>
-                    
-                  </div>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">remote_servers</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">mycluster</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span><br>          <span class="hljs-comment">&lt;!-- Optional. Shard weight when writing data. Default: 1. --&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span><br>          <span class="hljs-comment">&lt;!-- Optional. Whether to write data to just one of the replicas. Default: false (write data to all replicas). --&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">weight</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">weight</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">internal_replication</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">internal_replication</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>          <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>              <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>9000<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>          <span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br>      <span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">mycluster</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">remote_servers</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">zookeeper</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;2&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">host</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">host</span>&gt;</span><br>      <span class="hljs-tag">&lt;<span class="hljs-name">port</span>&gt;</span>2181<span class="hljs-tag">&lt;/<span class="hljs-name">port</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">zookeeper</span>&gt;</span><br><span class="hljs-comment">&lt;!-- vm-node001 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>01<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node002<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br><span class="hljs-comment">&lt;!-- vm-node002 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>02<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>02<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node003<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br><span class="hljs-comment">&lt;!-- vm-node003 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">macros</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">layer</span>&gt;</span>03<span class="hljs-tag">&lt;/<span class="hljs-name">layer</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">shard</span>&gt;</span>03<span class="hljs-tag">&lt;/<span class="hljs-name">shard</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">replica</span>&gt;</span>vm-node001<span class="hljs-tag">&lt;/<span class="hljs-name">replica</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">macros</span>&gt;</span><br></code></pre></td></tr></table></figure>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/BigData/" class="category-chain-item">BigData</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ClickHouse/">#ClickHouse</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ClickHouse分布式实践</div>
+      <div>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年7月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/07/25/openldap-ha/">
+                      <a href="/2021/07/25/openldap-ha/" title="N-Way Multi-Provider OpenLDAP实践">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">N-Way Multi-Provider OpenLDAP实践</span>
                         <span class="visible-mobile">上一篇</span>
@@ -840,7 +417,7 @@ clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/06/06/hadoop-hbase/">
+                      <a href="/2021/06/06/hadoop-hbase/" title="大数据Hadoop-HBase集群环境构建">
                         <span class="hidden-mobile">大数据Hadoop-HBase集群环境构建</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -852,68 +429,96 @@ clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: 'b874b82cdcd3bbdd9d310277f9965c8f'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -926,86 +531,196 @@ clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -1013,114 +728,15 @@ clickhouse-client --query <span class="hljs-string">"INSERT INTO tutorial.visits
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "ClickHouse分布式实践&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

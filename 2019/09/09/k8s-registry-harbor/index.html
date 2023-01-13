@@ -1,70 +1,109 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="在Kubernetes之上部署Harbor Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes镜像仓库Harbor">
+<meta property="og:url" content="https://www.boer.xyz/2019/09/09/k8s-registry-harbor/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="在Kubernetes之上部署Harbor Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?reg">
+<meta property="article:published_time" content="2019-09-09T02:20:36.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.269Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="Harbor">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Registry">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?reg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>Kubernetes镜像仓库Harbor · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +122,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +134,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +146,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +158,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +170,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,211 +195,219 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2019-09-09 10:20" pubdate>
-        2019年9月9日 上午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      633 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      10
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Kubernetes镜像仓库Harbor"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2019-09-09 10:20" pubdate>
+          2019年9月9日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Kubernetes镜像仓库Harbor</h1>
             
-            <div class="markdown-body" id="post-body">
-              <p>在Kubernetes之上部署Harbor</p>
+            
+              <div class="markdown-body">
+                
+                <p>在Kubernetes之上部署Harbor</p>
 <p>Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images as trusted. Harbor, a CNCF Graduated project, delivers compliance, performance, and interoperability to help you consistently and securely manage artifacts across cloud native compute platforms like Kubernetes and Docker.</p>
 <blockquote>
 <p>在企业级Registry的行列，竟然没有Harbor的竞品…</p>
 </blockquote>
-<a id="more"></a>
+<span id="more"></span>
 
-<h3 id="Helm-Charts"><a href="#Helm-Charts" class="headerlink" title="Helm Charts"></a>Helm Charts</h3><div class="hljs"><pre><code class="hljs bash">~/k8s/charts
-helm repo add harbor https://helm.goharbor.io
-helm list
-helm install --name harbor -f values.yaml . --namespace harbor
-helm upgrade -f values.yaml harbor . --namespace harbor
-helm delete --purge harbor
-kubectl -n harbor delete pvc $(kubectl -n harbor get pvc | grep harbor | awk <span class="hljs-string">'&#123;print $1&#125;'</span>)
-helm status harbor
-helm fetch harbor/harbor --version 1.3.2
-tar -zxf harbor-1.3.2.tgz</code></pre></div>
+<h3 id="Helm-Charts"><a href="#Helm-Charts" class="headerlink" title="Helm Charts"></a>Helm Charts</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">~/k8s/charts<br>helm repo add harbor https://helm.goharbor.io<br>helm list<br>helm install --name harbor -f values.yaml . --namespace harbor<br>helm upgrade -f values.yaml harbor . --namespace harbor<br>helm delete --purge harbor<br>kubectl -n harbor delete pvc $(kubectl -n harbor get pvc | grep harbor | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>)<br>helm status harbor<br>helm fetch harbor/harbor --version 1.3.2<br>tar -zxf harbor-1.3.2.tgz<br></code></pre></td></tr></table></figure>
 
-<h3 id="Harbor-Helm-Values配置"><a href="#Harbor-Helm-Values配置" class="headerlink" title="Harbor Helm Values配置"></a>Harbor Helm Values配置</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment"># vim harbor/values.yaml</span>
-<span class="hljs-attr">expose:</span>
-  <span class="hljs-attr">type:</span> <span class="hljs-string">ingress</span>
-  <span class="hljs-attr">tls:</span>
-    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
-  <span class="hljs-attr">ingress:</span>
-    <span class="hljs-attr">hosts:</span>
-      <span class="hljs-attr">core:</span> <span class="hljs-string">registry.boer.xyz</span>
-      <span class="hljs-attr">notary:</span> <span class="hljs-string">notary.boer.xyz</span>
-    <span class="hljs-attr">controller:</span> <span class="hljs-string">default</span>
-    <span class="hljs-attr">annotations:</span>
-      <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">"nginx"</span>
-      <span class="hljs-attr">ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">"true"</span>
-      <span class="hljs-attr">ingress.kubernetes.io/proxy-body-size:</span> <span class="hljs-string">"0"</span>
-      <span class="hljs-attr">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">"true"</span>
-      <span class="hljs-attr">nginx.ingress.kubernetes.io/proxy-body-size:</span> <span class="hljs-string">"0"</span>
-<span class="hljs-attr">externalURL:</span> <span class="hljs-string">https://registry.boer.xyz</span>
-<span class="hljs-attr">persistence:</span>
-  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span>
-  <span class="hljs-attr">resourcePolicy:</span> <span class="hljs-string">"keep"</span>
-  <span class="hljs-attr">persistentVolumeClaim:</span>
-    <span class="hljs-attr">registry:</span>
-      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">"openebs-hostpath"</span>
-    <span class="hljs-attr">chartmuseum:</span>
-      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">"openebs-hostpath"</span>
-    <span class="hljs-attr">jobservice:</span>
-      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">"openebs-hostpath"</span>
-    <span class="hljs-attr">database:</span>
-      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">"openebs-hostpath"</span>
-    <span class="hljs-attr">redis:</span>
-      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">"openebs-hostpath"</span>
-<span class="hljs-attr">harborAdminPassword:</span> <span class="hljs-string">"&lt;your-secret-password&gt;"</span> <span class="hljs-comment"># 注意替换</span></code></pre></div>
+<h3 id="Harbor-Helm-Values配置"><a href="#Harbor-Helm-Values配置" class="headerlink" title="Harbor Helm Values配置"></a>Harbor Helm Values配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># vim harbor/values.yaml</span><br><span class="hljs-attr">expose:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">ingress</span><br>  <span class="hljs-attr">tls:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">ingress:</span><br>    <span class="hljs-attr">hosts:</span><br>      <span class="hljs-attr">core:</span> <span class="hljs-string">registry.boer.xyz</span><br>      <span class="hljs-attr">notary:</span> <span class="hljs-string">notary.boer.xyz</span><br>    <span class="hljs-attr">controller:</span> <span class="hljs-string">default</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">kubernetes.io/ingress.class:</span> <span class="hljs-string">&quot;nginx&quot;</span><br>      <span class="hljs-attr">ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">ingress.kubernetes.io/proxy-body-size:</span> <span class="hljs-string">&quot;0&quot;</span><br>      <span class="hljs-attr">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">nginx.ingress.kubernetes.io/proxy-body-size:</span> <span class="hljs-string">&quot;0&quot;</span><br><span class="hljs-attr">externalURL:</span> <span class="hljs-string">https://registry.boer.xyz</span><br><span class="hljs-attr">persistence:</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">resourcePolicy:</span> <span class="hljs-string">&quot;keep&quot;</span><br>  <span class="hljs-attr">persistentVolumeClaim:</span><br>    <span class="hljs-attr">registry:</span><br>      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">&quot;openebs-hostpath&quot;</span><br>    <span class="hljs-attr">chartmuseum:</span><br>      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">&quot;openebs-hostpath&quot;</span><br>    <span class="hljs-attr">jobservice:</span><br>      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">&quot;openebs-hostpath&quot;</span><br>    <span class="hljs-attr">database:</span><br>      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">&quot;openebs-hostpath&quot;</span><br>    <span class="hljs-attr">redis:</span><br>      <span class="hljs-attr">storageClass:</span> <span class="hljs-string">&quot;openebs-hostpath&quot;</span><br><span class="hljs-attr">harborAdminPassword:</span> <span class="hljs-string">&quot;&lt;your-secret-password&gt;&quot;</span> <span class="hljs-comment"># 注意替换</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="Registry证书分发"><a href="#Registry证书分发" class="headerlink" title="Registry证书分发"></a>Registry证书分发</h3><div class="hljs"><pre><code class="hljs bash">kubectl -n harbor get secret harbor-harbor-ingress -o yaml
-<span class="hljs-comment"># 其中 data 区域中 ca.crt 对应的值就是我们需要证书，不过需要注意还需要做一个base64的解码</span>
-<span class="hljs-comment"># 保存data区域ca.crt的base64 -d内容到harbor.crt</span>
-
-<span class="hljs-comment">## docker私有registry -  证书分发</span>
-mkdir -p /etc/docker/certs.d/registry.boer.xyz
-cp harbor.crt /etc/docker/certs.d/registry.boer.xyz <span class="hljs-comment"># 所有master\node均需配置</span>
-
-<span class="hljs-comment">## 本地浏览器 - 证书分发</span>
-<span class="hljs-comment"># 下载harbor.crt到本地电脑，双击-导入浏览器，添加到信任的根证书目录</span>
-<span class="hljs-comment"># Chrome会提示: 连接时安全的。</span>
-<span class="hljs-comment"># ~灼眼的小红锁变成了可爱的小绿锁~</span></code></pre></div>
+<h3 id="Registry证书分发"><a href="#Registry证书分发" class="headerlink" title="Registry证书分发"></a>Registry证书分发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl -n harbor get secret harbor-harbor-ingress -o yaml<br><span class="hljs-comment"># 其中 data 区域中 ca.crt 对应的值就是我们需要证书，不过需要注意还需要做一个base64的解码</span><br><span class="hljs-comment"># 保存data区域ca.crt的base64 -d内容到harbor.crt</span><br><br><span class="hljs-comment">## docker私有registry -  证书分发</span><br><span class="hljs-built_in">mkdir</span> -p /etc/docker/certs.d/registry.boer.xyz<br><span class="hljs-built_in">cp</span> harbor.crt /etc/docker/certs.d/registry.boer.xyz <span class="hljs-comment"># 所有master\node均需配置</span><br><br><span class="hljs-comment">## 本地浏览器 - 证书分发</span><br><span class="hljs-comment"># 下载harbor.crt到本地电脑，双击-导入浏览器，添加到信任的根证书目录</span><br><span class="hljs-comment"># Chrome会提示: 连接时安全的。</span><br><span class="hljs-comment"># ~灼眼的小红锁变成了可爱的小绿锁~</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="Registry域名"><a href="#Registry域名" class="headerlink" title="Registry域名"></a>Registry域名</h3><blockquote>
 <p>如果你的环境没有自己的DNS服务器</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs bash"><span class="hljs-comment"># ansible下发harbor解析hosts</span>
-<span class="hljs-comment">## 添加hosts</span>
-ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10.10.253.17 registry.boer.xyz'"</span>
-<span class="hljs-comment">## 删除hosts</span>
-ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10.10.253.17 registry.boer.xyz' state=absent"</span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># ansible下发harbor解析hosts</span><br><span class="hljs-comment">## 添加hosts</span><br>ansible k8s -m lineinfile -a <span class="hljs-string">&quot;dest=/etc/hosts line=&#x27;10.10.253.17 registry.boer.xyz&#x27;&quot;</span><br><span class="hljs-comment">## 删除hosts</span><br>ansible k8s -m lineinfile -a <span class="hljs-string">&quot;dest=/etc/hosts line=&#x27;10.10.253.17 registry.boer.xyz&#x27; state=absent&quot;</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="创建Registry-secret"><a href="#创建Registry-secret" class="headerlink" title="创建Registry secret"></a>创建Registry secret</h3><blockquote>
 <p>思路分享：Harbor建一个账号(比如: deployer)，作为K8S的公用镜像拉取账号。<br>注意将公用账户加入<strong>每一个项目</strong>的成员，并赋予<strong>项目管理员</strong>以上权限。</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs bash">kubectl create secret docker-registry regcred --docker-server=registry.boer.xyz --docker-username=deployer --docker-password=&lt;your-password&gt; --docker-email=boer0924@gmail.com --namespace=boer-public</code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl create secret docker-registry regcred --docker-server=registry.boer.xyz --docker-username=deployer --docker-password=&lt;your-password&gt; --docker-email=boer0924@gmail.com --namespace=boer-public<br></code></pre></td></tr></table></figure>
 
-<h3 id="用法Demo"><a href="#用法Demo" class="headerlink" title="用法Demo"></a>用法Demo</h3><div class="hljs"><pre><code class="hljs yaml"><span class="hljs-comment">## docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</span>
-<span class="hljs-comment"># docker tag boer0924/theapp:0.0.1 registry.boer.xyz/public/theapp:0.0.1</span>
-<span class="hljs-comment"># docker push registry.boer.xyz/public/theapp:0.0.1 # 上传镜像</span>
-<span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span>
-<span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span>
-<span class="hljs-attr">template:</span>
-  <span class="hljs-attr">spec:</span>
-    <span class="hljs-attr">containers:</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">theapp</span>
-      <span class="hljs-attr">image:</span> <span class="hljs-string">registry.boer.xyz/public/theapp:0.0.1</span>
-      <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span>
-      <span class="hljs-attr">ports:</span>
-      <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">5000</span>
-    <span class="hljs-attr">imagePullSecrets:</span> <span class="hljs-comment"># 划重点</span>
-    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">regcred</span></code></pre></div>
+<h3 id="用法Demo"><a href="#用法Demo" class="headerlink" title="用法Demo"></a>用法Demo</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">## docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</span><br><span class="hljs-comment"># docker tag boer0924/theapp:0.0.1 registry.boer.xyz/public/theapp:0.0.1</span><br><span class="hljs-comment"># docker push registry.boer.xyz/public/theapp:0.0.1 # 上传镜像</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">template:</span><br>  <span class="hljs-attr">spec:</span><br>    <span class="hljs-attr">containers:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">theapp</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">registry.boer.xyz/public/theapp:0.0.1</span><br>      <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>      <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">5000</span><br>    <span class="hljs-attr">imagePullSecrets:</span> <span class="hljs-comment"># 划重点</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">regcred</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><ul>
-<li><a href="https://www.qikqiak.com/post/harbor-quick-install/" target="_blank" rel="noopener">https://www.qikqiak.com/post/harbor-quick-install/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/post/harbor-quick-install/">https://www.qikqiak.com/post/harbor-quick-install/</a></li>
 </ul>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Kubernetes/">Kubernetes</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Kubernetes/">Kubernetes</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Harbor/">Harbor</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Registry/">Registry</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Kubernetes/" class="category-chain-item">Kubernetes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/Harbor/">#Harbor</a>
+      
+        <a href="/tags/Docker/">#Docker</a>
+      
+        <a href="/tags/Registry/">#Registry</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes镜像仓库Harbor</div>
+      <div>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2019年9月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2019/09/24/k8s-ha-deployment/">
+                      <a href="/2019/09/24/k8s-ha-deployment/" title="Kubeadm部署HA高可用Kubernetes集群">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Kubeadm部署HA高可用Kubernetes集群</span>
                         <span class="visible-mobile">上一篇</span>
@@ -367,7 +417,7 @@ ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2019/06/13/middleware-devops-guide/">
+                      <a href="/2019/06/13/middleware-devops-guide/" title="中间件运维规范(初稿)">
                         <span class="hidden-mobile">中间件运维规范(初稿)</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -379,68 +429,96 @@ ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: 'de10837b2757a6846f50f96a86ede158'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -453,86 +531,196 @@ ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -540,114 +728,15 @@ ansible k8s -m lineinfile -a <span class="hljs-string">"dest=/etc/hosts line='10
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "Kubernetes镜像仓库Harbor&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

@@ -1,70 +1,108 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+<html lang="zh-CN" data-default-color-scheme=auto>
 
 
 
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="/img/favicon/favicon.ico">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="念念不忘 必有回响">
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="ClickHouse server version 21.7.2.7 (official build). MySQL 5.7.35 Date 2021.8.25">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL To ClickHouse数据实时同步引擎MaterializeMySQL">
+<meta property="og:url" content="https://www.boer.xyz/2021/08/26/mysql-to-clickhouse-with-materializemysql/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="ClickHouse server version 21.7.2.7 (official build). MySQL 5.7.35 Date 2021.8.25">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?mms">
+<meta property="article:published_time" content="2021-08-26T02:16:16.000Z">
+<meta property="article:modified_time" content="2023-01-13T08:26:44.269Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="ClickHouse">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="MaterializeMySQL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?mms">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
   <title>MySQL To ClickHouse数据实时同步引擎MaterializeMySQL · ~·boer·~ 乌托邦</title>
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
 
-  
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/monokai.min.css" />
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.staticfile.org/gitalk/1.6.2/gitalk.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
 
 
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564"
-     crossorigin="anonymous"></script>
-<meta name="generator" content="Hexo 4.2.1"></head>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>~·boer·~ 乌托邦</strong>&nbsp;</a>
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -83,7 +121,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
-                首页
+                <span>首页</span>
               </a>
             </li>
           
@@ -95,7 +133,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
-                归档
+                <span>归档</span>
               </a>
             </li>
           
@@ -107,7 +145,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
-                分类
+                <span>分类</span>
               </a>
             </li>
           
@@ -119,7 +157,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
-                标签
+                <span>标签</span>
               </a>
             </li>
           
@@ -131,21 +169,24 @@
             <li class="nav-item">
               <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
-                关于
+                <span>关于</span>
               </a>
             </li>
           
         
         
           <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
           </li>
         
       </ul>
@@ -153,312 +194,221 @@
   </div>
 </nav>
 
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-26 10:16" pubdate>
-        2021年8月26日 上午
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      1k 字
-    </span>
   
 
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      18
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQL To ClickHouse数据实时同步引擎MaterializeMySQL"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-08-26 10:16" pubdate>
+          2021年8月26日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          6.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          55 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">MySQL To ClickHouse数据实时同步引擎MaterializeMySQL</h1>
             
-            <div class="markdown-body" id="post-body">
-              <ul>
+            
+              <div class="markdown-body">
+                
+                <ul>
 <li>ClickHouse server version 21.7.2.7 (official build).</li>
 <li>MySQL 5.7.35</li>
 <li>Date 2021.8.25</li>
 </ul>
-<a id="more"></a>
+<span id="more"></span>
 
-<h3 id="一、数据同步"><a href="#一、数据同步" class="headerlink" title="一、数据同步"></a>一、数据同步</h3><h4 id="1、MySQL配置"><a href="#1、MySQL配置" class="headerlink" title="1、MySQL配置"></a>1、MySQL配置</h4><div class="hljs"><pre><code class="hljs conf"># vim custom_config.cnf
-[mysqld]
-log-bin&#x3D;mysql-bin
-binlog-format&#x3D;ROW
-max_binlog_size&#x3D;10M # binlog文件大小
-enforce-gtid-consistency&#x3D;ON
-gtid-mode&#x3D;ON
-server_id&#x3D;1</code></pre></div>
-<h4 id="2、MySQL存储过程模拟数据"><a href="#2、MySQL存储过程模拟数据" class="headerlink" title="2、MySQL存储过程模拟数据"></a>2、MySQL存储过程模拟数据</h4><div class="hljs"><pre><code class="hljs sql"><span class="hljs-comment">/*</span>
-<span class="hljs-comment">show databases;</span>
-<span class="hljs-comment">create database if not exists testdb default character set utf8mb4 collate utf8mb4_unicode_ci;</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">select User,Host,plugin,authentication_string from mysql.user;</span>
-<span class="hljs-comment">show global variables like 'validate_password%';</span>
-<span class="hljs-comment">set global validate_password_length=9;</span>
-<span class="hljs-comment">create user 'tester'@'%' identified with mysql_native_password by '54Ceshi@db';</span>
-<span class="hljs-comment">set global validate_password_length=12;</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">grant all privileges on testdb.* to 'tester'@'%' with grant OPTION;</span>
-<span class="hljs-comment">flush privileges;</span>
-<span class="hljs-comment">show grants for tester@'%';</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">SMALLINT(6)  -32768 ~ 32767</span>
-<span class="hljs-comment">SMALLINT(5) UNSIGNED  65535</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">INT(11)  -2147483648 ~ 2147483647</span>
-<span class="hljs-comment">INT(10) UNSIGNED  4294967295</span>
-<span class="hljs-comment"></span>
-<span class="hljs-comment">BIGINT(20)  -9223372036854775808 ~ 9223372036854775807</span>
-<span class="hljs-comment">BIGINT(20) UNSIGNED  18446744073709551615</span>
-<span class="hljs-comment">*/</span>
-
-<span class="hljs-keyword">USE</span> testdb;
-<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`tb_test`</span>;
-<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`tb_test`</span> (
-	<span class="hljs-string">`id`</span>          <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">UNSIGNED</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'主键自增ID'</span>,
-	<span class="hljs-string">`username`</span>    <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">''</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'用户名'</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">'utf8mb4_unicode_ci'</span>,
-	<span class="hljs-string">`password`</span>    <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">''</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'密码'</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">'utf8mb4_unicode_ci'</span>,
-	<span class="hljs-string">`phone`</span>       <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">''</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'手机号'</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">'utf8mb4_unicode_ci'</span>,
-	<span class="hljs-string">`email`</span>       <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">''</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'邮箱'</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">'utf8mb4_unicode_ci'</span>,
-	<span class="hljs-string">`gender`</span>      <span class="hljs-built_in">SMALLINT</span>(<span class="hljs-number">5</span>) <span class="hljs-keyword">UNSIGNED</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'0'</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'性别：0-保密（默认），1-男，2-女'</span>,
-	<span class="hljs-string">`salary`</span>      <span class="hljs-built_in">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'0'</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'薪水'</span>,
-	<span class="hljs-string">`state`</span>       <span class="hljs-built_in">SMALLINT</span>(<span class="hljs-number">5</span>) <span class="hljs-keyword">UNSIGNED</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'0'</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'状态：0-禁用（默认），1-启用'</span>,
-	<span class="hljs-string">`deleted`</span>     <span class="hljs-built_in">SMALLINT</span>(<span class="hljs-number">5</span>) <span class="hljs-keyword">UNSIGNED</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'0'</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'是否删除：0-否（默认），1-是'</span>,
-	<span class="hljs-string">`create_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'创建时间'</span>,
-	<span class="hljs-string">`update_time`</span> DATETIME <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'更新时间'</span>,
-	<span class="hljs-string">`remark`</span>      <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">''</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'备注'</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">'utf8mb4_unicode_ci'</span>,
-	PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>),
-	<span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">INDEX</span> <span class="hljs-string">`uq_username`</span> (<span class="hljs-string">`username`</span>),
-	<span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">INDEX</span> <span class="hljs-string">`uq_phone`</span> (<span class="hljs-string">`phone`</span>),
-	<span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">INDEX</span> <span class="hljs-string">`uq_email`</span> (<span class="hljs-string">`email`</span>),
-	<span class="hljs-keyword">INDEX</span> <span class="hljs-string">`ix_create_time`</span> (<span class="hljs-string">`create_time`</span>),
-	<span class="hljs-keyword">INDEX</span> <span class="hljs-string">`ix_update_time`</span> (<span class="hljs-string">`update_time`</span>)
-)
-<span class="hljs-keyword">COMMENT</span>=<span class="hljs-string">'测试表'</span>
-<span class="hljs-keyword">COLLATE</span>=<span class="hljs-string">'utf8mb4_unicode_ci'</span>
-<span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span>
-AUTO_INCREMENT=<span class="hljs-number">1</span>
-; 
-
-delimiter ;
-<span class="hljs-keyword">SET</span> collation_connection=<span class="hljs-string">'utf8mb4_unicode_ci'</span>;
-
-<span class="hljs-keyword">drop</span> <span class="hljs-keyword">procedure</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">exists</span> proc_tb_test_data;
-
-delimiter $$
-<span class="hljs-keyword">CREATE</span> definer=<span class="hljs-string">`tester`</span>@<span class="hljs-string">`%`</span> <span class="hljs-keyword">PROCEDURE</span> proc_tb_test_data( <span class="hljs-keyword">IN</span> input_total_num <span class="hljs-built_in">int</span>(<span class="hljs-number">10</span>), <span class="hljs-keyword">IN</span> input_commit_num <span class="hljs-built_in">int</span>(<span class="hljs-number">10</span>) )
-label_proc:<span class="hljs-keyword">BEGIN</span>
-    <span class="hljs-keyword">declare</span> i <span class="hljs-built_in">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">declare</span> row_total_num <span class="hljs-built_in">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">declare</span> row_commit_num <span class="hljs-built_in">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">500</span>;
-
-    if (input_total_num&gt;=input_commit_num and input_commit_num&gt;0) then
-        <span class="hljs-keyword">set</span> row_total_num=input_total_num;
-        <span class="hljs-keyword">set</span> row_commit_num=input_commit_num;
-    else
-        leave label_proc;
-    <span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>;
-
-    <span class="hljs-keyword">start</span> <span class="hljs-keyword">transaction</span>;
-    while i&lt;=row_total_num do
-
-<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_test(username, <span class="hljs-keyword">password</span>, phone, email, gender, salary, state, deleted)
-<span class="hljs-keyword">SELECT</span> 
-    username,
-    <span class="hljs-keyword">upper</span>(<span class="hljs-keyword">MD5</span>(username)) <span class="hljs-keyword">as</span> <span class="hljs-keyword">password</span>,
-    phone,
-    <span class="hljs-keyword">case</span> 
-        <span class="hljs-keyword">when</span> email_type&lt;=<span class="hljs-number">5</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">CONCAT</span>(username,<span class="hljs-string">'@gmail.com'</span>)
-        <span class="hljs-keyword">when</span> email_type&gt;<span class="hljs-number">5</span> <span class="hljs-keyword">AND</span> email_type&lt;=<span class="hljs-number">15</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">CONCAT</span>(username,<span class="hljs-string">'@sina.cn'</span>)
-        <span class="hljs-keyword">when</span> email_type&gt;<span class="hljs-number">15</span> <span class="hljs-keyword">AND</span> email_type&lt;=<span class="hljs-number">35</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">CONCAT</span>(username,<span class="hljs-string">'@sina.com'</span>)
-        <span class="hljs-keyword">when</span> email_type&gt;<span class="hljs-number">35</span> <span class="hljs-keyword">AND</span> email_type&lt;=<span class="hljs-number">60</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">CONCAT</span>(username,<span class="hljs-string">'@163.com'</span>)
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">CONCAT</span>(t.username,<span class="hljs-string">'@qq.com'</span>)
-    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> email,
-    gender,
-    salary,
-    state,
-    <span class="hljs-keyword">case</span> 
-        <span class="hljs-keyword">when</span> state=<span class="hljs-number">0</span> <span class="hljs-keyword">AND</span> <span class="hljs-keyword">RAND</span>()&lt;<span class="hljs-number">0.1</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span>
-        <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
-    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> deleted
-<span class="hljs-keyword">FROM</span> (
-<span class="hljs-keyword">SELECT</span>
-<span class="hljs-keyword">LEFT</span>(<span class="hljs-keyword">lower</span>(<span class="hljs-keyword">to_base64</span>(<span class="hljs-keyword">sha1</span>(<span class="hljs-keyword">UUID</span>()))),<span class="hljs-keyword">FLOOR</span>(<span class="hljs-keyword">RAND</span>()*<span class="hljs-number">10</span>)+<span class="hljs-number">6</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">'username'</span>,
-<span class="hljs-keyword">FLOOR</span>(<span class="hljs-keyword">RAND</span>()*<span class="hljs-number">6000000000</span>+<span class="hljs-number">13000000000</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">'phone'</span>,
-<span class="hljs-keyword">FLOOR</span>((<span class="hljs-keyword">RAND</span>()*<span class="hljs-number">100</span>)+<span class="hljs-number">1</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">'email_type'</span>,
-<span class="hljs-keyword">FLOOR</span>((<span class="hljs-keyword">RAND</span>()*<span class="hljs-number">3</span>)) <span class="hljs-keyword">AS</span> <span class="hljs-string">'gender'</span>,
-<span class="hljs-keyword">FLOOR</span>((<span class="hljs-keyword">RAND</span>()*<span class="hljs-number">17000</span>+<span class="hljs-number">3000</span>)) <span class="hljs-keyword">AS</span> <span class="hljs-string">'salary'</span>,
-<span class="hljs-keyword">ROUND</span>(<span class="hljs-keyword">RAND</span>()+<span class="hljs-number">0.3</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">'state'</span>
-) t
-<span class="hljs-keyword">ON</span> <span class="hljs-keyword">DUPLICATE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-keyword">UPDATE</span> update_time=<span class="hljs-keyword">NOW</span>()
-;
-
-        if (i=row_total_num or i%row_commit_num=0) then
-            <span class="hljs-keyword">commit</span>;
-        elseif i%row_commit_num=1 then
-            <span class="hljs-keyword">start</span> <span class="hljs-keyword">transaction</span>;
-        <span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>;
-
-        <span class="hljs-keyword">set</span> i=i+<span class="hljs-number">1</span>;
-    <span class="hljs-keyword">end</span> <span class="hljs-keyword">while</span>;
-
-    <span class="hljs-keyword">commit</span>;
-<span class="hljs-keyword">END</span> $$
-delimiter ;
-
-<span class="hljs-comment">-- call proc_tb_test_data(1000000,5000);</span>
-<span class="hljs-comment">/* 受影响记录行数: 0  已找到记录行: 0  警告: 0  持续时间 1 查询: 00:01:34.5 */</span>
-
-<span class="hljs-comment">-- select count(*) from tb_test;  -- 936248</span>
-<span class="hljs-comment">-- select * from tb_test order by id desc limit 10;</span>
-<span class="hljs-comment">-- select * from tb_test where state=1 and deleted=1 limit 100;</span>
-<span class="hljs-comment">-- truncate table tb_test;</span>
-<span class="hljs-comment">-- ALTER TABLE `tb_test` AUTO_INCREMENT=1;</span>
-<span class="hljs-comment">-- ALTER TABLE `tb_test` ENGINE=InnoDB;</span></code></pre></div>
-<h4 id="3、删除binlog"><a href="#3、删除binlog" class="headerlink" title="3、删除binlog"></a>3、删除binlog</h4><div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-built_in">binary</span> <span class="hljs-keyword">logs</span>;
-<span class="hljs-keyword">purge</span> <span class="hljs-built_in">binary</span> <span class="hljs-keyword">logs</span> <span class="hljs-keyword">to</span> <span class="hljs-string">'mysql-bin.000006'</span>;</code></pre></div>
+<h3 id="一、数据同步"><a href="#一、数据同步" class="headerlink" title="一、数据同步"></a>一、数据同步</h3><h4 id="1、MySQL配置"><a href="#1、MySQL配置" class="headerlink" title="1、MySQL配置"></a>1、MySQL配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs conf"># vim custom_config.cnf<br>[mysqld]<br>log-bin=mysql-bin<br>binlog-format=ROW<br>max_binlog_size=10M # binlog文件大小<br>enforce-gtid-consistency=ON<br>gtid-mode=ON<br>server_id=1<br></code></pre></td></tr></table></figure>
+<h4 id="2、MySQL存储过程模拟数据"><a href="#2、MySQL存储过程模拟数据" class="headerlink" title="2、MySQL存储过程模拟数据"></a>2、MySQL存储过程模拟数据</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">/*</span><br><span class="hljs-comment">show databases;</span><br><span class="hljs-comment">create database if not exists testdb default character set utf8mb4 collate utf8mb4_unicode_ci;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">select User,Host,plugin,authentication_string from mysql.user;</span><br><span class="hljs-comment">show global variables like &#x27;validate_password%&#x27;;</span><br><span class="hljs-comment">set global validate_password_length=9;</span><br><span class="hljs-comment">create user &#x27;tester&#x27;@&#x27;%&#x27; identified with mysql_native_password by &#x27;54Ceshi@db&#x27;;</span><br><span class="hljs-comment">set global validate_password_length=12;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">grant all privileges on testdb.* to &#x27;tester&#x27;@&#x27;%&#x27; with grant OPTION;</span><br><span class="hljs-comment">flush privileges;</span><br><span class="hljs-comment">show grants for tester@&#x27;%&#x27;;</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">SMALLINT(6)  -32768 ~ 32767</span><br><span class="hljs-comment">SMALLINT(5) UNSIGNED  65535</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">INT(11)  -2147483648 ~ 2147483647</span><br><span class="hljs-comment">INT(10) UNSIGNED  4294967295</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">BIGINT(20)  -9223372036854775808 ~ 9223372036854775807</span><br><span class="hljs-comment">BIGINT(20) UNSIGNED  18446744073709551615</span><br><span class="hljs-comment">*/</span><br><br>USE testdb;<br><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">EXISTS</span> `tb_test`;<br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> IF <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">EXISTS</span> `tb_test` (<br>	`id`          <span class="hljs-type">BIGINT</span>(<span class="hljs-number">20</span>) UNSIGNED <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;主键自增ID&#x27;</span>,<br>	`username`    <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户名&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>,<br>	`password`    <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;密码&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>,<br>	`phone`       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">16</span>) <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;手机号&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>,<br>	`email`       <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">32</span>) <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;邮箱&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>,<br>	`gender`      <span class="hljs-type">SMALLINT</span>(<span class="hljs-number">5</span>) UNSIGNED <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;性别：0-保密（默认），1-男，2-女&#x27;</span>,<br>	`salary`      <span class="hljs-type">BIGINT</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;薪水&#x27;</span>,<br>	`state`       <span class="hljs-type">SMALLINT</span>(<span class="hljs-number">5</span>) UNSIGNED <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;状态：0-禁用（默认），1-启用&#x27;</span>,<br>	`deleted`     <span class="hljs-type">SMALLINT</span>(<span class="hljs-number">5</span>) UNSIGNED <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;是否删除：0-否（默认），1-是&#x27;</span>,<br>	`create_time` DATETIME <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>	`update_time` DATETIME <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,<br>	`remark`      <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;备注&#x27;</span> <span class="hljs-keyword">COLLATE</span> <span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>,<br>	<span class="hljs-keyword">PRIMARY</span> KEY (`id`),<br>	<span class="hljs-keyword">UNIQUE</span> INDEX `uq_username` (`username`),<br>	<span class="hljs-keyword">UNIQUE</span> INDEX `uq_phone` (`phone`),<br>	<span class="hljs-keyword">UNIQUE</span> INDEX `uq_email` (`email`),<br>	INDEX `ix_create_time` (`create_time`),<br>	INDEX `ix_update_time` (`update_time`)<br>)<br>COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;测试表&#x27;</span><br><span class="hljs-keyword">COLLATE</span><span class="hljs-operator">=</span><span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span><br>ENGINE<span class="hljs-operator">=</span>InnoDB<br>AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">1</span><br>; <br><br>delimiter ;<br><span class="hljs-keyword">SET</span> collation_connection<span class="hljs-operator">=</span><span class="hljs-string">&#x27;utf8mb4_unicode_ci&#x27;</span>;<br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">procedure</span> if <span class="hljs-keyword">exists</span> proc_tb_test_data;<br><br>delimiter $$<br><span class="hljs-keyword">CREATE</span> definer<span class="hljs-operator">=</span>`tester`@`<span class="hljs-operator">%</span>` <span class="hljs-keyword">PROCEDURE</span> proc_tb_test_data( <span class="hljs-keyword">IN</span> input_total_num <span class="hljs-type">int</span>(<span class="hljs-number">10</span>), <span class="hljs-keyword">IN</span> input_commit_num <span class="hljs-type">int</span>(<span class="hljs-number">10</span>) )<br>label_proc:<span class="hljs-keyword">BEGIN</span><br>    <span class="hljs-keyword">declare</span> i <span class="hljs-type">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">declare</span> row_total_num <span class="hljs-type">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">declare</span> row_commit_num <span class="hljs-type">int</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-number">500</span>;<br><br>    if (input_total_num<span class="hljs-operator">&gt;=</span>input_commit_num <span class="hljs-keyword">and</span> input_commit_num<span class="hljs-operator">&gt;</span><span class="hljs-number">0</span>) <span class="hljs-keyword">then</span><br>        <span class="hljs-keyword">set</span> row_total_num<span class="hljs-operator">=</span>input_total_num;<br>        <span class="hljs-keyword">set</span> row_commit_num<span class="hljs-operator">=</span>input_commit_num;<br>    <span class="hljs-keyword">else</span><br>        leave label_proc;<br>    <span class="hljs-keyword">end</span> if;<br><br>    <span class="hljs-keyword">start</span> transaction;<br>    while i<span class="hljs-operator">&lt;=</span>row_total_num do<br><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tb_test(username, password, phone, email, gender, salary, state, deleted)<br><span class="hljs-keyword">SELECT</span> <br>    username,<br>    <span class="hljs-built_in">upper</span>(MD5(username)) <span class="hljs-keyword">as</span> password,<br>    phone,<br>    <span class="hljs-keyword">case</span> <br>        <span class="hljs-keyword">when</span> email_type<span class="hljs-operator">&lt;=</span><span class="hljs-number">5</span> <span class="hljs-keyword">then</span> CONCAT(username,<span class="hljs-string">&#x27;@gmail.com&#x27;</span>)<br>        <span class="hljs-keyword">when</span> email_type<span class="hljs-operator">&gt;</span><span class="hljs-number">5</span> <span class="hljs-keyword">AND</span> email_type<span class="hljs-operator">&lt;=</span><span class="hljs-number">15</span> <span class="hljs-keyword">then</span> CONCAT(username,<span class="hljs-string">&#x27;@sina.cn&#x27;</span>)<br>        <span class="hljs-keyword">when</span> email_type<span class="hljs-operator">&gt;</span><span class="hljs-number">15</span> <span class="hljs-keyword">AND</span> email_type<span class="hljs-operator">&lt;=</span><span class="hljs-number">35</span> <span class="hljs-keyword">then</span> CONCAT(username,<span class="hljs-string">&#x27;@sina.com&#x27;</span>)<br>        <span class="hljs-keyword">when</span> email_type<span class="hljs-operator">&gt;</span><span class="hljs-number">35</span> <span class="hljs-keyword">AND</span> email_type<span class="hljs-operator">&lt;=</span><span class="hljs-number">60</span> <span class="hljs-keyword">then</span> CONCAT(username,<span class="hljs-string">&#x27;@163.com&#x27;</span>)<br>        <span class="hljs-keyword">else</span> CONCAT(t.username,<span class="hljs-string">&#x27;@qq.com&#x27;</span>)<br>    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> email,<br>    gender,<br>    salary,<br>    state,<br>    <span class="hljs-keyword">case</span> <br>        <span class="hljs-keyword">when</span> state<span class="hljs-operator">=</span><span class="hljs-number">0</span> <span class="hljs-keyword">AND</span> RAND()<span class="hljs-operator">&lt;</span><span class="hljs-number">0.1</span> <span class="hljs-keyword">then</span> <span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-number">0</span><br>    <span class="hljs-keyword">end</span> <span class="hljs-keyword">as</span> deleted<br><span class="hljs-keyword">FROM</span> (<br><span class="hljs-keyword">SELECT</span><br><span class="hljs-keyword">LEFT</span>(<span class="hljs-built_in">lower</span>(to_base64(sha1(UUID()))),<span class="hljs-built_in">FLOOR</span>(RAND()<span class="hljs-operator">*</span><span class="hljs-number">10</span>)<span class="hljs-operator">+</span><span class="hljs-number">6</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;username&#x27;</span>,<br><span class="hljs-built_in">FLOOR</span>(RAND()<span class="hljs-operator">*</span><span class="hljs-number">6000000000</span><span class="hljs-operator">+</span><span class="hljs-number">13000000000</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;phone&#x27;</span>,<br><span class="hljs-built_in">FLOOR</span>((RAND()<span class="hljs-operator">*</span><span class="hljs-number">100</span>)<span class="hljs-operator">+</span><span class="hljs-number">1</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;email_type&#x27;</span>,<br><span class="hljs-built_in">FLOOR</span>((RAND()<span class="hljs-operator">*</span><span class="hljs-number">3</span>)) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;gender&#x27;</span>,<br><span class="hljs-built_in">FLOOR</span>((RAND()<span class="hljs-operator">*</span><span class="hljs-number">17000</span><span class="hljs-operator">+</span><span class="hljs-number">3000</span>)) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;salary&#x27;</span>,<br>ROUND(RAND()<span class="hljs-operator">+</span><span class="hljs-number">0.3</span>) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;state&#x27;</span><br>) t<br><span class="hljs-keyword">ON</span> DUPLICATE KEY <span class="hljs-keyword">UPDATE</span> update_time<span class="hljs-operator">=</span>NOW()<br>;<br><br>        if (i<span class="hljs-operator">=</span>row_total_num <span class="hljs-keyword">or</span> i<span class="hljs-operator">%</span>row_commit_num<span class="hljs-operator">=</span><span class="hljs-number">0</span>) <span class="hljs-keyword">then</span><br>            <span class="hljs-keyword">commit</span>;<br>        elseif i<span class="hljs-operator">%</span>row_commit_num<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">then</span><br>            <span class="hljs-keyword">start</span> transaction;<br>        <span class="hljs-keyword">end</span> if;<br><br>        <span class="hljs-keyword">set</span> i<span class="hljs-operator">=</span>i<span class="hljs-operator">+</span><span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">end</span> while;<br><br>    <span class="hljs-keyword">commit</span>;<br><span class="hljs-keyword">END</span> $$<br>delimiter ;<br><br><span class="hljs-comment">-- call proc_tb_test_data(1000000,5000);</span><br><span class="hljs-comment">/* 受影响记录行数: 0  已找到记录行: 0  警告: 0  持续时间 1 查询: 00:01:34.5 */</span><br><br><span class="hljs-comment">-- select count(*) from tb_test;  -- 936248</span><br><span class="hljs-comment">-- select * from tb_test order by id desc limit 10;</span><br><span class="hljs-comment">-- select * from tb_test where state=1 and deleted=1 limit 100;</span><br><span class="hljs-comment">-- truncate table tb_test;</span><br><span class="hljs-comment">-- ALTER TABLE `tb_test` AUTO_INCREMENT=1;</span><br><span class="hljs-comment">-- ALTER TABLE `tb_test` ENGINE=InnoDB;</span><br></code></pre></td></tr></table></figure>
+<h4 id="3、删除binlog"><a href="#3、删除binlog" class="headerlink" title="3、删除binlog"></a>3、删除binlog</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-type">binary</span> logs;<br>purge <span class="hljs-type">binary</span> logs <span class="hljs-keyword">to</span> <span class="hljs-string">&#x27;mysql-bin.000006&#x27;</span>;<br></code></pre></td></tr></table></figure>
 <h4 id="4、ClickHouse同步"><a href="#4、ClickHouse同步" class="headerlink" title="4、ClickHouse同步"></a>4、ClickHouse同步</h4><p><code>CREATE DATABASE somedata_without_binlog ENGINE = MaterializeMySQL(&#39;10.10.10.16:3306&#39;, &#39;materialize_mysql&#39;, &#39;root&#39;, &#39;&lt;your_pass&gt;&#39;);</code></p>
 <h4 id="5、验证数据"><a href="#5、验证数据" class="headerlink" title="5、验证数据"></a>5、验证数据</h4><p><code>select count(*) from materialize_mysql.mysql_table</code></p>
 <h3 id="二、MaterializedMySQL引擎限制"><a href="#二、MaterializedMySQL引擎限制" class="headerlink" title="二、MaterializedMySQL引擎限制"></a>二、MaterializedMySQL引擎限制</h3><h4 id="1、数据类型支持"><a href="#1、数据类型支持" class="headerlink" title="1、数据类型支持"></a>1、数据类型支持</h4><p>官方版本：数据类型支持有限；阿里云版本：不支持类型全部转为string<br><strong>If MySQL table contains a column of such type, ClickHouse throws exception “Unhandled data type” and stops replication.</strong></p>
-<div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>
-	c.TABLE_SCHEMA ,
-	c.TABLE_NAME,
-	c.COLUMN_NAME,
-	c.DATA_TYPE
-<span class="hljs-keyword">FROM</span>
-	information_schema.<span class="hljs-string">`COLUMNS`</span> c
-<span class="hljs-keyword">WHERE</span>
-	c.TABLE_SCHEMA = <span class="hljs-string">'test'</span>
-	<span class="hljs-keyword">AND</span> c.DATA_TYPE <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">IN</span> (<span class="hljs-string">'int'</span>, <span class="hljs-string">'time'</span>);</code></pre></div>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>	c.TABLE_SCHEMA ,<br>	c.TABLE_NAME,<br>	c.COLUMN_NAME,<br>	c.DATA_TYPE<br><span class="hljs-keyword">FROM</span><br>	information_schema.`COLUMNS` c<br><span class="hljs-keyword">WHERE</span><br>	c.TABLE_SCHEMA <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;test&#x27;</span><br>	<span class="hljs-keyword">AND</span> c.DATA_TYPE <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">IN</span> (<span class="hljs-string">&#x27;int&#x27;</span>, <span class="hljs-string">&#x27;time&#x27;</span>);<br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>DB::Exception: Unknown data type family: time: While executing MYSQL_QUERY_EVENT.</p>
 </blockquote>
 <h4 id="2、主键"><a href="#2、主键" class="headerlink" title="2、主键"></a>2、主键</h4><p>Each table in MySQL should contain PRIMARY KEY.</p>
-<div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span>
-	t.TABLE_SCHEMA,
-	t.TABLE_NAME,
-	t.TABLE_ROWS
-<span class="hljs-keyword">FROM</span>
-	information_schema.TABLES t
-<span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> information_schema.columns c <span class="hljs-keyword">ON</span>
-	t.TABLE_SCHEMA = c.TABLE_SCHEMA
-	<span class="hljs-keyword">AND</span> t.TABLE_NAME = c.TABLE_NAME
-	<span class="hljs-keyword">AND</span> t.TABLE_TYPE = <span class="hljs-string">'BASE TABLE'</span>
-	<span class="hljs-keyword">AND</span> c.COLUMN_KEY = <span class="hljs-string">'PRI'</span>
-<span class="hljs-keyword">WHERE</span>
-	t.TABLE_SCHEMA = <span class="hljs-string">'test'</span>
-	<span class="hljs-keyword">AND</span> t.TABLE_TYPE = <span class="hljs-string">'BASE TABLE'</span>
-	<span class="hljs-keyword">AND</span> c.COLUMN_KEY <span class="hljs-keyword">IS</span> <span class="hljs-literal">NULL</span>
-<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span>
-	t.TABLE_SCHEMA,
-	t.TABLE_NAME;</code></pre></div>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>	t.TABLE_SCHEMA,<br>	t.TABLE_NAME,<br>	t.TABLE_ROWS<br><span class="hljs-keyword">FROM</span><br>	information_schema.TABLES t<br><span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> information_schema.columns c <span class="hljs-keyword">ON</span><br>	t.TABLE_SCHEMA <span class="hljs-operator">=</span> c.TABLE_SCHEMA<br>	<span class="hljs-keyword">AND</span> t.TABLE_NAME <span class="hljs-operator">=</span> c.TABLE_NAME<br>	<span class="hljs-keyword">AND</span> t.TABLE_TYPE <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;BASE TABLE&#x27;</span><br>	<span class="hljs-keyword">AND</span> c.COLUMN_KEY <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;PRI&#x27;</span><br><span class="hljs-keyword">WHERE</span><br>	t.TABLE_SCHEMA <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;test&#x27;</span><br>	<span class="hljs-keyword">AND</span> t.TABLE_TYPE <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;BASE TABLE&#x27;</span><br>	<span class="hljs-keyword">AND</span> c.COLUMN_KEY <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span><br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span><br>	t.TABLE_SCHEMA,<br>	t.TABLE_NAME;<br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>DB::Exception: The test.mysql_table_without_primary cannot be materialized, because there is no primary keys.</p>
 </blockquote>
 <h4 id="3、ENUM字段超出范围"><a href="#3、ENUM字段超出范围" class="headerlink" title="3、ENUM字段超出范围"></a>3、ENUM字段超出范围</h4><h4 id="4、级联UPDATE-DELETE查询"><a href="#4、级联UPDATE-DELETE查询" class="headerlink" title="4、级联UPDATE/DELETE查询"></a>4、级联UPDATE/DELETE查询</h4><p>Cascade UPDATE/DELETE queries are not supported by the MaterializedMySQL engine.</p>
-<div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`mysql_table`</span> (
-  <span class="hljs-string">`id`</span> <span class="hljs-built_in">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> AUTO_INCREMENT,
-  <span class="hljs-string">`create_at`</span> datetime <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">'2020-08-25 10:10:10'</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'创建时间'</span>,
-  <span class="hljs-string">`name`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">COMMENT</span> <span class="hljs-string">'名字'</span>,
-  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>)
-) <span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> AUTO_INCREMENT=<span class="hljs-number">1</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8 <span class="hljs-keyword">COMMENT</span>=<span class="hljs-string">'测试'</span>;
-<span class="hljs-comment">-- </span>
-<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> materialize_mysql.mysql_table (<span class="hljs-keyword">NAME</span>) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">'boer'</span>);
-<span class="hljs-keyword">update</span> materialize_mysql.mysql_table <span class="hljs-keyword">set</span> <span class="hljs-keyword">name</span>=<span class="hljs-string">'boer'</span> <span class="hljs-keyword">where</span> <span class="hljs-keyword">id</span> = <span class="hljs-number">1</span>;</code></pre></div>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> `mysql_table` (<br>  `id` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> AUTO_INCREMENT,<br>  `create_at` datetime <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;2020-08-25 10:10:10&#x27;</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,<br>  `name` <span class="hljs-type">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;名字&#x27;</span>,<br>  <span class="hljs-keyword">PRIMARY</span> KEY (`id`)<br>) ENGINE<span class="hljs-operator">=</span>InnoDB AUTO_INCREMENT<span class="hljs-operator">=</span><span class="hljs-number">1</span> <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;测试&#x27;</span>;<br><span class="hljs-comment">-- </span><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> materialize_mysql.mysql_table (NAME) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;boer&#x27;</span>);<br><span class="hljs-keyword">update</span> materialize_mysql.mysql_table <span class="hljs-keyword">set</span> name<span class="hljs-operator">=</span><span class="hljs-string">&#x27;boer&#x27;</span> <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
 <blockquote>
 <p>经测试：级联UPDATE可以正常同步</p>
 </blockquote>
 <h3 id="三、参考链接"><a href="#三、参考链接" class="headerlink" title="三、参考链接"></a>三、参考链接</h3><ul>
-<li><a href="https://clickhouse.tech/docs/en/engines/database-engines/materialized-mysql/" target="_blank" rel="noopener">https://clickhouse.tech/docs/en/engines/database-engines/materialized-mysql/</a></li>
-<li><a href="https://help.aliyun.com/document_detail/209912.html" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/209912.html</a></li>
-<li><a href="https://www.jianshu.com/p/d0d4306411b3" target="_blank" rel="noopener">https://www.jianshu.com/p/d0d4306411b3</a></li>
+<li><a target="_blank" rel="noopener" href="https://clickhouse.tech/docs/en/engines/database-engines/materialized-mysql/">https://clickhouse.tech/docs/en/engines/database-engines/materialized-mysql/</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/209912.html">https://help.aliyun.com/document_detail/209912.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d0d4306411b3">https://www.jianshu.com/p/d0d4306411b3</a></li>
 </ul>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/BigData/">BigData</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/ClickHouse/">ClickHouse</a>
-                    
-                      <a class="hover-with-bg" href="/tags/MySQL/">MySQL</a>
-                    
-                      <a class="hover-with-bg" href="/tags/MaterializeMySQL/">MaterializeMySQL</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/BigData/" class="category-chain-item">BigData</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ClickHouse/">#ClickHouse</a>
+      
+        <a href="/tags/MySQL/">#MySQL</a>
+      
+        <a href="/tags/MaterializeMySQL/">#MaterializeMySQL</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySQL To ClickHouse数据实时同步引擎MaterializeMySQL</div>
+      <div>https://www.boer.xyz/2021/08/26/mysql-to-clickhouse-with-materializemysql/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年8月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
               
               
-                <div class="post-prevnext row">
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/09/01/object-storage-of-minio/">
+                      <a href="/2021/09/01/object-storage-of-minio/" title="对象存储MinIO实践">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">对象存储MinIO实践</span>
                         <span class="visible-mobile">上一篇</span>
@@ -468,7 +418,7 @@ delimiter ;
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/07/28/openvpn-ha-with-ldap/">
+                      <a href="/2021/07/28/openvpn-ha-with-ldap/" title="OpenVPN with ldap认证实践">
                         <span class="hidden-mobile">OpenVPN with ldap认证实践</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -480,68 +430,96 @@ delimiter ;
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments">
-                
-                
+  
+  
+    <article id="comments" lazyload>
+      
   <div id="gitalk-container"></div>
   <script type="text/javascript">
-    function loadGitalk() {
-      addScript('https://cdn.staticfile.org/blueimp-md5/2.13.0/js/md5.min.js');
-      addScript('https://cdn.staticfile.org/gitalk/1.6.2/gitalk.min.js', function () {
-        var gitalk = new Gitalk({
-          clientID: 'bfd810bfaf1a918e9808',
-          clientSecret: '4c2c9106fc885a31c98c200250aba6d571671013',
-          repo: 'theblog',
-          owner: 'boer0924',
-          admin: ["boer0924"],
-          id: md5(location.pathname),
-          language: 'zh-CN',
-          labels: ["Gitalk"],
-          perPage: 15,
-          pagerDirection: 'last',
-          createIssueManually: true,
-          distractionFreeMode: false
-        });
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: '1596562d69364051e5d011833210c542'
+          }
+        )
+        var gitalk = new Gitalk(options);
         gitalk.render('gitalk-container');
       });
-    }
-    waitElementVisible('gitalk-container', loadGitalk);
+    });
   </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+    </article>
+  
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
-  </main>
 
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
 
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
@@ -554,86 +532,196 @@ delimiter ;
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
-  
 
-  
+    
 
-  
+    
+  </main>
 
-  <footer class="mt-5">
-  <div class="text-center py-3">
-    <div>
-      <!-- <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
-      <i class="iconfont icon-love"></i>
-      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
-        <span>Fluid</span></a> -->
-      <span>&copy;2023</span>
-      <i class="iconfont icon-love"></i>
-      <span>boer</span>
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
     </div>
-    
-  <div class="statistics">
-    
-    
+  
+  
+    <div class="statistics">
+  
+  
 
+  
     
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
       
-        <!-- 不蒜子统计PV -->
-        <span id="busuanzi_container_site_pv" style="display: none">
-            总访问量 
-            <span id="busuanzi_value_site_pv"></span>
-             次
-          </span>
+        typing(text);
       
-      
-        <!-- 不蒜子统计UV -->
-        <span id="busuanzi_container_site_uv" style="display: none">
-            总访客数 
-            <span id="busuanzi_value_site_uv"></span>
-             人
-          </span>
-      
-    
-  </div>
+    })(window, document);
+  </script>
 
 
-    
-
-    
-  </div>
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
 
+
   
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
+  <script>Fluid.plugins.codeWidget();</script>
 
 
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -641,114 +729,15 @@ delimiter ;
 
 
 
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
 
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "MySQL To ClickHouse数据实时同步引擎MaterializeMySQL&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 80,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
-      
-    };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
-    }
-    anchors.add(res.join(", "))
-  </script>
-
-
-
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
-    }
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
-      }
-    );
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
