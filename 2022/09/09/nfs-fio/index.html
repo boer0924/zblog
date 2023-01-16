@@ -16,16 +16,16 @@
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
   
-    <meta name="description" content="兼容NFS v3版本的NFS Server部署以及nfs-subdir-external-provisionerCSI安装配置，并通过Fio测试NFS性能。 兼容NFS v3版本的NFS Server123456789101112131415161718192021docker run --privileged -d --name nfs \  --network kind \  -v &#x2F;home">
+    <meta name="description" content="兼容NFS v3版本的NFS Server部署以及nfs-subdir-external-provisionerCSI安装配置，并通过Fio测试NFS性能。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NFS CSI及Fio性能测试">
 <meta property="og:url" content="https://www.boer.xyz/2022/09/09/nfs-fio/index.html">
 <meta property="og:site_name" content="~·boer·~ 乌托邦">
-<meta property="og:description" content="兼容NFS v3版本的NFS Server部署以及nfs-subdir-external-provisionerCSI安装配置，并通过Fio测试NFS性能。 兼容NFS v3版本的NFS Server123456789101112131415161718192021docker run --privileged -d --name nfs \  --network kind \  -v &#x2F;home">
+<meta property="og:description" content="兼容NFS v3版本的NFS Server部署以及nfs-subdir-external-provisionerCSI安装配置，并通过Fio测试NFS性能。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://picsum.photos/300/200.webp?nfs">
 <meta property="article:published_time" content="2022-09-09T08:10:18.000Z">
-<meta property="article:modified_time" content="2023-01-13T10:14:14.447Z">
+<meta property="article:modified_time" content="2023-01-16T10:05:49.829Z">
 <meta property="article:author" content="boer">
 <meta property="article:tag" content="fio">
 <meta property="article:tag" content="nfs">
@@ -283,6 +283,8 @@
               <div class="markdown-body">
                 
                 <p>兼容NFS v3版本的NFS Server部署以及<code>nfs-subdir-external-provisioner</code>CSI安装配置，并通过Fio测试NFS性能。</p>
+<span id="more"></span>
+
 <h1 id="兼容NFS-v3版本的NFS-Server"><a href="#兼容NFS-v3版本的NFS-Server" class="headerlink" title="兼容NFS v3版本的NFS Server"></a>兼容NFS v3版本的NFS Server</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run --privileged -d --name nfs \<br>  --network kind \<br>  -v /home/boer/projects/kind-k8s/nfs_data:/data                        \<br>  -e NFS_EXPORT_0=<span class="hljs-string">&#x27;/data *(rw,insecure,no_subtree_check,no_root_squash,fsid=1)&#x27;</span>  \<br>  -p 2049:2049   -p 2049:2049/udp   \<br>  -p 111:111     -p 111:111/udp     \<br>  -p 32765:32765 -p 32765:32765/udp \<br>  -p 32767:32767 -p 32767:32767/udp \<br>  erichough/nfs-server:latest<br><span class="hljs-comment"># nfs csi</span><br>helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/<br>helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \<br>  --<span class="hljs-built_in">set</span> nfs.server=172.30.254.86 \<br>  --<span class="hljs-built_in">set</span> nfs.path=/data<br><span class="hljs-comment"># Storage Class</span><br>nfs-client Delete archiveOnDelete=<span class="hljs-literal">true</span><br>nfs Retain archiveOnDelete=<span class="hljs-literal">true</span><br><span class="hljs-comment"># test</span><br>https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy<br><br>helm install -n operators nfs-subdir-external-provisioner --<span class="hljs-built_in">set</span> nfs.server=repository.cncqi.polestarit.net --<span class="hljs-built_in">set</span> nfs.path=/GPassS --<span class="hljs-built_in">set</span> storageClass.name=nfs-storage .<br></code></pre></td></tr></table></figure>
 
 <h1 id="PVC-FIO"><a href="#PVC-FIO" class="headerlink" title="PVC FIO"></a>PVC FIO</h1><p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/147897.html">测试块存储性能</a></p>
@@ -307,7 +309,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  <a href="/categories/SRE/" class="category-chain-item">SRE</a>
   
   
 
