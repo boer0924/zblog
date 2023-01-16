@@ -2,7 +2,6 @@
 title: Elasticsearch基准测试
 date: 2021-11-16 15:36:16
 index_img: https://picsum.photos/300/200.webp?rally
-sticky: 110
 tags:
   - Elasticserach
 categories: BigData

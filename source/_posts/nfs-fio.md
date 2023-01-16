@@ -7,9 +7,12 @@ tags:
   - fio
   - nfs
   - csi
-categories: DevOps
+categories: SRE
 ---
 兼容NFS v3版本的NFS Server部署以及`nfs-subdir-external-provisioner`CSI安装配置，并通过Fio测试NFS性能。
+
+<!-- more -->
+
 # 兼容NFS v3版本的NFS Server
 ```bash
 docker run --privileged -d --name nfs \

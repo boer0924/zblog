@@ -2,7 +2,6 @@
 title: Kafka老矣？Pulsar真香...
 date: 2021-06-01 16:16:16
 index_img: https://picsum.photos/300/200.webp?pulsar
-sticky: 110
 tags:
   - Kafka
   - Pulsar
