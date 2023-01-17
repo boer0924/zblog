@@ -1,5 +1,5 @@
 ---
-title: NFS CSI及Fio性能测试
+title: NFS CSI部署及Fio性能测试
 date: 2022-09-09 16:10:18
 index_img: https://picsum.photos/300/200.webp?nfs
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
@@ -35,12 +35,12 @@ nfs Retain archiveOnDelete=true
 # test
 https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy
 
-helm install -n operators nfs-subdir-external-provisioner --set nfs.server=repository.cncqi.polestarit.net --set nfs.path=/GPassS --set storageClass.name=nfs-storage .
+helm install -n operators nfs-subdir-external-provisioner --set nfs.server=repository.boer.xyz --set nfs.path=/nfs --set storageClass.name=nfs-storage .
 ```
 
 # PVC FIO
 
-[测试块存储性能](https://help.aliyun.com/document_detail/147897.html)
+[1、参考：测试块存储性能](https://help.aliyun.com/document_detail/147897.html)
 
 ```yaml
 apiVersion: v1
@@ -142,10 +142,10 @@ fio -direct=1 -iodepth=128 -rw=randread -ioengine=libaio -bs=128k -numjobs=1 -ti
 fio -direct=1 -iodepth=128 -rw=randwrite -ioengine=libaio -bs=128k -numjobs=1 -time_based=1 -runtime=1000 -group_reporting -filename=/data/rw128k -size=2G -name=rw128k
 ```
 
-![fio](https://fio.readthedocs.io/en/latest/fio_doc.html#i-o-type)
+[2、参考：fio](https://fio.readthedocs.io/en/latest/fio_doc.html#i-o-type)
 
 # Docker方式
 
 ```bash
-docker run --rm -v $(pwd)/test:/data -v /tmp/jobs.fio:/tmp/jobs.fio harbor.cncqi.polestarit.net/paas/xridge_fio:latest /tmp/jobs.fio
+docker run --rm -v $(pwd)/test:/data -v /tmp/jobs.fio:/tmp/jobs.fio harbor.boer.xyz/public/xridge_fio:latest /tmp/jobs.fio
 ```
