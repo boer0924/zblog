@@ -421,6 +421,33 @@
   
   
   <entry>
+    <title>Go Modules</title>
+    <link href="/2020/08/09/golang-modules/"/>
+    <url>/2020/08/09/golang-modules/</url>
+    
+    <content type="html"><![CDATA[<p>Go Modules是Go 1.11引入的新特性，它是 Go 语言的包管理工具，用于管理 Go 项目中的依赖关系。</p><span id="more"></span><h3 id="自建仓库"><a href="#自建仓库" class="headerlink" title="自建仓库"></a>自建仓库</h3><p><a href="https://go.dev/ref/mod">https://go.dev/ref/mod</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">go <span class="hljs-built_in">env</span> -w GO111MODULE=on<br>go <span class="hljs-built_in">env</span> -w GOPROXY=https://goproxy.cn,direct<br><br>go mod init code.boer.xyz/boerlabs/sm<br>go mod init code.boer.xyz/boerlabs/sm/v2<br>go mod tidy<br>go mod verify<br>go mod vendor<br><br>go clean -modcache<br><br>go run -mod=vendor main.go<br>go build -mod=verdor -o s2m main.go<br>go build -mod=mod -o s2m main.go <span class="hljs-comment"># disable vendor</span><br>go build -o s2m main.go <span class="hljs-comment"># disable vendor</span><br><br>go <span class="hljs-built_in">env</span> -w GOFLAGS=<span class="hljs-string">&quot;-mod=vendor”</span><br><span class="hljs-string"></span><br><span class="hljs-string">## 自建仓库作为go mod地址</span><br><span class="hljs-string"># http仓库</span><br><span class="hljs-string">go env -w GOINSECURE=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># 私有仓库</span><br><span class="hljs-string">go env -w GOPRIVATE=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># GOPRIVATE变量是 低级别的 GONOPROXY 和 GONOSUMDB 变量的默认值</span><br><span class="hljs-string"># go env -w GONOPROXY=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># go env -w GONOSUMDB=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br></code></pre></td></tr></table></figure><h3 id="导入本地包"><a href="#导入本地包" class="headerlink" title="导入本地包"></a>导入本地包</h3><blockquote><p>或者更改其他开源库后，放在本地</p></blockquote><p><a href="https://go.dev/doc/tutorial/call-module-code">https://go.dev/doc/tutorial/call-module-code</a></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;home&gt;/<br> |-- greetings/<br> |-- hello/<br><span class="hljs-comment"># go mod edit -replace example.com/greetings=../greetings</span><br><br>module example.com/hello<br><br>go 1.16<br><br>require example.com/greetings<br><br>replace example.com/greetings =&gt; ../greetings<br><br>---<br><br>&lt;home&gt;/<br> |-- greetings/<br> |-- hello/<br><span class="hljs-comment"># go mod edit -replace example.com/greetings=./greetings</span><br><br>module example.com/hello<br><br>go 1.16<br><br>require example.com/greetings<br><br>replace example.com/greetings =&gt; ./greetings<br></code></pre></td></tr></table></figure><h2 id="VSCode-use-vendor"><a href="#VSCode-use-vendor" class="headerlink" title="VSCode use vendor"></a>VSCode use vendor</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 全局配置</span><br>go <span class="hljs-built_in">env</span> -w GOFLAGS=<span class="hljs-string">&quot;-mod=vendor&quot;</span><br><span class="hljs-comment"># 工作区配置</span><br>&#123;<br>  <span class="hljs-string">&quot;go.toolsEnvVars&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;GOFLAGS&quot;</span>: <span class="hljs-string">&quot;-mod=vendor&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>SRE</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>go</tag>
+      
+      <tag>mod</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kubernetes SpringCloud微服务容器云之路</title>
     <link href="/2020/07/22/k8s-springcloud-fly/"/>
     <url>/2020/07/22/k8s-springcloud-fly/</url>

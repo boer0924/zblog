@@ -16,27 +16,27 @@
   <meta name="author" content="boer">
   <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
   
-    <meta name="description" content="获取数据库记录数&#x2F;数据大小&#x2F;索引大小排名前N的表">
+    <meta name="description" content="Go Modules是Go 1.11引入的新特性，它是 Go 语言的包管理工具，用于管理 Go 项目中的依赖关系。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL获取Largest表TopN">
-<meta property="og:url" content="https://www.boer.xyz/2018/03/08/mysql-record-topN-tables/index.html">
+<meta property="og:title" content="Go Modules">
+<meta property="og:url" content="https://www.boer.xyz/2020/08/09/golang-modules/index.html">
 <meta property="og:site_name" content="~·boer·~ 乌托邦">
-<meta property="og:description" content="获取数据库记录数&#x2F;数据大小&#x2F;索引大小排名前N的表">
+<meta property="og:description" content="Go Modules是Go 1.11引入的新特性，它是 Go 语言的包管理工具，用于管理 Go 项目中的依赖关系。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://picsum.photos/300/200.webp?mysql-topN">
-<meta property="article:published_time" content="2018-03-08T02:30:18.000Z">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?mod">
+<meta property="article:published_time" content="2020-08-09T08:10:18.000Z">
 <meta property="article:modified_time" content="2023-03-15T09:34:08.706Z">
 <meta property="article:author" content="boer">
-<meta property="article:tag" content="MySQL">
-<meta property="article:tag" content="information_schema">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="mod">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://picsum.photos/300/200.webp?mysql-topN">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?mod">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>MySQL获取Largest表TopN · ~·boer·~ 乌托邦</title>
+  <title>Go Modules · ~·boer·~ 乌托邦</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,13 +196,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="MySQL获取Largest表TopN"></span>
+            <span id="subtitle" data-typed-text="Go Modules"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2018-03-08 10:30" pubdate>
-          2018年3月8日 上午
+        <time datetime="2020-08-09 16:10" pubdate>
+          2020年8月9日 下午
         </time>
       </span>
     
@@ -226,7 +226,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          471 字
+          1.4k 字
         
       </span>
     
@@ -238,7 +238,7 @@
         
         
           <!-- compatible with older versions-->
-          4 分钟
+          12 分钟
         
       </span>
     
@@ -276,21 +276,24 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">MySQL获取Largest表TopN</h1>
+            <h1 style="display: none">Go Modules</h1>
             
             
               <div class="markdown-body">
                 
-                <p>获取数据库记录数/数据大小/索引大小排名前N的表</p>
+                <p>Go Modules是Go 1.11引入的新特性，它是 Go 语言的包管理工具，用于管理 Go 项目中的依赖关系。</p>
 <span id="more"></span>
 
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span><br>	TABLE_SCHEMA <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;数据库&#x27;</span>,<br>	TABLE_NAME <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;表名&#x27;</span>,<br>	TABLE_ROWS <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;记录数&#x27;</span>,<br>	TABLE_COMMENT <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;建表说明&#x27;</span>,<br>	<span class="hljs-keyword">TRUNCATE</span> ( DATA_LENGTH <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;数据容量(MB)&#x27;</span>,<br>	<span class="hljs-keyword">TRUNCATE</span> ( INDEX_LENGTH <span class="hljs-operator">/</span> <span class="hljs-number">1024</span> <span class="hljs-operator">/</span> <span class="hljs-number">1024</span>, <span class="hljs-number">2</span> ) <span class="hljs-keyword">AS</span> <span class="hljs-string">&#x27;索引容量(MB)&#x27;</span> <br><span class="hljs-keyword">FROM</span><br>	information_schema.TABLES <br><span class="hljs-keyword">WHERE</span><br>	TABLE_SCHEMA <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;meisoodev&#x27;</span> <br><span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span><br>	TABLE_ROWS <span class="hljs-keyword">DESC</span> <br>	LIMIT <span class="hljs-number">10</span>;<br></code></pre></td></tr></table></figure>
+<h3 id="自建仓库"><a href="#自建仓库" class="headerlink" title="自建仓库"></a>自建仓库</h3><p><a target="_blank" rel="noopener" href="https://go.dev/ref/mod">https://go.dev/ref/mod</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">go <span class="hljs-built_in">env</span> -w GO111MODULE=on<br>go <span class="hljs-built_in">env</span> -w GOPROXY=https://goproxy.cn,direct<br><br>go mod init code.boer.xyz/boerlabs/sm<br>go mod init code.boer.xyz/boerlabs/sm/v2<br>go mod tidy<br>go mod verify<br>go mod vendor<br><br>go clean -modcache<br><br>go run -mod=vendor main.go<br>go build -mod=verdor -o s2m main.go<br>go build -mod=mod -o s2m main.go <span class="hljs-comment"># disable vendor</span><br>go build -o s2m main.go <span class="hljs-comment"># disable vendor</span><br><br>go <span class="hljs-built_in">env</span> -w GOFLAGS=<span class="hljs-string">&quot;-mod=vendor”</span><br><span class="hljs-string"></span><br><span class="hljs-string">## 自建仓库作为go mod地址</span><br><span class="hljs-string"># http仓库</span><br><span class="hljs-string">go env -w GOINSECURE=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># 私有仓库</span><br><span class="hljs-string">go env -w GOPRIVATE=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># GOPRIVATE变量是 低级别的 GONOPROXY 和 GONOSUMDB 变量的默认值</span><br><span class="hljs-string"># go env -w GONOPROXY=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br><span class="hljs-string"># go env -w GONOSUMDB=&quot;</span>code.boer.xyz<span class="hljs-string">&quot;</span><br></code></pre></td></tr></table></figure>
 
-<ul>
-<li><a target="_blank" rel="noopener" href="https://dataedo.com/kb/query/mysql/list-10-largest-tables">https://dataedo.com/kb/query/mysql/list-10-largest-tables</a></li>
-<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/ask/283493">https://developer.aliyun.com/ask/283493</a></li>
-</ul>
+<h3 id="导入本地包"><a href="#导入本地包" class="headerlink" title="导入本地包"></a>导入本地包</h3><blockquote>
+<p>或者更改其他开源库后，放在本地</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://go.dev/doc/tutorial/call-module-code">https://go.dev/doc/tutorial/call-module-code</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;home&gt;/<br> |-- greetings/<br> |-- hello/<br><span class="hljs-comment"># go mod edit -replace example.com/greetings=../greetings</span><br><br>module example.com/hello<br><br>go 1.16<br><br>require example.com/greetings<br><br>replace example.com/greetings =&gt; ../greetings<br><br>---<br><br>&lt;home&gt;/<br> |-- greetings/<br>	 |-- hello/<br><span class="hljs-comment"># go mod edit -replace example.com/greetings=./greetings</span><br><br>module example.com/hello<br><br>go 1.16<br><br>require example.com/greetings<br><br>replace example.com/greetings =&gt; ./greetings<br></code></pre></td></tr></table></figure>
 
+<h2 id="VSCode-use-vendor"><a href="#VSCode-use-vendor" class="headerlink" title="VSCode use vendor"></a>VSCode use vendor</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 全局配置</span><br>go <span class="hljs-built_in">env</span> -w GOFLAGS=<span class="hljs-string">&quot;-mod=vendor&quot;</span><br><span class="hljs-comment"># 工作区配置</span><br>&#123;<br>  <span class="hljs-string">&quot;go.toolsEnvVars&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;GOFLAGS&quot;</span>: <span class="hljs-string">&quot;-mod=vendor&quot;</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -308,7 +311,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  <a href="/categories/SRE/" class="category-chain-item">SRE</a>
   
   
 
@@ -323,9 +326,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/MySQL/">#MySQL</a>
+        <a href="/tags/go/">#go</a>
       
-        <a href="/tags/information-schema/">#information_schema</a>
+        <a href="/tags/mod/">#mod</a>
       
     </div>
   
@@ -337,8 +340,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>MySQL获取Largest表TopN</div>
-      <div>https://www.boer.xyz/2018/03/08/mysql-record-topN-tables/</div>
+      <div>Go Modules</div>
+      <div>https://www.boer.xyz/2020/08/09/golang-modules/</div>
     </div>
     <div class="license-meta">
       
@@ -350,7 +353,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2018年3月8日</div>
+          <div>2020年8月9日</div>
         </div>
       
       
@@ -382,9 +385,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2018/03/24/srv-initialize/" title="主机初始化的那些事儿">
+                      <a href="/2020/08/15/golang-gin-gorm-paginate/" title="Golang - Gin&amp;Gorm分页实现">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">主机初始化的那些事儿</span>
+                        <span class="hidden-mobile">Golang - Gin&amp;Gorm分页实现</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -392,8 +395,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2018/02/16/mirror-speed/" title="各种镜像源加速">
-                        <span class="hidden-mobile">各种镜像源加速</span>
+                      <a href="/2020/07/22/k8s-springcloud-fly/" title="Kubernetes SpringCloud微服务容器云之路">
+                        <span class="hidden-mobile">Kubernetes SpringCloud微服务容器云之路</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -416,7 +419,7 @@
         var options = Object.assign(
           {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
           {
-            id: 'eea60a780b86d99a99c911e65a83ca3e'
+            id: '27a1e0eaf0fbb27e9652898cc0dddb37'
           }
         )
         var gitalk = new Gitalk(options);
