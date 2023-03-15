@@ -2,7 +2,6 @@
 title: ClickHouse分布式实践
 date: 2021-07-01 10:16:16
 index_img: https://picsum.photos/300/200.webp?ch
-sticky: 110
 tags:
   - ClickHouse
 categories: BigData

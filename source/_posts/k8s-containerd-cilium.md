@@ -2,7 +2,6 @@
 title: Kubernetes新技术研究
 date: 2021-05-20 16:16:16
 index_img: https://picsum.photos/300/200.webp?cilium
-sticky: 100
 tags:
   - Cilium
   - Containerd
