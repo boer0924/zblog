@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="boer">
+  <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="Go 语言并不支持传统意义上的继承，相反，它提倡通过组合来扩展类型的功能。这并不是 Go 所特有的概念，继承之上的组合是 OOP 的一个众所周知的原则，在《设计模式》一书的第一章就有介绍。Embedding(嵌入)是 Go 语言一个重要的特性，有了它使得组合更加方便、更有用。虽然 Go 力求简单，但某种程度上嵌入增加了语言的复杂度，如果使用不当会导致 bug 出现。在这一系列文章中，我将介绍 Go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 语言中的嵌入【第三部分】：接口嵌入结构体">
+<meta property="og:url" content="https://www.boer.xyz/2023/03/15/golang-interfaces-in-structs/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="Go 语言并不支持传统意义上的继承，相反，它提倡通过组合来扩展类型的功能。这并不是 Go 所特有的概念，继承之上的组合是 OOP 的一个众所周知的原则，在《设计模式》一书的第一章就有介绍。Embedding(嵌入)是 Go 语言一个重要的特性，有了它使得组合更加方便、更有用。虽然 Go 力求简单，但某种程度上嵌入增加了语言的复杂度，如果使用不当会导致 bug 出现。在这一系列文章中，我将介绍 Go">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?iis">
+<meta property="article:published_time" content="2023-03-15T09:30:36.000Z">
+<meta property="article:modified_time" content="2023-03-15T10:07:22.400Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?iis">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Go 语言中的嵌入【第三部分】：接口嵌入结构体 · ~·boer·~ 乌托邦</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg008.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Go 语言中的嵌入【第三部分】：接口嵌入结构体"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-15 17:30" pubdate>
+          2023年3月15日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Go 语言中的嵌入【第三部分】：接口嵌入结构体</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Go 语言并不支持传统意义上的继承，相反，它提倡通过组合来扩展类型的功能。这并不是 Go 所特有的概念，继承之上的组合是 OOP 的一个众所周知的原则，在《设计模式》一书的第一章就有介绍。Embedding(嵌入)是 Go 语言一个重要的特性，有了它使得组合更加方便、更有用。虽然 Go 力求简单，但某种程度上嵌入增加了语言的复杂度，如果使用不当会导致 bug 出现。在这一系列文章中，我将介绍 Go 支持的不同种类的嵌入，并提供真实的代码示例(大部分来自 Go 语言的标准库)。</p>
+<span id="more"></span>
+
+<p>这篇文章是介绍 Go 语言支持的各种嵌入方式的系列文章的第三部分：</p>
+<ul>
+<li>结构体嵌入结构体<a href="/2023/03/15/golang-structs-in-structs/">(第一部分)</a>；</li>
+<li>接口嵌入接口<a href="/2023/03/15/golang-interfaces-in-interfaces/">(第二部分)</a>；</li>
+<li>接口嵌入结构体<a href="/2023/03/15/golang-interfaces-in-structs/">(第三部分)</a>；</li>
+</ul>
+<h3 id="结构体中嵌入接口"><a href="#结构体中嵌入接口" class="headerlink" title="结构体中嵌入接口"></a>结构体中嵌入接口</h3><p>第一眼看上去，这是 Go 语言支持的最令人困惑的嵌入方式。我们并不能立马知道结构体中嵌入接口意味着什么。在这篇文章中，我们将慢慢研究该技术点，并介绍几个实际场景中的例子。文章看完之后，你会看到底层的机制其实很简单，而且这个功能在各种场景中非常有用。</p>
+<p>我们先从一个简单的例子开始：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">Fooer</span> interface &#123;<br>  <span class="hljs-type">Foo</span>() string<br>&#125;<br><span class="hljs-keyword">type</span> <span class="hljs-type">Container</span> struct &#123;<br>  <span class="hljs-type">Fooer</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>Fooer 是一个接口，被嵌入到结构体 Container 中。回顾下第一篇文章，我们知道嵌入的结构体会自动获得被嵌入结构体的方法。对于接口来说，也是同样的道理。我们可以这样认为，结构体 Container 有这样一个转发的方法：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs autoit"><span class="hljs-keyword">func</span> <span class="hljs-params">(cont Container)</span> <span class="hljs-title function_">Foo</span><span class="hljs-params">()</span> <span class="hljs-title function_">string</span> &#123;<br>  <span class="hljs-keyword">return</span> cont.Fooer.Foo()<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>但是这里的 cont.Fooer 指的是什么呢？它是任何实现了 Fooer 接口的对象。那这个对象从哪里来呢？当初始化 Container 时，分配给 Fooer 字段的。看下这个例子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// sink takes a value implementing the Fooer interface.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">sink</span><span class="hljs-params">(f Fooer)</span></span> &#123;<br>  fmt.Println(<span class="hljs-string">&quot;sink:&quot;</span>, f.Foo())<br>&#125;<br><span class="hljs-comment">// TheRealFoo is a type that implements the Fooer interface.</span><br><span class="hljs-keyword">type</span> TheRealFoo <span class="hljs-keyword">struct</span> &#123;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(trf TheRealFoo)</span></span> Foo() <span class="hljs-type">string</span> &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;TheRealFoo Foo&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>现在我们可以这样操作：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">co := Container&#123;Fooer: TheRealFoo&#123;&#125;&#125;<br><span class="hljs-function"><span class="hljs-title">sink</span><span class="hljs-params">(co)</span></span><br><br></code></pre></td></tr></table></figure>
+
+
+<p>执行程序将会输出：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">sink:</span> TheRealFoo Foo.<br><br></code></pre></td></tr></table></figure>
+
+
+<p>发生了什么，这里的机制是怎么样的？注意看，Container 是怎样被初始化的，字段 Fooer 被赋了一个 TheRealFoo 类型的值。我们可以将任何实现了 Fooer 接口的类型的值赋值给 Fooer，其他类型的值的话会编译不通过。因为 Fooer 接口嵌入到 Container，所以 Container 自动获得了 TheRealFoo 的方法，这使得 Container 也实现了接口 Fooer。这就是为什么可以将 Container 的值传递给 sink。如果没有嵌入，sink(co) 将会编译报错，因为 co 没有实现 Fooer。</p>
+<p>可能你会好奇假设 Container 结构体的 Fooer 字段没有被初始化会发生什么？这是个很好的问题。如果是这样的话，会出现的情况可能和你预想的差不多，字段 Fooer 的默认值是 nil，看下面的代码：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">co := Container&#123;&#125;<br><span class="hljs-function"><span class="hljs-title">sink</span><span class="hljs-params">(co)</span></span><br><br></code></pre></td></tr></table></figure>
+
+
+<p>将会报错：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">runtime <span class="hljs-type">error</span>: invalid memory address or <span class="hljs-literal">nil</span> pointer dereference<br><br></code></pre></td></tr></table></figure>
+
+
+<p>上面介绍了接口嵌入结构体的工作机制，现在有一个更重要的问题：我们为什么需要怎么做？下面我将介绍介个来自 Go 语言标准库的例子，但是我会先介绍一个其他示例，并展示这个知识点在日常编写客户端代码的重要用途。</p>
+<h3 id="示例：接口包装器"><a href="#示例：接口包装器" class="headerlink" title="示例：接口包装器"></a>示例：接口包装器</h3><p>这个例子来自 GitHub 用户 valyala，摘自评论[1]。</p>
+<p>假设我们想给一个 socket 连接添加一些额外的功能，比如计算读取的字节数，我们可以定义如下的结构：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">StatsConn</span> struct &#123;<br>  net.<span class="hljs-type">Conn</span><br>  <span class="hljs-type">BytesRead</span> uint64<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>StatsConn 实现了接口 net.Conn，所以它可以在任何需要 net.Conn 的地方使用。我们可以使用实现了 net.Conn 接口的类型的任何值来初始化 StatsConn，它会“继承”该类型的所有方法，关键是，我们可以重新实现自己想要的方法。就比如这个例子，我们重新实现了 Read 方法，记录读取的字节数：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stata">func (<span class="hljs-keyword">sc</span> *StatsConn) <span class="hljs-keyword">Read</span>(p []byte) (int, <span class="hljs-keyword">error</span>) &#123;<br>  <span class="hljs-keyword">n</span>, <span class="hljs-keyword">err</span> := <span class="hljs-keyword">sc</span>.Conn.<span class="hljs-keyword">Read</span>(p)<br>  <span class="hljs-keyword">sc</span>.BytesRead += uint64(<span class="hljs-keyword">n</span>)<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">n</span>, <span class="hljs-keyword">err</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>对 StatsConn 的使用者来说，我们仍然可以在这个方法中调用 sc.Conn.Read() 方法，也可以做一些额外的工作，比如将记录读取的字节数。</p>
+<p>从上一节我们知道，正确地初始化 StatsConn 就至关重要，比如：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stata">conn, <span class="hljs-keyword">err</span> := <span class="hljs-keyword">net</span>.Dial(<span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-keyword">u</span>.Host+<span class="hljs-string">&quot;:80&quot;</span>)<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  <span class="hljs-keyword">log</span>.Fatal(<span class="hljs-keyword">err</span>)<br>&#125;<br>sconn := &amp;StatsConn&#123;conn, 0&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>上面的代码中 net.Dial 的返回值实现了接口 net.Conn，所以我们可以用它来初始化 StatsConn。</p>
+<p>我们可以将变量 sconn 传递给参数是 net.Conn 的任何函数，比如：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stata">resp, <span class="hljs-keyword">err</span> := ioutil.ReadAll(sconn)<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  <span class="hljs-keyword">log</span>.Fatal(<span class="hljs-keyword">err</span>)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>这样的话，接着我们可以访问 BytesRead 字段获取读取的字节数。</p>
+<p>这是一个接口包装器的例子。我们创建了一个新的类型，实现了一个现有的接口，但重新使用了一个嵌入的值来实现了大部分的功能。我们也可以通过一个显示的 conn 字段来实现这一点，就像下面这样：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">StatsConn</span> struct &#123;<br>  conn net.<span class="hljs-type">Conn</span><br>  <span class="hljs-type">BytesRead</span> uint64<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>然后为 net.Conn 接口中的每个方法编写转发方法，例如：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stata">func (<span class="hljs-keyword">sc</span> *StatsConn) <span class="hljs-keyword">Close</span>() <span class="hljs-keyword">error</span> &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">sc</span>.conn.<span class="hljs-keyword">Close</span>()<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>但是 ner.Conn 接口有 8 个方法，给所有这些方法写转发方法是乏味且没有必要的。嵌入接口可以避免这点，我们只需要重写想要实现的那些方法即可。</p>
+<h3 id="示例：sort-Reverse"><a href="#示例：sort-Reverse" class="headerlink" title="示例：sort.Reverse"></a>示例：sort.Reverse</h3><p>接口嵌入结构体在 Go 语言标准库中的一个经典例子就是 sort.Reverse。它的用法常常让刚学习 Go 语言的新手感到困惑，因为根本不清楚它是机制是怎样的。</p>
+<p>我们先从一个简单的排序例子开始，对整型的切片排序：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gradle">lst := []<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">8</span>, <span class="hljs-number">1</span>, <span class="hljs-number">9</span>, <span class="hljs-number">3</span>&#125;<br><span class="hljs-keyword">sort</span>.<span class="hljs-keyword">Sort</span>(<span class="hljs-keyword">sort</span>.IntSlice(lst))<br>fmt.<span class="hljs-keyword">Println</span>(lst)<br><br></code></pre></td></tr></table></figure>
+
+
+<p>输出 [1 2 3 4 5 8 9]。这段代码的实现原理是怎样的呢？sort.Sort() 函数接收一个实现 sort.Interface 接口的参数，该接口定义如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">type</span> Interface interface &#123;<br>    <span class="hljs-comment">// Len is the number of elements in the collection.</span><br>    <span class="hljs-constructor">Len()</span> <span class="hljs-built_in">int</span><br>    <span class="hljs-comment">// Less reports whether the element with</span><br>    <span class="hljs-comment">// index i should sort before the element with index j.</span><br>    <span class="hljs-constructor">Less(<span class="hljs-params">i</span>, <span class="hljs-params">j</span> <span class="hljs-params">int</span>)</span> <span class="hljs-built_in">bool</span><br>    <span class="hljs-comment">// Swap swaps the elements with indexes i and j.</span><br>    <span class="hljs-constructor">Swap(<span class="hljs-params">i</span>, <span class="hljs-params">j</span> <span class="hljs-params">int</span>)</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>如果我们有一个想要使用 sort.Sort() 来排序的类型，那该类型就必须实现该接口。对于像整型切片这样的简单类型，标准库提供了类型转换 sort.IntSlice，该类型是实现了接口 sort.Interface，所以上面那段代码可以执行。</p>
+<p>那 sort.Reverse 的工作机制是怎样的呢？它通过巧妙地将接口嵌入结构体，sort 包有一个的未导出的类型来实现这点：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">type</span> reverse <span class="hljs-keyword">struct</span> &#123;<br>  sort.Interface<br>&#125;<br>func (r reverse) <span class="hljs-constructor">Less(<span class="hljs-params">i</span>, <span class="hljs-params">j</span> <span class="hljs-params">int</span>)</span> <span class="hljs-built_in">bool</span> &#123;<br>  return r.Interface.<span class="hljs-constructor">Less(<span class="hljs-params">j</span>, <span class="hljs-params">i</span>)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>到这里应该很好理解了，reverse 通过嵌入的方式实现了接口 sort.Interface (前提是用一个已经实现接口 sort.Interface 的类型的值初始化)，它重写了其中一个方法 – Less()。在 Less() 方法里，将参数调换顺序，然后调用了 sort.Interface 的 Less() 方法，实现参数的反转。</p>
+<p>实现参数反转的 sort.Reverse 也很简单：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gradle">func <span class="hljs-keyword">Reverse</span>(data <span class="hljs-keyword">sort</span>.<span class="hljs-keyword">Interface</span>) <span class="hljs-keyword">sort</span>.<span class="hljs-keyword">Interface</span> &#123;<br>  <span class="hljs-keyword">return</span> &amp;<span class="hljs-keyword">reverse</span>&#123;data&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>所以我们可以这样做：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">sort</span>.<span class="hljs-keyword">Sort</span>(<span class="hljs-keyword">sort</span>.<span class="hljs-keyword">Reverse</span>(<span class="hljs-keyword">sort</span>.IntSlice(lst)))<br>fmt.<span class="hljs-keyword">Println</span>(lst)<br><br></code></pre></td></tr></table></figure>
+
+
+<p>程序输出：[9 8 5 4 3 2 1]</p>
+<p>这里需要理解的关键点是，调用 sort.Reverse 函数本身不会执行排序或者反转的操作，它其实可以看做是一个高阶函数：包装了一个接口类型的值并且在 Less() 方法里调整了功能，实际的排序操作发生在调用 sort.Sort 的时候。</p>
+<h3 id="示例：context-WithValue"><a href="#示例：context-WithValue" class="headerlink" title="示例：context.WithValue"></a>示例：context.WithValue</h3><p>context 包里有一个 WithValue 函数：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">func <span class="hljs-constructor">WithValue(<span class="hljs-params">parent</span> Context, <span class="hljs-params">key</span>, <span class="hljs-params">val</span> <span class="hljs-params">interface</span>&#123;&#125;)</span> Context<br><br></code></pre></td></tr></table></figure>
+
+
+<p>该函数返回一个父 context 的备份，并携带键值对 key-val。我们一起来看下底层机制是怎样的。</p>
+<p>忽略错误检查，WithValue 主要代码如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">func <span class="hljs-constructor">WithValue(<span class="hljs-params">parent</span> Context, <span class="hljs-params">key</span>, <span class="hljs-params">val</span> <span class="hljs-params">interface</span>&#123;&#125;)</span> Context &#123;<br>  return &amp;valueCtx&#123;parent, key, <span class="hljs-keyword">val</span>&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>valueCtx 结构体如下：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> valueCtx struct &#123;<br>  <span class="hljs-type">Context</span><br>  key, val interface&#123;&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>看，这又是一个接口嵌入结构体的例子。valueCtx 实现了 Context 接口，可以重写其中的方法，实际上它只重写了 Value():</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">func (c *valueCtx) Value(key <span class="hljs-keyword">interface</span>&#123;&#125;) <span class="hljs-keyword">interface</span>&#123;&#125; &#123;<br>  <span class="hljs-keyword">if</span> c.key == key &#123;<br>    <span class="hljs-keyword">return</span> c.<span class="hljs-keyword">val</span><br>  &#125;<br>  <span class="hljs-keyword">return</span> c.Context.Value(key)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<h3 id="示例：使用受限制的接口降低结构体的功能"><a href="#示例：使用受限制的接口降低结构体的功能" class="headerlink" title="示例：使用受限制的接口降低结构体的功能"></a>示例：使用受限制的接口降低结构体的功能</h3><p>这是个有点进阶的知识点，但是在标准库的很多地方都有使用。尽管这样，我也不认为在编写代码时需要普遍使用，所以如果你刚入门 Go 语言，可以不用接着往下看，不用太担心。当你积累了更多 Go 语言方面的经验再来看也不迟。</p>
+<p>我们先来看下 io.ReaderFrom 接口：</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">ReaderFrom</span> interface &#123;<br>    <span class="hljs-type">ReadFrom</span>(r <span class="hljs-type">Reader</span>) (n int64, err error)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>实现了这个接口的类型可以从 io.Reader 读取数据。例如，<code>*os.File</code>类型实现了该接口，可以从 io.Reader 读取数据并存放在打开的文件里。我们看下是怎么实现的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f *File)</span></span> ReadFrom(r io.Reader) (n <span class="hljs-type">int64</span>, err <span class="hljs-type">error</span>) &#123;<br>  <span class="hljs-keyword">if</span> err := f.checkValid(<span class="hljs-string">&quot;write&quot;</span>); err != <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>, err<br>  &#125;<br>  n, handled, e := f.readFrom(r)<br>  <span class="hljs-keyword">if</span> !handled &#123;<br>    <span class="hljs-keyword">return</span> genericReadFrom(f, r)<br>  &#125;<br>  <span class="hljs-keyword">return</span> n, f.wrapErr(<span class="hljs-string">&quot;write&quot;</span>, e)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>首先尝试使用 readFrom 方法从 r 读取数据，底层与操作系统相关。例如，在 Linux 上，它使用 copy_file_range 系统调用在两个文件之间进行非常快速的复制，直接在内核中进行。</p>
+<p>readFrom 会返回 bool 值(handled)，表示读取是否成功。如果不成功，ReadFrom 会调用 genericReadFrom 函数，如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">func generic<span class="hljs-constructor">ReadFrom(<span class="hljs-params">f</span> <span class="hljs-operator">*</span>File, <span class="hljs-params">r</span> <span class="hljs-params">io</span>.Reader)</span> (<span class="hljs-built_in">int64</span>, error) &#123;<br>  return io.<span class="hljs-constructor">Copy(<span class="hljs-params">onlyWriter</span>&#123;<span class="hljs-params">f</span>&#125;, <span class="hljs-params">r</span>)</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>它使用 io.Copy 从 r 复制到 f，到目前为止看起来还不错。但是 f 为什么要使用 onlyWriter 包装下呢？</p>
+<figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> onlyWriter struct &#123;<br>  io.<span class="hljs-type">Writer</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>有趣吧，这就是我们熟悉的接口嵌入结构体。但是找遍整个文件，没有看到 onlyWriter 定义任何方法，也就是说没实现任何功能。为什么会这样呢？</p>
+<p>要理解问什么，我们需要看看 io.Copy 的代码，它的代码有点长就不贴出来了。但是关键点要注意到如果 dst 参数实现了接口 io.ReaderFrom，它就会调用 ReadFrom，这样就回到了刚才调用 genericReadFrom 地方，这就形成了循环调用了！</p>
+<p>现在，为什么需要 onlyWriter 变得很好理解了。将 f 包装起来作为参数调用 io.Copy，该参数的类型(即 onlyWriter)没有实现接口 io.ReaderFrom，但是实现了 io.Writer 接口，所以，它会去调用 File 的 Write 方法，这样就避免了 ReadFrom 的无限循环调用。</p>
+<p>正如我之前提到过的，这种使用方法比较高级。我觉得有必要强调一下，因为这实际上是一种不同寻常的用法，而且在整个标准库中普遍使用。</p>
+<p>这里有一点还比较好，显式地命名了 onlyWriter 类型，有助于我们理解它是干什么的。标准库中的一些代码是直接使用匿名结构体的，比如在 tar 包里面：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">io.<span class="hljs-constructor">Copy(<span class="hljs-params">struct</span>&#123; <span class="hljs-params">io</span>.Writer &#125;&#123;<span class="hljs-params">sw</span>&#125;, <span class="hljs-params">r</span>)</span><br><br></code></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>via: <a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2020/embedding-in-go-part-3-interfaces-in-structs/">https://eli.thegreenplace.net/2020/embedding-in-go-part-3-interfaces-in-structs/</a><br>作者：Eli Bendersky  </p>
+</blockquote>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>[1] 评论: <a target="_blank" rel="noopener" href="https://github.com/golang/go/issues/22013#issuecomment-331886875">https://github.com/golang/go/issues/22013#issuecomment-331886875</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SRE/" class="category-chain-item">SRE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Go/">#Go</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Go 语言中的嵌入【第三部分】：接口嵌入结构体</div>
+      <div>https://www.boer.xyz/2023/03/15/golang-interfaces-in-structs/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/15/golang-interfaces-in-interfaces/" title="Go 语言中的嵌入【第二部分】：接口嵌入接口">
+                        <span class="hidden-mobile">Go 语言中的嵌入【第二部分】：接口嵌入接口</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: 'e827ce61ba3621ff36725bdad8929104'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2023  </span><i class="iconfont icon-love"></i><span>boer</span>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
