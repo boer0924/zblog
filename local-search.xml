@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>gofiber-with-casbin授权示例</title>
+    <link href="/2024/03/24/gofiber-with-casbin/"/>
+    <url>/2024/03/24/gofiber-with-casbin/</url>
+    
+    <content type="html"><![CDATA[<p>Casbin是一个支持如ACL, RBAC, ABAC等访问模型的的授权库，支持众多语言。</p><p>Fiber is a Go web framework built on top of Fasthttp, the fastest HTTP engine for Go. It’s designed to ease things up for fast development with zero memory allocation and performance in mind.<br>号称: zero memory allocation</p><p>model.conf</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs conf">[request_definition]<br>r = sub, obj, act<br><br>[policy_definition]<br>p = sub, obj, act<br><br>[role_definition]<br>g = _, _<br><br>[policy_effect]<br>e = some(where (p.eft == allow))<br><br>[matchers]<br>m = g(r.sub, p.sub) &amp;&amp; keyMatch2(r.obj, p.obj) &amp;&amp; regexMatch(r.act, p.act)<br></code></pre></td></tr></table></figure><p>policy.csv</p><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs gradle">p,admin,<span class="hljs-regexp">/api/</span>todos,GET<br>p,admin,<span class="hljs-regexp">/api/</span>todos,POST<br>p,admin,<span class="hljs-regexp">/api/</span>todos/:id,GET<br>p,admin,<span class="hljs-regexp">/api/</span>todos/:id,PUT<br>p,admin,<span class="hljs-regexp">/api/</span>todos/:id,<span class="hljs-keyword">DELETE</span><br>p,viewer,<span class="hljs-regexp">/api/</span>todos,GET<br>p,viewer,<span class="hljs-regexp">/api/</span>todos/:id,GET<br><br>g,boer,admin<br>g,john,viewer<br></code></pre></td></tr></table></figure><p>main.go</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>  app := fiber.New()<br><br>  authz := casbin.New(casbin.Config&#123;<br>ModelFilePath: <span class="hljs-string">&quot;./model.conf&quot;</span>,<br>PolicyAdapter: fileadapter.NewAdapter(<span class="hljs-string">&quot;./policy.csv&quot;</span>),<br>Lookup:        <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *fiber.Ctx)</span></span> <span class="hljs-type">string</span> &#123; <span class="hljs-keyword">return</span> internalauthn.GetUserName(c) &#125;,<br>Unauthorized: <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *fiber.Ctx)</span></span> <span class="hljs-type">error</span> &#123;<br><span class="hljs-keyword">return</span> c.JSON(fiber.Map&#123;<br><span class="hljs-string">&quot;message&quot;</span>: <span class="hljs-string">&quot;Invalid or expired JWT&quot;</span>,<br><span class="hljs-string">&quot;code&quot;</span>:    fiber.StatusUnauthorized,<br>&#125;)<br>&#125;,<br>Forbidden: <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(c *fiber.Ctx)</span></span> <span class="hljs-type">error</span> &#123;<br><span class="hljs-keyword">return</span> c.JSON(fiber.Error&#123;<br>Message: <span class="hljs-string">&quot;Forbidden&quot;</span>,<br>Code:    fiber.StatusForbidden,<br>&#125;)<br>&#125;,<br>&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Golang</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Golang</tag>
+      
+      <tag>RBAC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Go 语言中的嵌入【第三部分】：接口嵌入结构体</title>
     <link href="/2023/03/15/golang-interfaces-in-structs/"/>
     <url>/2023/03/15/golang-interfaces-in-structs/</url>
