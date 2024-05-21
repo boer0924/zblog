@@ -2,6 +2,60 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2015/08/24/clear-bash-ps1-prompt/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
     
     <lastmod>2024-05-21</lastmod>
@@ -137,15 +191,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2020/08/16/k8s-apm-skywalking/</loc>
     
     <lastmod>2024-05-21</lastmod>
@@ -155,7 +200,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
+    <loc>https://www.boer.xyz/2020/06/24/k8s-cicd-drone/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -165,6 +210,15 @@
   
   <url>
     <loc>https://www.boer.xyz/2020/04/24/k8s-codeing-gitea/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/06/23/k8s-cicd-jenkins-pipeline/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -218,7 +272,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
+    <loc>https://www.boer.xyz/2019/06/13/middleware-devops-guide/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -227,7 +281,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2019/06/13/middleware-devops-guide/</loc>
+    <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -272,6 +326,15 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/2022/09/09/nfs-fio/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2016/03/24/nginx-http/</loc>
     
     <lastmod>2024-05-21</lastmod>
@@ -290,25 +353,16 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/05/10/oc-vpn-connect/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2022/09/09/nfs-fio/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2021/07/25/openldap-ha/</loc>
+    
+    <lastmod>2024-05-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/05/10/oc-vpn-connect/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -371,7 +425,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
+    <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -380,7 +434,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2018/07/28/springboot-logging-configuration/</loc>
+    <loc>https://www.boer.xyz/2018/03/24/srv-initialize/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -435,60 +489,6 @@
   
   <url>
     <loc>https://www.boer.xyz/about/index.html</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2015/08/24/clear-bash-ps1-prompt/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/</loc>
-    
-    <lastmod>2024-05-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
     
     <lastmod>2024-05-21</lastmod>
     
@@ -779,6 +779,27 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/tags/Skywalking/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Pinpoint/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/APM/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/tags/CICD/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -808,27 +829,6 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/Harbor/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Skywalking/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Pinpoint/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/APM/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -961,6 +961,20 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/tags/RabbitMQ/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Kafka/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -976,20 +990,6 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/SpringBoot/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/RabbitMQ/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Kafka/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1038,6 +1038,27 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/tags/fio/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/nfs/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/csi/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/tags/Nginx/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -1066,6 +1087,13 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/tags/OpenLDAP/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/tags/ocserv/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -1074,34 +1102,6 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/VPN/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/fio/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/nfs/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/csi/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/OpenLDAP/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1143,20 +1143,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/tags/parted/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/kernel/</loc>
-    <lastmod>2024-05-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/tags/Log4J2/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -1165,6 +1151,20 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/Logback/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/parted/</loc>
+    <lastmod>2024-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/kernel/</loc>
     <lastmod>2024-05-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
