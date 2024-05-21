@@ -20,7 +20,7 @@ boer，将成为一个响彻世界的品牌。所以，在将来的某一天，�
 
 --- 阿里云、腾讯云、AWS
 
---- Linux, Kubernetes, Ansible, Nginx, MySQL, Redis, ELKStack, Zabbix, Prometheus, Git, Python, Golang, Java, VUE, SpringCloud, DevOps, 中间件, Kafka, RabbitMQ, Elasticsearch, Consul, Pinpoint, Skywalking
+--- Linux, Kubernetes, Ansible, Nginx/Traefik, MySQL, Redis, ELKStack, Zabbix, Prometheus, Git, Python, Golang, Java, Gin/Fiber, React/VUE, SpringCloud, DevOps, Kafka, RabbitMQ, Elasticsearch/Opensearch, Etcd, Pinpoint, Skywalking, eBPF/OpenTelemetry
 
 一切新鲜、好奇的美好事物……
 
