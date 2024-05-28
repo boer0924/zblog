@@ -1,6 +1,6 @@
 ---
 title: Golang - String/Bytes/Rune(字节-字符)
-date: 2023-05-08 10:10:116
+date: 2023-05-08 10:10:16
 index_img: https://picsum.photos/300/200.webp?str
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
 sticky: 100
