@@ -2,6 +2,186 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2015/08/24/clear-bash-ps1-prompt/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2016/07/07/fpm-rpm-build/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/30/golang-func-mapreduce/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/08/15/golang-gin-gorm-paginate/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2024/03/24/golang-gofiber-with-casbin/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2023/03/15/golang-interfaces-in-interfaces/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2023/03/15/golang-interfaces-in-structs/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/24/golang-map-methods/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2020/08/09/golang-modules/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/18/golang-slice-methods/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2017/08/16/golang-slice-reverse/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2023/05/08/golang-string/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2023/03/15/golang-structs-in-structs/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/2021/06/06/hadoop-hbase/</loc>
     
     <lastmod>2024-05-28</lastmod>
@@ -92,15 +272,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/2020/07/22/k8s-springcloud-fly/</loc>
     
     <lastmod>2024-05-28</lastmod>
@@ -110,7 +281,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2018/02/16/mirror-speed/</loc>
+    <loc>https://www.boer.xyz/2019/09/09/k8s-registry-harbor/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -128,7 +299,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2021/05/20/mysql-note/</loc>
+    <loc>https://www.boer.xyz/2018/02/16/mirror-speed/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -138,6 +309,15 @@
   
   <url>
     <loc>https://www.boer.xyz/2018/03/08/mysql-record-topN-tables/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/2021/05/20/mysql-note/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -182,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2021/07/25/openldap-ha/</loc>
+    <loc>https://www.boer.xyz/2020/05/10/oc-vpn-connect/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -191,7 +371,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/05/10/oc-vpn-connect/</loc>
+    <loc>https://www.boer.xyz/2021/07/25/openldap-ha/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -272,7 +452,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
+    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -281,7 +461,7 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/2012/05/26/the-university-the-dream/</loc>
+    <loc>https://www.boer.xyz/2020/06/18/theai-train/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -318,186 +498,6 @@
   
   <url>
     <loc>https://www.boer.xyz/about/index.html</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/06/24/aliyun-api-sdk-monitor/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2015/08/24/clear-bash-ps1-prompt/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/07/01/clickhouse-distributed/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2018/01/18/closewait-timewait/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2021/11/16/elasticsearch-benchmark-rally/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2019/03/24/es-data-migrate/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/12/31/for-my2012/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2016/07/07/fpm-rpm-build/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2012/06/14/for-the-girl/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/30/golang-func-mapreduce/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/08/15/golang-gin-gorm-paginate/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2024/03/24/golang-gofiber-with-casbin/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2023/03/15/golang-interfaces-in-interfaces/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2023/03/15/golang-interfaces-in-structs/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/24/golang-map-methods/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2020/08/09/golang-modules/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/18/golang-slice-methods/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2017/08/16/golang-slice-reverse/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2024/05/28/golang-string/</loc>
-    
-    <lastmod>2024-05-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/2023/03/15/golang-structs-in-structs/</loc>
     
     <lastmod>2024-05-28</lastmod>
     
@@ -991,20 +991,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/tags/Docker/</loc>
-    <lastmod>2024-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Registry/</loc>
-    <lastmod>2024-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
     <lastmod>2024-05-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -1026,6 +1012,34 @@
   </url>
   
   <url>
+    <loc>https://www.boer.xyz/tags/Docker/</loc>
+    <lastmod>2024-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Registry/</loc>
+    <lastmod>2024-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/RabbitMQ/</loc>
+    <lastmod>2024-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/Kafka/</loc>
+    <lastmod>2024-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.boer.xyz/tags/pip/</loc>
     <lastmod>2024-05-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -1041,20 +1055,6 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/npm/</loc>
-    <lastmod>2024-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/RabbitMQ/</loc>
-    <lastmod>2024-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.boer.xyz/tags/Kafka/</loc>
     <lastmod>2024-05-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1131,13 +1131,6 @@
   </url>
   
   <url>
-    <loc>https://www.boer.xyz/tags/OpenLDAP/</loc>
-    <lastmod>2024-05-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.boer.xyz/tags/ocserv/</loc>
     <lastmod>2024-05-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -1146,6 +1139,13 @@
   
   <url>
     <loc>https://www.boer.xyz/tags/VPN/</loc>
+    <lastmod>2024-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.boer.xyz/tags/OpenLDAP/</loc>
     <lastmod>2024-05-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
