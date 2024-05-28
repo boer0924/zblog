@@ -1,5 +1,5 @@
 ---
-title: gofiber-with-casbin授权示例
+title: Golang - gofiber-with-casbin授权示例
 date: 2024-03-24 10:36:20
 index_img: https://picsum.photos/300/200.webp?casbin
 tags:

@@ -1,12 +1,12 @@
 ---
-title: Go 语言中的嵌入【第三部分】：接口嵌入结构体
+title: Golang - 语言中的嵌入【第三部分】：接口嵌入结构体
 date: 2023-03-15 17:30:36
 index_img: https://picsum.photos/300/200.webp?iis
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg008.jpg
 sticky: 220
 tags:
-  - Go
-categories: SRE
+  - Golang
+categories: Golang
 ---
 Go 语言并不支持传统意义上的继承，相反，它提倡通过组合来扩展类型的功能。这并不是 Go 所特有的概念，继承之上的组合是 OOP 的一个众所周知的原则，在《设计模式》一书的第一章就有介绍。Embedding(嵌入)是 Go 语言一个重要的特性，有了它使得组合更加方便、更有用。虽然 Go 力求简单，但某种程度上嵌入增加了语言的复杂度，如果使用不当会导致 bug 出现。在这一系列文章中，我将介绍 Go 支持的不同种类的嵌入，并提供真实的代码示例(大部分来自 Go 语言的标准库)。
 

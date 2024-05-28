@@ -1,12 +1,12 @@
 ---
-title: Go Modules
+title: Golang - Modules
 date: 2020-08-09 16:10:18
 index_img: https://picsum.photos/300/200.webp?mod
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
 sticky: 100
 tags:
   - Go
-categories: SRE
+categories: Golang
 ---
 Go Modules是Go 1.11引入的新特性，它是 Go 语言的包管理工具，用于管理 Go 项目中的依赖关系。
 
