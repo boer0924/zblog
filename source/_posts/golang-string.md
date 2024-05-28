@@ -31,6 +31,7 @@ Unicode是ASCII的后继者，它旨在支持世界上所有的文字。Unicode�
 ASCII只能支持有限的字符，而Unicode则能够支持更广泛的字符。在编码方式上，ASCII采用固定长度的编码，每个字符都对应一个7位或8位的二进制码，而Unicode则采用可变长度的编码，例如UTF-8、UTF-16和UTF-32等，每个字符的编码长度可以不同。
 
 ASCII是Unicode的一个子集。Unicode的前128个码位与ASCII的编码完全相同，因此ASCII编码的文本可以直接在Unicode编码中使用，而不需要进行转换。
+
 ---
 
 ### UTF-8
@@ -117,12 +118,12 @@ ASCII 字符（如 "Hello, " 中的字符）每个占用 1 个字节。
 如果你希望按字符（rune）进行索引，可以将字符串转换为 rune 切片，因为在 rune 切片中，每个元素都是一个字符（rune）。
 
 ```go
-    s := "Hello, 世界"
-    r := []rune(s)
+s := "Hello, 世界"
+r := []rune(s)
 
-    // 按字符（rune）进行索引
-    fmt.Printf("第 1 个字符: %c\n", r[0]) // 输出 H
-    fmt.Printf("第 8 个字符: %c\n", r[7]) // 输出 世
+// 按字符（rune）进行索引
+fmt.Printf("第 1 个字符: %c\n", r[0]) // 输出 H
+fmt.Printf("第 8 个字符: %c\n", r[7]) // 输出 世
 ```
 
 ### Q4. for range "Hello, 世界"得到什么，为什么？
@@ -130,10 +131,10 @@ ASCII 字符（如 "Hello, " 中的字符）每个占用 1 个字节。
 
 让我们分析一下字符串 "Hello, 世界"：
 ```go
-    s := "Hello, 世界"
-    for i, c := range s {
-        fmt.Printf("位置: %d, 字符: %c, Unicode: %U\n", i, c, c)
-    }
+s := "Hello, 世界"
+for i, c := range s {
+    fmt.Printf("位置: %d, 字符: %c, Unicode: %U\n", i, c, c)
+}
 
 // 位置: 0, 字符: H, Unicode: U+0048
 // 位置: 1, 字符: e, Unicode: U+0065

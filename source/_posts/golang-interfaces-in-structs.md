@@ -1,5 +1,5 @@
 ---
-title: Golang - 语言中的嵌入【第三部分】：接口嵌入结构体
+title: Golang - Go语言中的嵌入【第三部分】：接口嵌入结构体
 date: 2023-03-15 17:30:36
 index_img: https://picsum.photos/300/200.webp?iis
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg008.jpg
