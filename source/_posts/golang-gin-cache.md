@@ -34,6 +34,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/patrickmn/go-cache"
+	"github.com/robfig/cron/v3"
 )
 
 const (
@@ -64,6 +65,16 @@ func main() {
 	cacheClient := NewCacheClient()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
+	crontab := cron.New()
+	if _, err := crontab.AddFunc("@every 1s", func() {
+		// setDefaultCache(cacheClient)
+		log.Printf("-----debug crontab-----> %s \n", time.Now().Format(time.RFC3339))
+	}); err != nil {
+		return
+	}
+	crontab.Start()
+	defer crontab.Stop()
 
 	// r.Use(authMiddleware())
 	apiv1 := r.Group("/api/v1")
