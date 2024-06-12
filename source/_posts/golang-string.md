@@ -3,7 +3,6 @@ title: Golang - String/Bytes/Rune(字节-字符)
 date: 2023-05-08 10:10:16
 index_img: https://picsum.photos/300/200.webp?str
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
-sticky: 100
 tags:
   - Golang
   - Go
@@ -15,6 +14,7 @@ tags:
 categories: Golang
 ---
 In Go, a string is in effect a read-only slice of bytes. 
+ASCII -> Unicode -> UTF-8 -> Bytes -> Rune -> String
 
 <!-- more -->
 

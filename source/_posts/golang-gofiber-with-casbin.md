@@ -7,11 +7,12 @@ tags:
   - RBAC
 categories: Golang
 ---
-
 Casbin是一个支持如ACL, RBAC, ABAC等访问模型的的授权库，支持众多语言。
 
 Fiber is a Go web framework built on top of Fasthttp, the fastest HTTP engine for Go. It's designed to ease things up for fast development with zero memory allocation and performance in mind.
 号称: zero memory allocation
+
+<!-- more -->
 
 model.conf
 ```conf

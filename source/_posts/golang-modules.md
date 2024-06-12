@@ -3,7 +3,6 @@ title: Golang - Modules
 date: 2020-08-09 16:10:18
 index_img: https://picsum.photos/300/200.webp?mod
 banner_img: https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg006.jpg
-sticky: 100
 tags:
   - Go
 categories: Golang

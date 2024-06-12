@@ -2,7 +2,6 @@
 title: MySQL To ClickHouse数据实时同步引擎MaterializeMySQL
 date: 2021-08-26 10:16:16
 index_img: https://picsum.photos/300/200.webp?mms
-sticky: 110
 tags:
   - MySQL
   - ClickHouse
