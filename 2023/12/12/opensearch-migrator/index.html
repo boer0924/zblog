@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon.png">
+  <link rel="icon" href="/img/favicon/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="boer">
+  <meta name="keywords" content="新基建, 数字化, 大数据, 人工智能AI, 云计算, 容器云, 区块链, Java, Golang, Python, Linux, Kubernetes, DevOps, 中间件, Kafka, RabbitMQ, ElasticStack, Consul, 微服务">
+  
+    <meta name="description" content="OpenSearch is the flexible, scalable, open-source way to build solutions for data-intensive applications. 分享一个OpenSearch索引迁移备份脚本，可自行编译为二进制工具(OSM - OpenSearch Migrator)  migrate index docs from source">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSearch索引迁移&#x2F;备份工具">
+<meta property="og:url" content="https://www.boer.xyz/2023/12/12/opensearch-migrator/index.html">
+<meta property="og:site_name" content="~·boer·~ 乌托邦">
+<meta property="og:description" content="OpenSearch is the flexible, scalable, open-source way to build solutions for data-intensive applications. 分享一个OpenSearch索引迁移备份脚本，可自行编译为二进制工具(OSM - OpenSearch Migrator)  migrate index docs from source">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picsum.photos/300/200.webp?osm">
+<meta property="article:published_time" content="2023-12-12T02:30:18.000Z">
+<meta property="article:modified_time" content="2024-06-12T07:06:39.169Z">
+<meta property="article:author" content="boer">
+<meta property="article:tag" content="OpenSearch">
+<meta property="article:tag" content="migrate">
+<meta property="article:tag" content="es">
+<meta property="article:tag" content="ElasticSearch">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picsum.photos/300/200.webp?osm">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>OpenSearch索引迁移/备份工具 · ~·boer·~ 乌托邦</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.boer.xyz","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"tajs":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9057605667811564" crossorigin="anonymous"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>~·boer·~ 乌托邦</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://for-boer-blog.oss-cn-beijing.aliyuncs.com/bg005.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OpenSearch索引迁移/备份工具"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-12 10:30" pubdate>
+          2023年12月12日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          106 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">OpenSearch索引迁移/备份工具</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>OpenSearch is the flexible, scalable, open-source way to build solutions for data-intensive applications.</p>
+<p>分享一个OpenSearch索引迁移备份脚本，可自行编译为二进制工具(OSM - OpenSearch Migrator)</p>
+<ol>
+<li>migrate index docs from source opensearch to target opensearch (auto create target index)</li>
+<li>backup index docs from source opensearch to local file</li>
+<li>restore index docs from local file to target opensearch<span id="more"></span></li>
+</ol>
+<blockquote>
+<p>Tips: 站在坑里提醒个人用户还是使用ElasticSearch，OpenSearch文档近乎没有，Bug还多！</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;bufio&quot;</span><br>	<span class="hljs-string">&quot;bytes&quot;</span><br>	<span class="hljs-string">&quot;context&quot;</span><br>	<span class="hljs-string">&quot;crypto/tls&quot;</span><br>	<span class="hljs-string">&quot;encoding/json&quot;</span><br>	<span class="hljs-string">&quot;flag&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;io&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;net/http&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;runtime&quot;</span><br>	<span class="hljs-string">&quot;strings&quot;</span><br>	<span class="hljs-string">&quot;sync&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br><br>	<span class="hljs-string">&quot;github.com/opensearch-project/opensearch-go/v2&quot;</span><br>	<span class="hljs-string">&quot;github.com/opensearch-project/opensearch-go/v2/opensearchutil&quot;</span><br>	<span class="hljs-string">&quot;github.com/pkg/errors&quot;</span><br>	<span class="hljs-string">&quot;github.com/schollz/progressbar/v3&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> (<br>	verbose  *<span class="hljs-type">bool</span><br>	docCount <span class="hljs-type">int64</span><br>)<br><br><span class="hljs-keyword">type</span> GetIndexResponse <span class="hljs-keyword">struct</span> &#123;<br>	Aliases  <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125; <span class="hljs-string">`json:&quot;aliases&quot;`</span><br>	Mappings <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125; <span class="hljs-string">`json:&quot;mappings&quot;`</span><br>	Settings <span class="hljs-keyword">struct</span> &#123;<br>		Index <span class="hljs-keyword">struct</span> &#123;<br>			NumberOfShards   <span class="hljs-type">string</span>                 <span class="hljs-string">`json:&quot;number_of_shards&quot;`</span><br>			RefreshInterval  <span class="hljs-type">string</span>                 <span class="hljs-string">`json:&quot;refresh_interval&quot;`</span><br>			NumberOfReplicas <span class="hljs-type">string</span>                 <span class="hljs-string">`json:&quot;number_of_replicas&quot;`</span><br>			Analysis         <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125; <span class="hljs-string">`json:&quot;analysis&quot;`</span><br>		&#125; <span class="hljs-string">`json:&quot;index&quot;`</span><br>	&#125; <span class="hljs-string">`json:&quot;settings&quot;`</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Hit <span class="hljs-keyword">struct</span> &#123;<br>	ID     <span class="hljs-type">string</span>      <span class="hljs-string">`json:&quot;_id&quot;`</span><br>	Source <span class="hljs-keyword">interface</span>&#123;&#125; <span class="hljs-string">`json:&quot;_source&quot;`</span><br>&#125;<br><br><span class="hljs-keyword">type</span> ScrollResponse <span class="hljs-keyword">struct</span> &#123;<br>	ScrollID <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;_scroll_id&quot;`</span><br>	Took     <span class="hljs-type">int</span><br>	Hits     <span class="hljs-keyword">struct</span> &#123;<br>		Total <span class="hljs-keyword">struct</span> &#123;<br>			Value <span class="hljs-type">int</span><br>		&#125;<br>		Hits []Hit<br>	&#125;<br>	TimedOut <span class="hljs-type">bool</span> <span class="hljs-string">`json:&quot;timed_out&quot;`</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	sourceURL := flag.String(<span class="hljs-string">&quot;s&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;source opensearch instance, ie: http://localhost:9200&quot;</span>)<br>	targetURL := flag.String(<span class="hljs-string">&quot;d&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;target opensearch instance, ie: http://localhost:9201&quot;</span>)<br>	sourceAuth := flag.String(<span class="hljs-string">&quot;m&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;basic auth of source opensearch instance, ie: user:pass&quot;</span>)<br>	targetAuth := flag.String(<span class="hljs-string">&quot;n&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;basic auth of target opensearch instance, ie: user:pass&quot;</span>)<br>	sourceIndex := flag.String(<span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;index name to copy, ie: index-name-v1&quot;</span>)<br>	targetIndex := flag.String(<span class="hljs-string">&quot;y&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;index name to save, ie: index-name-v1&quot;</span>)<br>	query := flag.String(<span class="hljs-string">&quot;q&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;query against source opensearch instance, filter data before migrate&quot;</span>)<br><br>	outputFile := flag.String(<span class="hljs-string">&quot;o&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;output documents of source index into local file, ie: index-name.json&quot;</span>)<br>	inputFile := flag.String(<span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;indexing from local dump file, ie: index-name.json&quot;</span>)<br><br>	verbose = flag.Bool(<span class="hljs-string">&quot;v&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;setting log level to debug (default: info)&quot;</span>)<br><br>	flag.Usage = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		fmt.Fprintf(flag.CommandLine.Output(), <span class="hljs-string">&quot;Functions of %s:\n&quot;</span>, flag.CommandLine.Name())<br>		fmt.Println(<span class="hljs-string">&quot;  1. migrate index docs from source opensearch to target opensearch (auto create target index)&quot;</span>)<br>		fmt.Println(<span class="hljs-string">&quot;  2. backup index docs from source opensearch to local file&quot;</span>)<br>		fmt.Println(<span class="hljs-string">&quot;  3. restore index docs from local file to target opensearch&quot;</span>)<br>		fmt.Println(<span class="hljs-string">&quot;Commands:&quot;</span>)<br>		flag.PrintDefaults()<br>	&#125;<br><br>	flag.Parse()<br><br>	sourceClient, err := opensearch.NewClient(opensearch.Config&#123;<br>		Transport: &amp;http.Transport&#123;<br>			TLSClientConfig: &amp;tls.Config&#123;InsecureSkipVerify: <span class="hljs-literal">true</span>&#125;,<br>		&#125;,<br>		Addresses: []<span class="hljs-type">string</span>&#123;*sourceURL&#125;,<br>		Username:  strings.Split(*sourceAuth, <span class="hljs-string">&quot;:&quot;</span>)[<span class="hljs-number">0</span>],<br>		Password:  strings.Join(strings.Split(*sourceAuth, <span class="hljs-string">&quot;:&quot;</span>)[<span class="hljs-number">1</span>:], <span class="hljs-string">&quot;&quot;</span>),<br>	&#125;)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalln(<span class="hljs-string">&quot;cannot initialize source opensearch instance&quot;</span>, err)<br>	&#125;<br><br>	targetClient, err := opensearch.NewClient(opensearch.Config&#123;<br>		Transport: &amp;http.Transport&#123;<br>			TLSClientConfig: &amp;tls.Config&#123;InsecureSkipVerify: <span class="hljs-literal">true</span>&#125;,<br>		&#125;,<br>		Addresses: []<span class="hljs-type">string</span>&#123;*targetURL&#125;,<br>		Username:  strings.Split(*targetAuth, <span class="hljs-string">&quot;:&quot;</span>)[<span class="hljs-number">0</span>],<br>		Password:  strings.Join(strings.Split(*targetAuth, <span class="hljs-string">&quot;:&quot;</span>)[<span class="hljs-number">1</span>:], <span class="hljs-string">&quot;&quot;</span>),<br>	&#125;)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalln(<span class="hljs-string">&quot;cannot initialize target opensearch instance&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-keyword">var</span> wg sync.WaitGroup<br>	wg.Add(<span class="hljs-number">2</span>)<br><br>	documentChan := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">interface</span>&#123;&#125;)<br><br>	<span class="hljs-comment">// 创建索引</span><br>	<span class="hljs-keyword">if</span> *sourceURL != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *sourceIndex != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *sourceAuth != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *targetURL != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *targetIndex != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *targetAuth != <span class="hljs-string">&quot;&quot;</span> &#123;<br>		err = createIndex(sourceClient, targetClient, *sourceIndex, *targetIndex)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			log.Fatal(err)<br>			os.Exit(<span class="hljs-number">1</span>)<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> *sourceURL != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *sourceIndex != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *sourceAuth != <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-comment">// scroll from source instance</span><br>		<span class="hljs-keyword">go</span> scrollIndex(sourceClient, *sourceIndex, *query, documentChan, &amp;wg)<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> *inputFile != <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-comment">// restore from local file</span><br>		<span class="hljs-keyword">go</span> restoreIndex(*inputFile, documentChan, &amp;wg)<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> *targetURL != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *targetIndex != <span class="hljs-string">&quot;&quot;</span> &amp;&amp; *targetAuth != <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-comment">// bulk to target instance</span><br>		<span class="hljs-keyword">go</span> bulkIndex(targetClient, *targetIndex, documentChan, &amp;wg)<br>	&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> *outputFile != <span class="hljs-string">&quot;&quot;</span> &#123;<br>		<span class="hljs-comment">// backup to local file</span><br>		<span class="hljs-keyword">go</span> dumpIndex(*outputFile, documentChan, &amp;wg)<br>	&#125;<br><br>	wg.Wait()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">createIndex</span><span class="hljs-params">(sourceClient, targetClient *opensearch.Client, sourceIndex, targetIndex <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">error</span> &#123;<br>	getIndexResp, err := sourceClient.Indices.Get([]<span class="hljs-type">string</span>&#123;sourceIndex&#125;, sourceClient.Indices.Get.WithHuman())<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrapf(err, <span class="hljs-string">&quot;get index&quot;</span>)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> getIndexResp.Body.Close()<br><br>	resp := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]GetIndexResponse&#123;&#125;<br>	err = json.NewDecoder(getIndexResp.Body).Decode(&amp;resp)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrapf(err, <span class="hljs-string">&quot;decode resp&quot;</span>)<br>	&#125;<br><br>	<span class="hljs-comment">// debug</span><br>	<span class="hljs-keyword">if</span> *verbose &#123;<br>		log.Println(resp[sourceIndex])<br>	&#125;<br><br>	<span class="hljs-keyword">var</span> buf bytes.Buffer<br>	err = json.NewEncoder(&amp;buf).Encode(resp[sourceIndex])<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrapf(err, <span class="hljs-string">&quot;encode resp&quot;</span>)<br>	&#125;<br>	createIndexResp, err := targetClient.Indices.Create(targetIndex, targetClient.Indices.Create.WithBody(&amp;buf))<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrapf(err, <span class="hljs-string">&quot;create index&quot;</span>)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> createIndexResp.Body.Close()<br><br>	<span class="hljs-keyword">if</span> *verbose &#123;<br>		log.Println(createIndexResp)<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">scrollIndex</span><span class="hljs-params">(client *opensearch.Client, indexName, query <span class="hljs-type">string</span>, ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">interface</span>&#123;&#125;, wg *sync.WaitGroup)</span></span> <span class="hljs-type">error</span> &#123;<br><br>	<span class="hljs-keyword">defer</span> wg.Done()<br><br>	resp, err := client.Search(<br>		client.Search.WithIndex(indexName),<br>		client.Search.WithSize(<span class="hljs-number">5000</span>),<br>		client.Search.WithBody(strings.NewReader(query)),<br>		<span class="hljs-comment">// client.Search.WithSort(&quot;year:asc&quot;),</span><br>		client.Search.WithScroll(<span class="hljs-number">10</span>*time.Minute),<br>		client.Search.WithIgnoreUnavailable(<span class="hljs-literal">true</span>),<br>	)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Printf(<span class="hljs-string">&quot;error occurred: [%s]&quot;</span>, err.Error())<br>	&#125;<br>	<span class="hljs-keyword">defer</span> resp.Body.Close()<br><br>	<span class="hljs-keyword">var</span> result ScrollResponse<br>	err = json.NewDecoder(resp.Body).Decode(&amp;result)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> err<br>	&#125;<br><br>	docCount = <span class="hljs-type">int64</span>(result.Hits.Total.Value)<br>	ch &lt;- docCount<br>	bar := progressbar.Default(docCount, <span class="hljs-string">&quot;scroll processing&quot;</span>)<br>	scrollID := result.ScrollID<br><br>	<span class="hljs-keyword">for</span> &#123;<br>		<span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(result.Hits.Hits) == <span class="hljs-number">0</span> &#123;<br>			<span class="hljs-keyword">break</span><br>		&#125;<br><br>		<span class="hljs-keyword">for</span> _, hit := <span class="hljs-keyword">range</span> result.Hits.Hits &#123;<br>			<span class="hljs-comment">// 进度条</span><br>			bar.Add(<span class="hljs-number">1</span>)<br>			<span class="hljs-comment">// 写入channel</span><br>			ch &lt;- hit<br>		&#125;<br><br>		res, err := client.Scroll(<br>			client.Scroll.WithContext(context.Background()),<br>			client.Scroll.WithScrollID(scrollID),<br>			client.Scroll.WithScroll(<span class="hljs-number">10</span>*time.Minute),<br>		)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			log.Fatalf(<span class="hljs-string">&quot;Error getting response: %s&quot;</span>, err)<br>		&#125;<br><br>		<span class="hljs-keyword">defer</span> res.Body.Close()<br>		<span class="hljs-keyword">if</span> err := json.NewDecoder(res.Body).Decode(&amp;result); err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">return</span> err<br>		&#125;<br><br>		scrollID = result.ScrollID<br>	&#125;<br><br>	<span class="hljs-comment">// 清理scrollID</span><br>	clearScrollResponse, err := client.ClearScroll(<br>		client.ClearScroll.WithScrollID(scrollID),<br>	)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;Error getting response: %s&quot;</span>, err)<br>	&#125;<br>	<span class="hljs-keyword">if</span> clearScrollResponse.IsError() &#123;<br>		log.Printf(<span class="hljs-string">&quot;Error clearing scroll: %s&quot;</span>, clearScrollResponse.String())<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">// log.Printf(&quot;Successfully scroll [%d] documents&quot;, result.Hits.Total.Value)</span><br>		<span class="hljs-comment">// fmt.Println(&quot;Scroll cleared!&quot;)</span><br>	&#125;<br><br>	<span class="hljs-comment">// 写入方关闭channel</span><br>	<span class="hljs-built_in">close</span>(ch)<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">restoreIndex</span><span class="hljs-params">(fileName <span class="hljs-type">string</span>, ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">interface</span>&#123;&#125;, wg *sync.WaitGroup)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br><br>	file, err := os.Open(fileName)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrap(err, <span class="hljs-string">&quot;Error opening file&quot;</span>)<br><br>	&#125;<br><br>	<span class="hljs-comment">// 获取总文档数</span><br>	<span class="hljs-keyword">var</span> docCount <span class="hljs-type">int64</span><br>	scanner := bufio.NewScanner(file)<br>	<span class="hljs-keyword">for</span> scanner.Scan() &#123;<br>		docCount++<br>	&#125;<br>	<span class="hljs-keyword">if</span> err := scanner.Err(); err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrap(err, <span class="hljs-string">&quot;Error reading file&quot;</span>)<br>	&#125;<br><br>	<span class="hljs-keyword">defer</span> <span class="hljs-built_in">close</span>(ch)<br>	<span class="hljs-comment">// defer log.Printf(&quot;Successfully restore [%d] documents&quot;, docCount)</span><br><br>	bar := progressbar.Default(docCount, <span class="hljs-string">&quot;restore processing&quot;</span>)<br>	ch &lt;- docCount<br><br>	<span class="hljs-comment">// 重置文件seek</span><br>	file.Seek(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br><br>	<span class="hljs-keyword">var</span> hit Hit<br>	reader := bufio.NewReader(file)<br>	<span class="hljs-keyword">for</span> &#123;<br>		line, err := reader.ReadBytes(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">if</span> err == io.EOF &#123; <span class="hljs-comment">//读取结束，会报EOF</span><br>				<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>			&#125;<br>			<span class="hljs-keyword">return</span> err<br>		&#125;<br>		err = json.Unmarshal(line, &amp;hit)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">return</span> err<br>		&#125;<br>		bar.Add(<span class="hljs-number">1</span>)<br>		ch &lt;- hit<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">dumpIndex</span><span class="hljs-params">(fileName <span class="hljs-type">string</span>, ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">interface</span>&#123;&#125;, wg *sync.WaitGroup)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br><br>	file, err := os.Create(fileName)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> errors.Wrap(err, <span class="hljs-string">&quot;Error creating file&quot;</span>)<br>	&#125;<br>	<span class="hljs-keyword">defer</span> file.Close()<br><br>	writer := bufio.NewWriter(file)<br><br>	docCount := &lt;-ch<br>	bar := progressbar.Default(docCount.(<span class="hljs-type">int64</span>), <span class="hljs-string">&quot;dump processing&quot;</span>)<br><br>	<span class="hljs-comment">// 读取channel</span><br>	<span class="hljs-keyword">for</span> d := <span class="hljs-keyword">range</span> ch &#123;<br>		<span class="hljs-comment">// 进度条</span><br>		bar.Add(<span class="hljs-number">1</span>)<br>		<span class="hljs-comment">// 解析Doc</span><br>		doc, ok := d.(Hit)<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			<span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;assert error&quot;</span>)<br>		&#125;<br>		docBytes, err := json.Marshal(doc)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">return</span> err<br>		&#125;<br>		writer.Write(<span class="hljs-built_in">append</span>(docBytes, <span class="hljs-string">&#x27;\n&#x27;</span>))<br>	&#125;<br>	<span class="hljs-comment">// log.Printf(&quot;Successfully dumped [%d] documents&quot;, docCount)</span><br>	<span class="hljs-keyword">return</span> writer.Flush()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">bulkIndex</span><span class="hljs-params">(client *opensearch.Client, indexName <span class="hljs-type">string</span>, ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">interface</span>&#123;&#125;, wg *sync.WaitGroup)</span></span> <span class="hljs-type">error</span> &#123;<br>	<span class="hljs-keyword">defer</span> wg.Done()<br><br>	indexer, err := opensearchutil.NewBulkIndexer(opensearchutil.BulkIndexerConfig&#123;<br>		Client:     client,           <span class="hljs-comment">// The OpenSearch client</span><br>		Index:      indexName,        <span class="hljs-comment">// The default index name</span><br>		NumWorkers: runtime.NumCPU(), <span class="hljs-comment">// The number of worker goroutines (default: number of CPUs)</span><br>		FlushBytes: <span class="hljs-number">5e+6</span>,             <span class="hljs-comment">// The flush threshold in bytes (default: 5M)</span><br>	&#125;)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;Error creating the indexer: %s&quot;</span>, err)<br>	&#125;<br><br>	docCount := &lt;-ch<br>	bar := progressbar.Default(docCount.(<span class="hljs-type">int64</span>), <span class="hljs-string">&quot;bulk processing&quot;</span>)<br><br>	<span class="hljs-comment">// 读取channel</span><br>	<span class="hljs-keyword">for</span> d := <span class="hljs-keyword">range</span> ch &#123;<br>		<span class="hljs-comment">// 进度条</span><br>		bar.Add(<span class="hljs-number">1</span>)<br>		<span class="hljs-comment">// 解析Doc</span><br>		doc, ok := d.(Hit)<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			<span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;assert error&quot;</span>)<br>		&#125;<br>		docBytes, err := json.Marshal(doc.Source)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">return</span> err<br>		&#125;<br><br>		<span class="hljs-comment">// Add an item to the indexer</span><br>		err = indexer.Add(<br>			context.Background(),<br>			opensearchutil.BulkIndexerItem&#123;<br>				<span class="hljs-comment">// Action field configures the operation to perform (index, create, delete, update)</span><br>				Action: <span class="hljs-string">&quot;index&quot;</span>,<br><br>				<span class="hljs-comment">// DocumentID is the optional document ID</span><br>				DocumentID: doc.ID,<br><br>				<span class="hljs-comment">// Body is an `io.Reader` with the payload</span><br>				Body: bytes.NewReader(docBytes),<br><br>				<span class="hljs-comment">// OnSuccess is the optional callback for each successful operation</span><br>				OnSuccess: <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">					ctx context.Context,</span></span><br><span class="hljs-params"><span class="hljs-function">					item opensearchutil.BulkIndexerItem,</span></span><br><span class="hljs-params"><span class="hljs-function">					res opensearchutil.BulkIndexerResponseItem,</span></span><br><span class="hljs-params"><span class="hljs-function">				)</span></span> &#123;<br>					<span class="hljs-comment">// fmt.Printf(&quot;[%d] %s test/%s&quot;, res.Status, res.Result, item.DocumentID)</span><br>				&#125;,<br><br>				<span class="hljs-comment">// OnFailure is the optional callback for each failed operation</span><br>				OnFailure: <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">					ctx context.Context,</span></span><br><span class="hljs-params"><span class="hljs-function">					item opensearchutil.BulkIndexerItem,</span></span><br><span class="hljs-params"><span class="hljs-function">					res opensearchutil.BulkIndexerResponseItem, err <span class="hljs-type">error</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">				)</span></span> &#123;<br>					<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>						log.Printf(<span class="hljs-string">&quot;ERROR: %s&quot;</span>, err)<br>					&#125; <span class="hljs-keyword">else</span> &#123;<br>						log.Printf(<span class="hljs-string">&quot;ERROR: %s: %s&quot;</span>, res.Error.Type, res.Error.Reason)<br>					&#125;<br>				&#125;,<br>			&#125;,<br>		)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			<span class="hljs-keyword">return</span> errors.Wrapf(err, <span class="hljs-string">&quot;add indexer&quot;</span>)<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">// Close the indexer channel and flush remaining items</span><br>	<span class="hljs-comment">//</span><br>	<span class="hljs-keyword">if</span> err := indexer.Close(context.Background()); err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;Unexpected error: %s&quot;</span>, err)<br>	&#125;<br><br>	<span class="hljs-comment">// Report the indexer statistics</span><br>	<span class="hljs-comment">//</span><br>	stats := indexer.Stats()<br>	<span class="hljs-keyword">if</span> stats.NumFailed &gt; <span class="hljs-number">0</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;Indexed [%d] documents with [%d] errors&quot;</span>, stats.NumFlushed, stats.NumFailed)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-comment">// log.Printf(&quot;Successfully indexed [%d] documents&quot;, stats.NumFlushed)</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SRE/" class="category-chain-item">SRE</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OpenSearch/">#OpenSearch</a>
+      
+        <a href="/tags/migrate/">#migrate</a>
+      
+        <a href="/tags/es/">#es</a>
+      
+        <a href="/tags/ElasticSearch/">#ElasticSearch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OpenSearch索引迁移/备份工具</div>
+      <div>https://www.boer.xyz/2023/12/12/opensearch-migrator/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>boer</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年12月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/24/golang-gofiber-with-casbin/" title="Golang - gofiber-with-casbin授权示例">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Golang - gofiber-with-casbin授权示例</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/05/08/golang-string/" title="Golang - String/Bytes/Rune(字节-字符)">
+                        <span class="hidden-mobile">Golang - String/Bytes/Rune(字节-字符)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/gitalk/1.8.0/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"bfd810bfaf1a918e9808","clientSecret":"4c2c9106fc885a31c98c200250aba6d571671013","repo":"theblog","owner":"boer0924","admin":["boer0924"],"language":"zh-CN","labels":["Gitalk"],"perPage":15,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","id":"location.pathname"},
+          {
+            id: 'abdd986ef3ee1df584e759b80e16e391'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <span>&copy;2024  </span><i class="iconfont icon-love"></i><span>boer</span>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
