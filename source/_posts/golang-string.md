@@ -14,6 +14,7 @@ tags:
 categories: Golang
 ---
 In Go, a string is in effect a read-only slice of bytes. 
+
 ASCII -> Unicode -> UTF-8 -> Bytes -> Rune -> String
 
 <!-- more -->

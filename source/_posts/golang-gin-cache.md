@@ -42,19 +42,41 @@ const (
 )
 
 var (
-	cacheOnce            sync.Once
-	cronOnce             sync.Once
 	startUpdateCacheOnce sync.Once
-
-	cacheWithTTL *cache.Cache
-	cronClient   *cron.Cron
 )
 
-func NewCacheClient() *cache.Cache {
-	cacheOnce.Do(func() {
-		cacheWithTTL = cache.New(5*time.Minute, 10*time.Minute)
+type CacheClient struct {
+	cache *cache.Cache
+	once  sync.Once
+}
+
+func NewCacheClient() *CacheClient {
+	return &CacheClient{}
+}
+
+func (c *CacheClient) GetCache() *cache.Cache {
+	c.once.Do(func() {
+		c.cache = cache.New(5*time.Minute, 10*time.Minute)
 	})
-	return cacheWithTTL
+	return c.cache
+}
+
+type CronClient struct {
+	cron *cron.Cron
+	once sync.Once
+}
+
+func NewCronClient() *CronClient {
+	return &CronClient{}
+}
+
+func (c *CronClient) GetCron() *cron.Cron {
+	c.once.Do(func() {
+		sh, _ := time.LoadLocation("Asia/Shanghai")
+		c.cron = cron.New(cron.WithLocation(sh))
+		c.cron.Start()
+	})
+	return c.cron
 }
 
 func setDefaultCache(cacheClient *cache.Cache) {
@@ -62,31 +84,21 @@ func setDefaultCache(cacheClient *cache.Cache) {
 	cacheClient.Set("foo", "balalala~"+time.Now().Format(time.RFC3339Nano), defaultExpireTime)
 }
 
-func NewCronClient() *cron.Cron {
-	cronOnce.Do(func() {
-		sh, _ := time.LoadLocation("Asia/Shanghai")
-		cronClient = cron.New(cron.WithLocation(sh))
-		cronClient.Start()
-	})
-	return cronClient
-}
-
 func main() {
 	r := gin.Default()
 
-	cacheClient := NewCacheClient()
+	cacheClient := NewCacheClient().GetCache()
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	crontab := NewCronClient()
+	crontab := NewCronClient().GetCron()
+	defer crontab.Stop()
 	if _, err := crontab.AddFunc("@every 1s", func() {
 		// setDefaultCache(cacheClient)
 		log.Printf("-----debug crontab-----> %s \n", time.Now().Format(time.RFC3339))
 	}); err != nil {
 		return
 	}
-	// crontab.Start()
-	defer crontab.Stop()
 
 	// r.Use(authMiddleware())
 	apiv1 := r.Group("/api/v1")
