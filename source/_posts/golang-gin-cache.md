@@ -42,13 +42,16 @@ const (
 )
 
 var (
-	firstOnce  sync.Once
-	secondOnce sync.Once
+	cacheOnce            sync.Once
+	cronOnce             sync.Once
+	startUpdateCacheOnce sync.Once
+
+	cacheWithTTL *cache.Cache
+	cronClient   *cron.Cron
 )
 
 func NewCacheClient() *cache.Cache {
-	var cacheWithTTL *cache.Cache
-	firstOnce.Do(func() {
+	cacheOnce.Do(func() {
 		cacheWithTTL = cache.New(5*time.Minute, 10*time.Minute)
 	})
 	return cacheWithTTL
@@ -59,6 +62,15 @@ func setDefaultCache(cacheClient *cache.Cache) {
 	cacheClient.Set("foo", "balalala~"+time.Now().Format(time.RFC3339Nano), defaultExpireTime)
 }
 
+func NewCronClient() *cron.Cron {
+	cronOnce.Do(func() {
+		sh, _ := time.LoadLocation("Asia/Shanghai")
+		cronClient = cron.New(cron.WithLocation(sh))
+		cronClient.Start()
+	})
+	return cronClient
+}
+
 func main() {
 	r := gin.Default()
 
@@ -66,21 +78,21 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	crontab := cron.New()
+	crontab := NewCronClient()
 	if _, err := crontab.AddFunc("@every 1s", func() {
 		// setDefaultCache(cacheClient)
 		log.Printf("-----debug crontab-----> %s \n", time.Now().Format(time.RFC3339))
 	}); err != nil {
 		return
 	}
-	crontab.Start()
+	// crontab.Start()
 	defer crontab.Stop()
 
 	// r.Use(authMiddleware())
 	apiv1 := r.Group("/api/v1")
 	{
 		apiv1.GET("/go-cache", func(c *gin.Context) {
-			secondOnce.Do(func() {
+			startUpdateCacheOnce.Do(func() {
 				setDefaultCache(cacheClient) // 初始化cache
 				go func() {
 					log.Printf("----debug----> %s \n", time.Now().Format(time.RFC3339))
