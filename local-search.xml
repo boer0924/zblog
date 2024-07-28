@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Office2021LTSC版本安装激活</title>
+    <link href="/2024/07/24/office2021/"/>
+    <url>/2024/07/24/office2021/</url>
+    
+    <content type="html"><![CDATA[<p>GVLKs for KMS and Active Directory-based activation of Office, Project, and Visio<br><a href="https://learn.microsoft.com/zh-cn/office/volume-license-activation/gvlks">https://learn.microsoft.com/zh-cn/office/volume-license-activation/gvlks</a></p><span id="more"></span><p>Office Deployment Tool<br><a href="https://www.microsoft.com/en-us/download/details.aspx?id=49117">https://www.microsoft.com/en-us/download/details.aspx?id=49117</a></p><p>Office 自定义工具<br><a href="https://config.office.com/deploymentsettings">https://config.office.com/deploymentsettings</a> &gt; 保存到C:\Users\boer\Downloads\office\config.xml</p><p>cd C:\Users\boer\Downloads\office<br>下载<br>setup /download config.xml<br>配置安装<br>setup /configure config.xml</p><p>如果以上步骤未激活，二次激活方法如下：<br>cd C:\Program Files\Microsoft Office\Office16<br>cscript ospp.vbs /sethst:kms.03k.org<br>cscript ospp.vbs /act</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>DevOps</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Office</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Golang - gofiber-with-casbin授权示例</title>
     <link href="/2024/03/24/golang-gofiber-with-casbin/"/>
     <url>/2024/03/24/golang-gofiber-with-casbin/</url>
