@@ -160,7 +160,7 @@ banner: # 头图滚动视差
 # Footer
 #---------------------------
 footer:
-  content: '<span>&copy;2024  </span><i class="iconfont icon-love"></i><span>boer</span>'
+  content: '<span>&copy;2025  </span><i class="iconfont icon-love"></i><span>boer</span>'
   statistics:  # 展示网站的 PV、UV 统计数
     enable: true
     source: "busuanzi"  # 统计数据来源，可选：busuanzi | leancloud，使用 leancloud 需要在 web_analytics 中设置 api 参数，使用 busuanzi 注意可能间歇抽风
